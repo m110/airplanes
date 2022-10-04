@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/m110/airplanes/archetypes"
 	"log"
 	"math/rand"
 	"time"
@@ -9,8 +8,14 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
 
+	"github.com/m110/airplanes/archetypes"
 	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/system"
+)
+
+var (
+	screenWidth  = 800
+	screenHeight = 600
 )
 
 type System interface {
@@ -35,8 +40,9 @@ func NewGame() *Game {
 	}
 
 	g.systems = []System{
-		system.NewVelocity(),
 		system.NewControls(),
+		system.NewVelocity(),
+		system.NewBounds(screenWidth, screenHeight),
 	}
 	g.drawables = []Drawable{
 		system.NewRenderer(),
@@ -73,7 +79,7 @@ func (g *Game) Layout(width, height int) (int, int) {
 }
 
 func main() {
-	ebiten.SetWindowSize(800, 600)
+	ebiten.SetWindowSize(screenWidth, screenHeight)
 	rand.Seed(time.Now().UTC().UnixNano())
 
 	err := ebiten.RunGame(NewGame())

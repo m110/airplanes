@@ -49,6 +49,7 @@ func NewPlayerTwo(w donburi.World) *donburi.Entry {
 
 func newPlayer(w donburi.World) *donburi.Entry {
 	entity := w.Create(
+		component.PlayerTag,
 		component.Position,
 		component.Velocity,
 		component.Sprite,
