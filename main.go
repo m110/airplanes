@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/m110/airplanes/engine"
+	"github.com/m110/airplanes/archetypes"
 	"log"
 	"math/rand"
 	"time"
@@ -10,7 +10,6 @@ import (
 	"github.com/yohamta/donburi"
 
 	"github.com/m110/airplanes/assets"
-	"github.com/m110/airplanes/component"
 	"github.com/m110/airplanes/system"
 )
 
@@ -49,25 +48,8 @@ func NewGame() *Game {
 func createWorld() donburi.World {
 	world := donburi.NewWorld()
 
-	airplaneEntity := world.Create(
-		component.Position,
-		component.Velocity,
-		component.Sprite,
-		component.Input,
-	)
-	airplane := world.Entry(airplaneEntity)
-	donburi.SetValue(airplane, component.Position, component.PositionData{X: 100, Y: 100})
-	donburi.SetValue(airplane, component.Velocity, component.VelocityData{})
-	donburi.SetValue(airplane, component.Sprite, component.SpriteData{Image: assets.ShipYellowSmall})
-	donburi.SetValue(airplane, component.Input, component.InputData{
-		MoveUpKey:    ebiten.KeyW,
-		MoveRightKey: ebiten.KeyD,
-		MoveDownKey:  ebiten.KeyS,
-		MoveLeftKey:  ebiten.KeyA,
-		MoveSpeed:    3.5,
-		ShootKey:     ebiten.KeySpace,
-		ShootTimer:   engine.NewTimer(time.Millisecond * 300),
-	})
+	archetypes.NewPlayerOne(world)
+	archetypes.NewPlayerTwo(world)
 
 	return world
 }
