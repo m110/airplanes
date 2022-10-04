@@ -12,17 +12,23 @@ import (
 var (
 	//go:embed ships/ship_0011.png
 	shipYellowSmallData []byte
+	//go:embed tiles/tile_0000.png
+	laserSingleData []byte
 
 	ShipYellowSmall *ebiten.Image
+	LaserSingle     *ebiten.Image
 )
 
-func LoadAssets() error {
-	shipYellowSmallImage, _, err := image.Decode(bytes.NewReader(shipYellowSmallData))
+func LoadAssets() {
+	ShipYellowSmall = mustNewEbitenImage(shipYellowSmallData)
+	LaserSingle = mustNewEbitenImage(laserSingleData)
+}
+
+func mustNewEbitenImage(data []byte) *ebiten.Image {
+	img, _, err := image.Decode(bytes.NewReader(data))
 	if err != nil {
-		return err
+		panic(err)
 	}
 
-	ShipYellowSmall = ebiten.NewImageFromImage(shipYellowSmallImage)
-
-	return nil
+	return ebiten.NewImageFromImage(img)
 }

@@ -1,15 +1,16 @@
 package main
 
 import (
-	"github.com/m110/airplanes/assets"
-	"github.com/m110/airplanes/component"
-	"github.com/m110/airplanes/system"
 	"log"
 	"math/rand"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
+
+	"github.com/m110/airplanes/assets"
+	"github.com/m110/airplanes/component"
+	"github.com/m110/airplanes/system"
 )
 
 type System interface {
@@ -26,32 +27,45 @@ type Game struct {
 	drawables []Drawable
 }
 
-func NewGame() (*Game, error) {
-	err := assets.LoadAssets()
-	if err != nil {
-		return nil, err
-	}
+func NewGame() *Game {
+	assets.LoadAssets()
 
 	g := &Game{
 		world: createWorld(),
 	}
 
-	g.systems = []System{}
+	g.systems = []System{
+		system.NewVelocity(),
+		system.NewControls(),
+	}
 	g.drawables = []Drawable{
 		system.NewRenderer(),
 	}
 
-	return g, nil
+	return g
 }
 
 func createWorld() donburi.World {
 	world := donburi.NewWorld()
 
-	airplaneEntity := world.Create(component.Position, component.Velocity, component.Sprite)
+	airplaneEntity := world.Create(
+		component.Position,
+		component.Velocity,
+		component.Sprite,
+		component.Input,
+	)
 	airplane := world.Entry(airplaneEntity)
 	donburi.SetValue(airplane, component.Position, component.PositionData{X: 100, Y: 100})
-	donburi.SetValue(airplane, component.Velocity, component.VelocityData{X: 1, Y: 1})
+	donburi.SetValue(airplane, component.Velocity, component.VelocityData{})
 	donburi.SetValue(airplane, component.Sprite, component.SpriteData{Image: assets.ShipYellowSmall})
+	donburi.SetValue(airplane, component.Input, component.InputData{
+		MoveUpKey:    ebiten.KeyW,
+		MoveRightKey: ebiten.KeyD,
+		MoveDownKey:  ebiten.KeyS,
+		MoveLeftKey:  ebiten.KeyA,
+		MoveSpeed:    3.5,
+		ShootKey:     ebiten.KeySpace,
+	})
 
 	return world
 }
@@ -78,12 +92,7 @@ func main() {
 	ebiten.SetWindowSize(800, 600)
 	rand.Seed(time.Now().UTC().UnixNano())
 
-	g, err := NewGame()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = ebiten.RunGame(g)
+	err := ebiten.RunGame(NewGame())
 	if err != nil {
 		log.Fatal(err)
 	}
