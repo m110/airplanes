@@ -2,7 +2,6 @@ package system
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/m110/airplanes/archetypes"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/filter"
@@ -49,7 +48,8 @@ func (i *Controls) Update(w donburi.World) {
 			velocity.X = -input.MoveSpeed
 		}
 
-		if inpututil.IsKeyJustPressed(input.ShootKey) {
+		input.ShootTimer.Update()
+		if ebiten.IsKeyPressed(input.ShootKey) && input.ShootTimer.IsReady() {
 			bullet := archetypes.NewBullet(w)
 
 			bulletPosition := component.GetPosition(bullet)
@@ -60,6 +60,8 @@ func (i *Controls) Update(w donburi.World) {
 
 			bulletPosition.X = position.X + float64(sprite.Image.Bounds().Dx())/2.0 - float64(bulletSprite.Image.Bounds().Dx())/2.0
 			bulletPosition.Y = position.Y - float64(bulletSprite.Image.Bounds().Dy())
+
+			input.ShootTimer.Reset()
 		}
 	})
 }

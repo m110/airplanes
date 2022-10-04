@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/m110/airplanes/engine"
 	"log"
 	"math/rand"
 	"time"
@@ -65,6 +66,7 @@ func createWorld() donburi.World {
 		MoveLeftKey:  ebiten.KeyA,
 		MoveSpeed:    3.5,
 		ShootKey:     ebiten.KeySpace,
+		ShootTimer:   engine.NewTimer(time.Millisecond * 300),
 	})
 
 	return world
