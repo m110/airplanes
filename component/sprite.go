@@ -5,8 +5,14 @@ import (
 	"github.com/yohamta/donburi"
 )
 
+const (
+	SpriteLayerBackground = iota
+	SpriteLayerUnits
+)
+
 type SpriteData struct {
 	Image *ebiten.Image
+	Layer int
 }
 
 var Sprite = donburi.NewComponentType[SpriteData]()

@@ -21,6 +21,7 @@ func NewBullet(w donburi.World) *donburi.Entry {
 	})
 	donburi.SetValue(bullet, component.Sprite, component.SpriteData{
 		Image: assets.LaserSingle,
+		Layer: component.SpriteLayerUnits,
 	})
 
 	return bullet

@@ -6,10 +6,9 @@ import (
 	"image"
 	_ "image/png"
 
-	"github.com/lafriks/go-tiled/render"
-
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/lafriks/go-tiled"
+	"github.com/lafriks/go-tiled/render"
 )
 
 var (

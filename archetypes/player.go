@@ -15,7 +15,10 @@ func NewPlayerOne(w donburi.World) *donburi.Entry {
 	player := newPlayer(w)
 
 	donburi.SetValue(player, component.Position, component.PositionData{X: 100, Y: 500})
-	donburi.SetValue(player, component.Sprite, component.SpriteData{Image: assets.ShipYellowSmall})
+	donburi.SetValue(player, component.Sprite, component.SpriteData{
+		Image: assets.ShipYellowSmall,
+		Layer: component.SpriteLayerUnits,
+	})
 	donburi.SetValue(player, component.Input, component.InputData{
 		MoveUpKey:    ebiten.KeyW,
 		MoveRightKey: ebiten.KeyD,
@@ -33,7 +36,10 @@ func NewPlayerTwo(w donburi.World) *donburi.Entry {
 	player := newPlayer(w)
 
 	donburi.SetValue(player, component.Position, component.PositionData{X: 500, Y: 500})
-	donburi.SetValue(player, component.Sprite, component.SpriteData{Image: assets.ShipGreenSmall})
+	donburi.SetValue(player, component.Sprite, component.SpriteData{
+		Image: assets.ShipGreenSmall,
+		Layer: component.SpriteLayerUnits,
+	})
 	donburi.SetValue(player, component.Input, component.InputData{
 		MoveUpKey:    ebiten.KeyUp,
 		MoveRightKey: ebiten.KeyRight,
