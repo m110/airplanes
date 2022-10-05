@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	screenWidth  = 800
+	screenWidth  = 480
 	screenHeight = 600
 )
 
@@ -69,6 +69,7 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Clear()
+	screen.DrawImage(assets.Level1, nil)
 	for _, s := range g.drawables {
 		s.Draw(g.world, screen)
 	}
