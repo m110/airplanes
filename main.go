@@ -58,17 +58,18 @@ func createWorld() donburi.World {
 	archetypes.NewPlayerOne(world)
 	archetypes.NewPlayerTwo(world)
 
-	world.Create(component.CameraTag, component.Position)
-
-	level := world.Create(component.Position, component.Sprite, component.Velocity)
-	levelEntry := world.Entry(level)
-	donburi.SetValue(levelEntry, component.Position, component.PositionData{
+	camera := world.Create(component.CameraTag, component.Position, component.Velocity)
+	cameraEntry := world.Entry(camera)
+	donburi.SetValue(cameraEntry, component.Position, component.PositionData{
 		X: 0,
-		Y: -float64(assets.Level1.Bounds().Dy() - screenHeight),
+		Y: float64(assets.Level1.Bounds().Dy() - screenHeight),
 	})
-	donburi.SetValue(levelEntry, component.Velocity, component.VelocityData{
-		Y: 0.5,
+	donburi.SetValue(cameraEntry, component.Velocity, component.VelocityData{
+		Y: -0.5,
 	})
+
+	level := world.Create(component.Position, component.Sprite)
+	levelEntry := world.Entry(level)
 	donburi.SetValue(levelEntry, component.Sprite, component.SpriteData{
 		Image: assets.Level1,
 		Layer: component.SpriteLayerBackground,

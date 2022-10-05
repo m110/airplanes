@@ -33,7 +33,7 @@ func (i *Controls) Update(w donburi.World) {
 		velocity := component.GetVelocity(entry)
 
 		velocity.X = 0
-		velocity.Y = 0
+		velocity.Y = -0.5
 
 		if ebiten.IsKeyPressed(input.MoveUpKey) {
 			velocity.Y = -input.MoveSpeed

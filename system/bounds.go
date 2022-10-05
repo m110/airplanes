@@ -27,11 +27,23 @@ func NewBounds(screenWidth, screenHeight int) *Bounds {
 }
 
 func (b *Bounds) Update(w donburi.World) {
+	camera, ok := query.NewQuery(filter.Contains(component.CameraTag)).FirstEntity(w)
+	if !ok {
+		panic("no camera found")
+	}
+	cameraPos := component.GetPosition(camera)
+
 	b.query.EachEntity(w, func(entry *donburi.Entry) {
 		position := component.GetPosition(entry)
 		sprite := component.GetSprite(entry)
 
-		position.X = engine.Clamp(position.X, 0, float64(b.screenWidth-sprite.Image.Bounds().Dx()))
-		position.Y = engine.Clamp(position.Y, 0, float64(b.screenHeight-sprite.Image.Bounds().Dy()))
+		minX := cameraPos.X
+		maxX := cameraPos.X + float64(b.screenWidth-sprite.Image.Bounds().Dx())
+
+		minY := cameraPos.Y
+		maxY := cameraPos.Y + float64(b.screenHeight-sprite.Image.Bounds().Dy())
+
+		position.X = engine.Clamp(position.X, minX, maxX)
+		position.Y = engine.Clamp(position.Y, minY, maxY)
 	})
 }
