@@ -8,7 +8,7 @@
     ],
     "fileStates": {
     },
-    "last.imagePath": "/Users/milosz/src/gamedev/airplanes/assets/tiles",
+    "last.imagePath": "/Users/milosz/src/gamedev/airplanes/assets/ships",
     "map.height": 80,
     "map.lastUsedFormat": "tmx",
     "openFiles": [
@@ -19,7 +19,7 @@
     "tileset.lastUsedFormat": "tsx",
     "tileset.spacing": 1,
     "tileset.tileSize": {
-        "height": 16,
-        "width": 16
+        "height": 32,
+        "width": 32
     }
 }

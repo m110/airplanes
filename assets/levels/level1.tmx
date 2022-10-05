@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="80" tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="80" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="3">
  <tileset firstgid="1" source="tiles.tsx"/>
+ <tileset firstgid="121" source="ships.tsx"/>
  <layer id="1" name="Tile Layer 1" width="30" height="80">
   <data encoding="csv">
 51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,
@@ -85,4 +86,8 @@
 51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51
 </data>
  </layer>
+ <objectgroup id="2" name="Object Layer 1">
+  <object id="1" class="player1-spawn" gid="132" x="200" y="1236" width="32" height="32"/>
+  <object id="2" class="player2-spawn" gid="131" x="264" y="1236" width="32" height="32"/>
+ </objectgroup>
 </map>

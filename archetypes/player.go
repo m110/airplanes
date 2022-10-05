@@ -11,10 +11,10 @@ import (
 	"github.com/m110/airplanes/engine"
 )
 
-func NewPlayerOne(w donburi.World) *donburi.Entry {
+func NewPlayerOne(w donburi.World, position component.PositionData) *donburi.Entry {
 	player := newPlayer(w)
 
-	donburi.SetValue(player, component.Position, component.PositionData{X: 100, Y: 500})
+	donburi.SetValue(player, component.Position, position)
 	donburi.SetValue(player, component.Sprite, component.SpriteData{
 		Image: assets.ShipYellowSmall,
 		Layer: component.SpriteLayerUnits,
@@ -32,10 +32,10 @@ func NewPlayerOne(w donburi.World) *donburi.Entry {
 	return player
 }
 
-func NewPlayerTwo(w donburi.World) *donburi.Entry {
+func NewPlayerTwo(w donburi.World, position component.PositionData) *donburi.Entry {
 	player := newPlayer(w)
 
-	donburi.SetValue(player, component.Position, component.PositionData{X: 500, Y: 500})
+	donburi.SetValue(player, component.Position, position)
 	donburi.SetValue(player, component.Sprite, component.SpriteData{
 		Image: assets.ShipGreenSmall,
 		Layer: component.SpriteLayerUnits,
