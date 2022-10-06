@@ -6,6 +6,7 @@ import (
 	"image"
 	_ "image/png"
 	"path/filepath"
+	"strconv"
 
 	"github.com/lafriks/go-tiled"
 	"github.com/lafriks/go-tiled/render"
@@ -46,6 +47,7 @@ type Level struct {
 type Enemy struct {
 	Position Position
 	Rotation float64
+	Path     []Position
 }
 
 func LoadAssets() {
@@ -81,6 +83,23 @@ func mustLoadLevel(levelPath string) Level {
 
 	level := Level{}
 
+	paths := map[uint32][]Position{}
+	for _, og := range levelMap.ObjectGroups {
+		for _, o := range og.Objects {
+			if len(o.PolyLines) > 0 {
+				paths[o.ID] = []Position{}
+				for _, p := range o.PolyLines {
+					for _, pp := range *p.Points {
+						paths[o.ID] = append(paths[o.ID], Position{
+							X: o.X + pp.X,
+							Y: o.Y + pp.Y,
+						})
+					}
+				}
+			}
+		}
+	}
+
 	for _, og := range levelMap.ObjectGroups {
 		for _, o := range og.Objects {
 			if o.Class == "player1-spawn" {
@@ -96,13 +115,31 @@ func mustLoadLevel(levelPath string) Level {
 				}
 			}
 			if o.Class == "enemy-airplane" {
-				level.Enemies = append(level.Enemies, Enemy{
+				enemy := Enemy{
 					Position: Position{
 						X: o.X,
 						Y: o.Y,
 					},
 					Rotation: o.Rotation,
-				})
+				}
+
+				for _, p := range o.Properties {
+					if p.Name == "path" {
+						pathID, err := strconv.Atoi(p.Value)
+						if err != nil {
+							panic("invalid path id: " + err.Error())
+						}
+
+						path, ok := paths[uint32(pathID)]
+						if !ok {
+							panic("path not found: " + p.Value)
+						}
+
+						enemy.Path = path
+					}
+				}
+
+				level.Enemies = append(level.Enemies, enemy)
 			}
 		}
 	}

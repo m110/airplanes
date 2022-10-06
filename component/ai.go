@@ -9,10 +9,17 @@ const (
 
 type AIData struct {
 	Spawned bool
+	Type    int
 
-	Type             int
-	ConstantVelocity float64
-	Path             []PositionData
+	Speed float64
+
+	Path       []PathPosition
+	NextTarget int
+}
+
+type PathPosition struct {
+	X float64
+	Y float64
 }
 
 var AI = donburi.NewComponentType[AIData]()

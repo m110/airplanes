@@ -97,7 +97,12 @@ func createWorld(levelIndex int) donburi.World {
 	})
 
 	for _, enemy := range levelAsset.Enemies {
-		archetypes.NewEnemy(world, component.PositionData(enemy.Position), enemy.Rotation)
+		archetypes.NewEnemy(
+			world,
+			component.PositionData(enemy.Position),
+			enemy.Rotation,
+			enemy.Path,
+		)
 	}
 
 	return world

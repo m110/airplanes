@@ -12,22 +12,22 @@
             "expandedObjectLayers": [
                 2
             ],
-            "scale": 1.214,
+            "scale": 1.6124,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 280.0658978583196,
-                "y": 1082.7841845140033
+                "x": 245.59662614735797,
+                "y": 952.3071198213843
             }
         },
         "level2.tmx": {
             "expandedObjectLayers": [
                 2
             ],
-            "scale": 0.82,
+            "scale": 1.3692,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 230.4878048780488,
-                "y": 945.7317073170732
+                "x": 236.63453111305873,
+                "y": 896.5089103125913
             }
         },
         "ships.tsx": {
@@ -52,10 +52,10 @@
     "project": "airplanes.tiled-project",
     "property.type": "object",
     "recentFiles": [
+        "level1.tmx",
         "tiles.tsx",
         "level2.tmx",
-        "ships.tsx",
-        "level1.tmx"
+        "ships.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.spacing": 1,
