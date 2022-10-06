@@ -2,11 +2,11 @@ package system
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/m110/airplanes/archetypes"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
+	"github.com/m110/airplanes/archetypes"
 	"github.com/m110/airplanes/component"
 )
 
@@ -30,6 +30,10 @@ func NewControls() *Controls {
 func (i *Controls) Update(w donburi.World) {
 	i.query.EachEntity(w, func(entry *donburi.Entry) {
 		input := component.GetInput(entry)
+		if input.Disabled {
+			return
+		}
+
 		velocity := component.GetVelocity(entry)
 
 		velocity.X = 0

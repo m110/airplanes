@@ -60,6 +60,7 @@ func newPlayer(w donburi.World) *donburi.Entry {
 		component.Velocity,
 		component.Sprite,
 		component.Input,
+		component.Bounds,
 	)
 	player := w.Entry(entity)
 

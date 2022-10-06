@@ -20,6 +20,7 @@ func NewBounds(screenWidth, screenHeight int) *Bounds {
 			component.PlayerTag,
 			component.Position,
 			component.Sprite,
+			component.Bounds,
 		)),
 		screenWidth:  screenWidth,
 		screenHeight: screenHeight,
@@ -34,6 +35,11 @@ func (b *Bounds) Update(w donburi.World) {
 	cameraPos := component.GetPosition(camera)
 
 	b.query.EachEntity(w, func(entry *donburi.Entry) {
+		bounds := component.GetBounds(entry)
+		if bounds.Disabled {
+			return
+		}
+
 		position := component.GetPosition(entry)
 		sprite := component.GetSprite(entry)
 
