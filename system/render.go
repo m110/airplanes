@@ -1,6 +1,7 @@
 package system
 
 import (
+	"math"
 	"sort"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -61,6 +62,12 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 			sprite := component.GetSprite(entry)
 
 			op := &ebiten.DrawImageOptions{}
+			if entry.HasComponent(component.Rotation) {
+				w, h := sprite.Image.Size()
+				op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
+				angle := component.GetRotation(entry).Angle
+				op.GeoM.Rotate(float64(int(angle)%360) * 2 * math.Pi / 360)
+			}
 			op.GeoM.Translate(position.X, position.Y)
 			r.offscreen.DrawImage(sprite.Image, op)
 		}

@@ -1,15 +1,17 @@
 package archetypes
 
 import (
+	"github.com/yohamta/donburi"
+
 	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/component"
-	"github.com/yohamta/donburi"
 )
 
-func NewEnemy(w donburi.World, position component.PositionData) *donburi.Entry {
+func NewEnemy(w donburi.World, position component.PositionData, rotation float64) *donburi.Entry {
 	enemy := w.Entry(
 		w.Create(
 			component.Position,
+			component.Rotation,
 			component.Velocity,
 			component.Sprite,
 			component.AI,
@@ -18,6 +20,7 @@ func NewEnemy(w donburi.World, position component.PositionData) *donburi.Entry {
 	)
 
 	donburi.SetValue(enemy, component.Position, position)
+	component.GetRotation(enemy).Angle = rotation
 	donburi.SetValue(enemy, component.Sprite, component.SpriteData{
 		Image: assets.ShipGraySmall,
 		Layer: component.SpriteLayerUnits,

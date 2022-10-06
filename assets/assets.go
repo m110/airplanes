@@ -45,6 +45,7 @@ type Level struct {
 
 type Enemy struct {
 	Position Position
+	Rotation float64
 }
 
 func LoadAssets() {
@@ -100,6 +101,7 @@ func mustLoadLevel(levelPath string) Level {
 						X: o.X,
 						Y: o.Y,
 					},
+					Rotation: o.Rotation,
 				})
 			}
 		}

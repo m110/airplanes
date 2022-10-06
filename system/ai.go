@@ -1,6 +1,8 @@
 package system
 
 import (
+	"math"
+
 	"github.com/m110/airplanes/archetypes"
 	"github.com/m110/airplanes/component"
 	"github.com/yohamta/donburi"
@@ -20,6 +22,7 @@ func NewAI() *AI {
 				component.Velocity,
 				component.Sprite,
 				component.AI,
+				component.Rotation,
 			),
 		),
 	}
@@ -32,6 +35,7 @@ func (a *AI) Update(w donburi.World) {
 		if !ai.Spawned {
 			cameraPos := component.GetPosition(archetypes.MustFindCamera(w))
 			position := component.GetPosition(entry)
+			rotation := component.GetRotation(entry)
 			sprite := component.GetSprite(entry)
 
 			if position.Y+float64(sprite.Image.Bounds().Dy()) > cameraPos.Y {
@@ -45,7 +49,9 @@ func (a *AI) Update(w donburi.World) {
 
 				switch ai.Type {
 				case component.AITypeConstantVelocity:
-					velocity.Y = ai.ConstantVelocity
+					radians := float64(rotation.Angle-90) / 180.0 * math.Pi
+					velocity.X = math.Cos(radians) * ai.ConstantVelocity
+					velocity.Y = math.Sin(radians) * ai.ConstantVelocity
 				case component.AITypeFollowPath:
 					// TODO
 				}
