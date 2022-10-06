@@ -5,6 +5,8 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/m110/airplanes/engine"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
 
@@ -28,6 +30,7 @@ type Drawable interface {
 }
 
 type Game struct {
+	level     int
 	world     donburi.World
 	systems   []System
 	drawables []Drawable
@@ -37,7 +40,7 @@ func NewGame() *Game {
 	assets.LoadAssets()
 
 	g := &Game{
-		world: createWorld(),
+		level: 0,
 	}
 
 	g.systems = []System{
@@ -45,35 +48,50 @@ func NewGame() *Game {
 		system.NewVelocity(),
 		system.NewBounds(screenWidth, screenHeight),
 		system.NewCameraBounds(),
-		system.NewProgression(),
+		system.NewProgression(g.nextLevel),
 	}
 	g.drawables = []Drawable{
 		system.NewRenderer(),
 	}
 
+	g.loadLevel()
+
 	return g
 }
 
-func createWorld() donburi.World {
+func (g *Game) nextLevel() {
+	if g.level == len(assets.Levels)-1 {
+		// TODO all levels done
+		return
+	}
+	g.level++
+	g.loadLevel()
+}
+
+func (g *Game) loadLevel() {
+	g.world = createWorld(g.level)
+}
+
+func createWorld(levelIndex int) donburi.World {
+	levelAsset := assets.Levels[levelIndex]
+
 	world := donburi.NewWorld()
 
-	archetypes.NewPlayerOne(world, component.PositionData(assets.Level1.Player1Spawn))
-	archetypes.NewPlayerTwo(world, component.PositionData(assets.Level1.Player2Spawn))
+	level := world.Entry(world.Create(component.Level))
+	component.GetLevel(level).ProgressionTimer = engine.NewTimer(time.Second * 3)
 
-	camera := world.Create(component.CameraTag, component.Position, component.Velocity)
-	cameraEntry := world.Entry(camera)
-	donburi.SetValue(cameraEntry, component.Position, component.PositionData{
+	archetypes.NewPlayerOne(world, component.PositionData(levelAsset.Player1Spawn))
+	archetypes.NewPlayerTwo(world, component.PositionData(levelAsset.Player2Spawn))
+
+	archetypes.NewCamera(world, component.PositionData{
 		X: 0,
-		Y: float64(assets.Level1.Background.Bounds().Dy() - screenHeight),
-	})
-	donburi.SetValue(cameraEntry, component.Velocity, component.VelocityData{
-		Y: -0.5,
+		Y: float64(levelAsset.Background.Bounds().Dy() - screenHeight),
 	})
 
-	level := world.Create(component.Position, component.Sprite)
-	levelEntry := world.Entry(level)
+	levelEntity := world.Create(component.Position, component.Sprite)
+	levelEntry := world.Entry(levelEntity)
 	donburi.SetValue(levelEntry, component.Sprite, component.SpriteData{
-		Image: assets.Level1.Background,
+		Image: levelAsset.Background,
 		Layer: component.SpriteLayerBackground,
 	})
 

@@ -9,6 +9,7 @@ import (
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
+	"github.com/m110/airplanes/archetypes"
 	"github.com/m110/airplanes/component"
 )
 
@@ -28,10 +29,17 @@ func NewRenderer() *Render {
 }
 
 func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
-	camera, ok := query.NewQuery(filter.Contains(component.CameraTag)).FirstEntity(w)
-	if !ok {
-		panic("no camera found")
+	camera := archetypes.MustFindCamera(w)
+	cam := component.GetCamera(camera)
+
+	if !cam.Moving {
+		cam.MoveTimer.Update()
+		if cam.MoveTimer.IsReady() {
+			cam.Moving = true
+			component.GetVelocity(camera).Y = -0.5
+		}
 	}
+
 	cameraPos := component.GetPosition(camera)
 
 	r.offscreen.Clear()

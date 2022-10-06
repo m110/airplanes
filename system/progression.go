@@ -1,24 +1,20 @@
 package system
 
 import (
-	"time"
-
-	"github.com/m110/airplanes/engine"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
+	"github.com/m110/airplanes/archetypes"
 	"github.com/m110/airplanes/component"
 )
 
 type Progression struct {
-	query            *query.Query
-	progressionTimer *engine.Timer
-	reachedEnd       bool
-	progressed       bool
+	query         *query.Query
+	nextLevelFunc func()
 }
 
-func NewProgression() *Progression {
+func NewProgression(nextLevelFunc func()) *Progression {
 	return &Progression{
 		query: query.NewQuery(
 			filter.Contains(
@@ -28,19 +24,33 @@ func NewProgression() *Progression {
 				component.Bounds,
 			),
 		),
-		progressionTimer: engine.NewTimer(time.Second * 3),
+		nextLevelFunc: nextLevelFunc,
 	}
 }
 
 func (p *Progression) Update(w donburi.World) {
-	if p.progressed {
-		// TODO next level
+	levelEntry := component.MustFindLevel(w)
+	level := component.GetLevel(levelEntry)
+
+	if level.Progressed {
+		cameraPos := component.GetPosition(archetypes.MustFindCamera(w))
+		playersVisible := false
+		p.query.EachEntity(w, func(entry *donburi.Entry) {
+			playerPos := component.GetPosition(entry)
+			playerSprite := component.GetSprite(entry)
+			if playerPos.Y+float64(playerSprite.Image.Bounds().Dy()) > cameraPos.Y {
+				playersVisible = true
+			}
+		})
+		if !playersVisible {
+			p.nextLevelFunc()
+		}
 		return
 	}
 
-	if p.reachedEnd {
-		p.progressionTimer.Update()
-		if p.progressionTimer.IsReady() {
+	if level.ReachedEnd {
+		level.ProgressionTimer.Update()
+		if level.ProgressionTimer.IsReady() {
 			p.query.EachEntity(w, func(entry *donburi.Entry) {
 				input := component.GetInput(entry)
 				input.Disabled = true
@@ -52,18 +62,16 @@ func (p *Progression) Update(w donburi.World) {
 				bounds := component.GetBounds(entry)
 				bounds.Disabled = true
 			})
-			p.progressed = true
+
+			level.Progressed = true
 		}
 	} else {
-		camera, ok := query.NewQuery(filter.Contains(component.CameraTag)).FirstEntity(w)
-		if !ok {
-			panic("no camera found")
-		}
+		camera := archetypes.MustFindCamera(w)
 
 		cameraPos := component.GetPosition(camera)
 		if cameraPos.Y == 0 {
-			p.reachedEnd = true
-			p.progressionTimer.Reset()
+			level.ReachedEnd = true
+			level.ProgressionTimer.Reset()
 		}
 	}
 }

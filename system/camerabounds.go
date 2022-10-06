@@ -15,7 +15,7 @@ type CameraBounds struct {
 func NewCameraBounds() *CameraBounds {
 	return &CameraBounds{
 		query: query.NewQuery(filter.Contains(
-			component.CameraTag,
+			component.Camera,
 			component.Position,
 		)),
 	}

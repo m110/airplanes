@@ -5,6 +5,7 @@ import (
 	_ "embed"
 	"image"
 	_ "image/png"
+	"path/filepath"
 
 	"github.com/lafriks/go-tiled"
 	"github.com/lafriks/go-tiled/render"
@@ -20,14 +21,11 @@ var (
 	//go:embed tiles/tile_0000.png
 	laserSingleData []byte
 
-	//go:embed levels/level1.tmx
-	level1Data []byte
-
 	ShipYellowSmall *ebiten.Image
 	ShipGreenSmall  *ebiten.Image
 	LaserSingle     *ebiten.Image
 
-	Level1 Level
+	Levels []Level
 )
 
 type Position struct {
@@ -46,7 +44,14 @@ func LoadAssets() {
 	ShipGreenSmall = mustNewEbitenImage(shipGreenSmallData)
 	LaserSingle = mustNewEbitenImage(laserSingleData)
 
-	Level1 = mustLoadLevel(level1Data)
+	levelPaths, err := filepath.Glob("assets/levels/*.tmx")
+	if err != nil {
+		panic(err)
+	}
+
+	for _, path := range levelPaths {
+		Levels = append(Levels, mustLoadLevel(path))
+	}
 }
 
 func mustNewEbitenImage(data []byte) *ebiten.Image {
@@ -58,8 +63,8 @@ func mustNewEbitenImage(data []byte) *ebiten.Image {
 	return ebiten.NewImageFromImage(img)
 }
 
-func mustLoadLevel(levelData []byte) Level {
-	levelMap, err := tiled.LoadReader("assets/levels", bytes.NewReader(levelData))
+func mustLoadLevel(levelPath string) Level {
+	levelMap, err := tiled.LoadFile(levelPath)
 	if err != nil {
 		panic(err)
 	}

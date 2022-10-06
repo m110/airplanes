@@ -12,9 +12,8 @@ import (
 )
 
 func NewPlayerOne(w donburi.World, position component.PositionData) *donburi.Entry {
-	player := newPlayer(w)
+	player := newPlayer(w, position)
 
-	donburi.SetValue(player, component.Position, position)
 	donburi.SetValue(player, component.Sprite, component.SpriteData{
 		Image: assets.ShipYellowSmall,
 		Layer: component.SpriteLayerUnits,
@@ -26,16 +25,15 @@ func NewPlayerOne(w donburi.World, position component.PositionData) *donburi.Ent
 		MoveLeftKey:  ebiten.KeyA,
 		MoveSpeed:    3.5,
 		ShootKey:     ebiten.KeySpace,
-		ShootTimer:   engine.NewTimer(time.Millisecond * 300),
+		ShootTimer:   engine.NewTimer(time.Millisecond * 400),
 	})
 
 	return player
 }
 
 func NewPlayerTwo(w donburi.World, position component.PositionData) *donburi.Entry {
-	player := newPlayer(w)
+	player := newPlayer(w, position)
 
-	donburi.SetValue(player, component.Position, position)
 	donburi.SetValue(player, component.Sprite, component.SpriteData{
 		Image: assets.ShipGreenSmall,
 		Layer: component.SpriteLayerUnits,
@@ -47,22 +45,24 @@ func NewPlayerTwo(w donburi.World, position component.PositionData) *donburi.Ent
 		MoveLeftKey:  ebiten.KeyLeft,
 		MoveSpeed:    3.5,
 		ShootKey:     ebiten.KeyK,
-		ShootTimer:   engine.NewTimer(time.Millisecond * 300),
+		ShootTimer:   engine.NewTimer(time.Millisecond * 400),
 	})
 
 	return player
 }
 
-func newPlayer(w donburi.World) *donburi.Entry {
-	entity := w.Create(
-		component.PlayerTag,
-		component.Position,
-		component.Velocity,
-		component.Sprite,
-		component.Input,
-		component.Bounds,
+func newPlayer(w donburi.World, position component.PositionData) *donburi.Entry {
+	player := w.Entry(
+		w.Create(
+			component.PlayerTag,
+			component.Position,
+			component.Velocity,
+			component.Sprite,
+			component.Input,
+			component.Bounds,
+		),
 	)
-	player := w.Entry(entity)
+	donburi.SetValue(player, component.Position, position)
 
 	return player
 }

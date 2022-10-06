@@ -8,21 +8,19 @@ import (
 )
 
 func NewBullet(w donburi.World) *donburi.Entry {
-	bulletEntity := w.Create(
-		component.Velocity,
-		component.Position,
-		component.Sprite,
+	bullet := w.Entry(
+		w.Create(
+			component.Velocity,
+			component.Position,
+			component.Sprite,
+		),
 	)
-	bullet := w.Entry(bulletEntity)
 
-	donburi.SetValue(bullet, component.Position, component.PositionData{})
-	donburi.SetValue(bullet, component.Velocity, component.VelocityData{
-		Y: -10,
-	})
-	donburi.SetValue(bullet, component.Sprite, component.SpriteData{
-		Image: assets.LaserSingle,
-		Layer: component.SpriteLayerUnits,
-	})
+	component.GetVelocity(bullet).Y = -10
+
+	sprite := component.GetSprite(bullet)
+	sprite.Image = assets.LaserSingle
+	sprite.Layer = component.SpriteLayerUnits
 
 	return bullet
 }

@@ -14,6 +14,7 @@
     "openFiles": [
     ],
     "project": "airplanes.tiled-project",
+    "property.type": "object",
     "recentFiles": [
     ],
     "tileset.lastUsedFormat": "tsx",

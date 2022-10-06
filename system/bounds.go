@@ -1,6 +1,7 @@
 package system
 
 import (
+	"github.com/m110/airplanes/archetypes"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
@@ -28,10 +29,7 @@ func NewBounds(screenWidth, screenHeight int) *Bounds {
 }
 
 func (b *Bounds) Update(w donburi.World) {
-	camera, ok := query.NewQuery(filter.Contains(component.CameraTag)).FirstEntity(w)
-	if !ok {
-		panic("no camera found")
-	}
+	camera := archetypes.MustFindCamera(w)
 	cameraPos := component.GetPosition(camera)
 
 	b.query.EachEntity(w, func(entry *donburi.Entry) {
