@@ -3,19 +3,59 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "level1.tmx",
     "expandedProjectPaths": [
+        "."
     ],
     "fileStates": {
+        "level1.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 1.214,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 280.0658978583196,
+                "y": 1082.7841845140033
+            }
+        },
+        "level2.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 0.82,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 230.4878048780488,
+                "y": 945.7317073170732
+            }
+        },
+        "ships.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "tiles.tsx": {
+            "scaleInDock": 2.7075,
+            "scaleInEditor": 1
+        }
     },
     "last.imagePath": "/Users/milosz/src/gamedev/airplanes/assets/ships",
     "map.height": 80,
     "map.lastUsedFormat": "tmx",
     "openFiles": [
+        "tiles.tsx",
+        "level2.tmx",
+        "ships.tsx",
+        "ships.tsx",
+        "level1.tmx"
     ],
     "project": "airplanes.tiled-project",
     "property.type": "object",
     "recentFiles": [
+        "tiles.tsx",
+        "level2.tmx",
+        "ships.tsx",
+        "level1.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.spacing": 1,

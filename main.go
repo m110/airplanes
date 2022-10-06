@@ -5,14 +5,13 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/m110/airplanes/engine"
-
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
 
 	"github.com/m110/airplanes/archetypes"
 	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/component"
+	"github.com/m110/airplanes/engine"
 	"github.com/m110/airplanes/system"
 )
 
@@ -48,6 +47,7 @@ func NewGame() *Game {
 		system.NewVelocity(),
 		system.NewBounds(screenWidth, screenHeight),
 		system.NewCameraBounds(),
+		system.NewAI(),
 		system.NewProgression(g.nextLevel),
 	}
 	g.drawables = []Drawable{
@@ -94,6 +94,10 @@ func createWorld(levelIndex int) donburi.World {
 		Image: levelAsset.Background,
 		Layer: component.SpriteLayerBackground,
 	})
+
+	for _, enemy := range levelAsset.Enemies {
+		archetypes.NewEnemy(world, component.PositionData(enemy.Position))
+	}
 
 	return world
 }

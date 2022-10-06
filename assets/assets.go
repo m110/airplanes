@@ -18,11 +18,14 @@ var (
 	shipYellowSmallData []byte
 	//go:embed ships/ship_0010.png
 	shipGreenSmallData []byte
+	//go:embed ships/ship_0018.png
+	shipGraySmallData []byte
 	//go:embed tiles/tile_0000.png
 	laserSingleData []byte
 
 	ShipYellowSmall *ebiten.Image
 	ShipGreenSmall  *ebiten.Image
+	ShipGraySmall   *ebiten.Image
 	LaserSingle     *ebiten.Image
 
 	Levels []Level
@@ -37,11 +40,17 @@ type Level struct {
 	Background   *ebiten.Image
 	Player1Spawn Position
 	Player2Spawn Position
+	Enemies      []Enemy
+}
+
+type Enemy struct {
+	Position Position
 }
 
 func LoadAssets() {
 	ShipYellowSmall = mustNewEbitenImage(shipYellowSmallData)
 	ShipGreenSmall = mustNewEbitenImage(shipGreenSmallData)
+	ShipGraySmall = mustNewEbitenImage(shipGraySmallData)
 	LaserSingle = mustNewEbitenImage(laserSingleData)
 
 	levelPaths, err := filepath.Glob("assets/levels/*.tmx")
@@ -69,29 +78,38 @@ func mustLoadLevel(levelPath string) Level {
 		panic(err)
 	}
 
-	var player1Spawn, player2Spawn Position
+	level := Level{}
+
 	for _, og := range levelMap.ObjectGroups {
 		for _, o := range og.Objects {
 			if o.Class == "player1-spawn" {
-				player1Spawn = Position{
+				level.Player1Spawn = Position{
 					X: o.X,
 					Y: o.Y,
 				}
 			}
 			if o.Class == "player2-spawn" {
-				player2Spawn = Position{
+				level.Player2Spawn = Position{
 					X: o.X,
 					Y: o.Y,
 				}
 			}
+			if o.Class == "enemy-airplane" {
+				level.Enemies = append(level.Enemies, Enemy{
+					Position: Position{
+						X: o.X,
+						Y: o.Y,
+					},
+				})
+			}
 		}
 	}
 
-	if player1Spawn == (Position{}) {
+	if level.Player1Spawn == (Position{}) {
 		panic("player1-spawn not found")
 	}
 
-	if player2Spawn == (Position{}) {
+	if level.Player2Spawn == (Position{}) {
 		panic("player2-spawn not found")
 	}
 
@@ -105,9 +123,7 @@ func mustLoadLevel(levelPath string) Level {
 		panic(err)
 	}
 
-	return Level{
-		Background:   ebiten.NewImageFromImage(renderer.Result),
-		Player1Spawn: player1Spawn,
-		Player2Spawn: player2Spawn,
-	}
+	level.Background = ebiten.NewImageFromImage(renderer.Result)
+
+	return level
 }

@@ -1,8 +1,9 @@
 package component
 
 import (
-	"github.com/m110/airplanes/engine"
 	"github.com/yohamta/donburi"
+
+	"github.com/m110/airplanes/engine"
 )
 
 type CameraData struct {

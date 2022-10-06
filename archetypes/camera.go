@@ -3,12 +3,12 @@ package archetypes
 import (
 	"time"
 
-	"github.com/m110/airplanes/engine"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/component"
+	"github.com/m110/airplanes/engine"
 )
 
 func NewCamera(w donburi.World, startPosition component.PositionData) *donburi.Entry {
