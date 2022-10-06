@@ -13,6 +13,7 @@ func NewBullet(w donburi.World) *donburi.Entry {
 			component.Velocity,
 			component.Position,
 			component.Sprite,
+			component.Despawnable,
 		),
 	)
 
@@ -21,6 +22,8 @@ func NewBullet(w donburi.World) *donburi.Entry {
 	sprite := component.GetSprite(bullet)
 	sprite.Image = assets.LaserSingle
 	sprite.Layer = component.SpriteLayerUnits
+
+	component.GetDespawnable(bullet).Spawned = true
 
 	return bullet
 }

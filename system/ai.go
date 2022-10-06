@@ -37,6 +37,10 @@ func (a *AI) Update(w donburi.World) {
 			if position.Y+float64(sprite.Image.Bounds().Dy()) > cameraPos.Y {
 				ai.Spawned = true
 
+				if entry.HasComponent(component.Despawnable) {
+					component.GetDespawnable(entry).Spawned = true
+				}
+
 				velocity := component.GetVelocity(entry)
 
 				switch ai.Type {

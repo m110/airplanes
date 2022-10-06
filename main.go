@@ -48,6 +48,7 @@ func NewGame() *Game {
 		system.NewBounds(screenWidth, screenHeight),
 		system.NewCameraBounds(),
 		system.NewAI(),
+		system.NewDespawn(screenWidth, screenHeight),
 		system.NewProgression(g.nextLevel),
 	}
 	g.drawables = []Drawable{

@@ -13,6 +13,7 @@ func NewEnemy(w donburi.World, position component.PositionData) *donburi.Entry {
 			component.Velocity,
 			component.Sprite,
 			component.AI,
+			component.Despawnable,
 		),
 	)
 
