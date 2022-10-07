@@ -60,9 +60,8 @@ func (i *Controls) Update(w donburi.World) {
 			bulletSprite := component.GetSprite(bullet)
 
 			position := component.GetPosition(entry)
-			sprite := component.GetSprite(entry)
 
-			bulletPosition.X = position.X + float64(sprite.Image.Bounds().Dx())/2.0 - float64(bulletSprite.Image.Bounds().Dx())/2.0
+			bulletPosition.X = position.X
 			bulletPosition.Y = position.Y - float64(bulletSprite.Image.Bounds().Dy())
 
 			input.ShootTimer.Reset()
