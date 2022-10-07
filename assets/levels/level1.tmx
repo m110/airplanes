@@ -206,18 +206,6 @@
     <property name="speed" type="float" value="1.5"/>
    </properties>
   </object>
-  <object id="37" class="enemy-airplane" gid="142" x="-152" y="1156" width="32" height="32" rotation="90">
-   <properties>
-    <property name="path" type="object" value="33"/>
-    <property name="speed" type="float" value="1.5"/>
-   </properties>
-  </object>
-  <object id="39" class="enemy-airplane" gid="142" x="-152" y="1156" width="32" height="32" rotation="90">
-   <properties>
-    <property name="path" type="object" value="33"/>
-    <property name="speed" type="float" value="1.5"/>
-   </properties>
-  </object>
   <object id="29" x="100" y="1896">
    <polyline points="0,0 12,60 24,84 41.9566,99.712 56,112 96,96 132,80 160,56 192,44 260,44 308,40"/>
   </object>
