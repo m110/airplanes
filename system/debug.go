@@ -41,7 +41,7 @@ func (d *Debug) Draw(w donburi.World, screen *ebiten.Image) {
 		return
 	}
 
-	allCount := query.NewQuery(filter.Contains()).Count(w)
+	allCount := w.Len()
 
 	despawnableCount := 0
 	spawnedCount := 0

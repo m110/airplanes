@@ -70,8 +70,8 @@ func newPlayer(
 
 	width, height := image.Size()
 	donburi.SetValue(player, component.Collider, component.ColliderData{
-		Width:  width,
-		Height: height,
+		Width:  float64(width),
+		Height: float64(height),
 		Layer:  component.CollisionLayerPlayers,
 	})
 

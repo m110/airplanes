@@ -7,6 +7,15 @@ type Rect struct {
 	Height float64
 }
 
+func NewRect(x, y, width, height float64) Rect {
+	return Rect{
+		X:      x,
+		Y:      y,
+		Width:  width,
+		Height: height,
+	}
+}
+
 func (r Rect) MaxX() float64 {
 	return r.X + r.Width
 }

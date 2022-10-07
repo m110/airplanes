@@ -39,8 +39,8 @@ func NewEnemy(
 	width, height := image.Size()
 
 	donburi.SetValue(enemy, component.Collider, component.ColliderData{
-		Width:  width,
-		Height: height,
+		Width:  float64(width),
+		Height: float64(height),
 		Layer:  component.CollisionLayerEnemies,
 	})
 

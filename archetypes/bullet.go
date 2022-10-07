@@ -29,8 +29,8 @@ func NewBullet(w donburi.World) *donburi.Entry {
 	width, height := image.Size()
 
 	donburi.SetValue(bullet, component.Collider, component.ColliderData{
-		Width:  width,
-		Height: height,
+		Width:  float64(width),
+		Height: float64(height),
 		Layer:  component.CollisionLayerBullets,
 	})
 

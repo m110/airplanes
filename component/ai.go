@@ -3,13 +3,15 @@ package component
 import "github.com/yohamta/donburi"
 
 const (
-	AITypeConstantVelocity = iota
+	AITypeConstantVelocity AIType = iota
 	AITypeFollowPath
 )
 
+type AIType int
+
 type AIData struct {
 	Spawned bool
-	Type    int
+	Type    AIType
 
 	Speed float64
 

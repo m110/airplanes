@@ -42,6 +42,7 @@ func NewGame() *Game {
 		level: 0,
 	}
 
+	render := system.NewRenderer()
 	debug := system.NewDebug()
 
 	g.systems = []System{
@@ -51,12 +52,14 @@ func NewGame() *Game {
 		system.NewCameraBounds(),
 		system.NewAI(),
 		system.NewDespawn(screenWidth, screenHeight),
+		system.NewCollision(),
 		system.NewProgression(g.nextLevel),
+		render,
 		debug,
 	}
 
 	g.drawables = []Drawable{
-		system.NewRenderer(),
+		render,
 		debug,
 	}
 

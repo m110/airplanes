@@ -5,15 +5,17 @@ import (
 )
 
 const (
-	CollisionLayerBullets = iota
+	CollisionLayerBullets ColliderLayer = iota
 	CollisionLayerEnemies
 	CollisionLayerPlayers
 )
 
+type ColliderLayer int
+
 type ColliderData struct {
-	Width  int
-	Height int
-	Layer  int
+	Width  float64
+	Height float64
+	Layer  ColliderLayer
 }
 
 var Collider = donburi.NewComponentType[ColliderData]()

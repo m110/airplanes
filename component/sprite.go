@@ -6,13 +6,15 @@ import (
 )
 
 const (
-	SpriteLayerBackground = iota
+	SpriteLayerBackground SpriteLayer = iota
 	SpriteLayerUnits
 )
 
+type SpriteLayer int
+
 type SpriteData struct {
 	Image *ebiten.Image
-	Layer int
+	Layer SpriteLayer
 }
 
 var Sprite = donburi.NewComponentType[SpriteData]()
