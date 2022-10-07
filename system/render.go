@@ -97,6 +97,15 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 			}
 
 			op.GeoM.Translate(x, y)
+
+			// TODO Probably not the best place for this?
+			// Consider a child object that's hidden sometimes?
+			if entry.HasComponent(component.Health) {
+				if component.GetHealth(entry).JustDamaged {
+					op.ColorM.Translate(1.0, 1.0, 1.0, 0)
+				}
+			}
+
 			r.offscreen.DrawImage(sprite.Image, op)
 
 			if r.debug != nil && r.debug.Enabled {

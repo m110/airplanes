@@ -41,11 +41,25 @@ func (b *Bounds) Update(w donburi.World) {
 		position := component.GetPosition(entry)
 		sprite := component.GetSprite(entry)
 
-		minX := cameraPos.X
-		maxX := cameraPos.X + float64(b.screenWidth-sprite.Image.Bounds().Dx())
+		w, h := sprite.Image.Size()
+		width, height := float64(w), float64(h)
 
-		minY := cameraPos.Y
-		maxY := cameraPos.Y + float64(b.screenHeight-sprite.Image.Bounds().Dy())
+		var minX, maxX, minY, maxY float64
+
+		switch sprite.Pivot {
+		case component.SpritePivotTopLeft:
+			minX = cameraPos.X
+			maxX = cameraPos.X + float64(b.screenWidth) - width
+
+			minY = cameraPos.Y
+			maxY = cameraPos.Y + float64(b.screenHeight) - height
+		case component.SpritePivotCenter:
+			minX = cameraPos.X + width/2
+			maxX = cameraPos.X + float64(b.screenWidth) - width/2
+
+			minY = cameraPos.Y + height/2
+			maxY = cameraPos.Y + float64(b.screenHeight) - height/2
+		}
 
 		position.X = engine.Clamp(position.X, minX, maxX)
 		position.Y = engine.Clamp(position.Y, minY, maxY)

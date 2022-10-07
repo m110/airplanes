@@ -1,6 +1,9 @@
 package archetypes
 
 import (
+	"time"
+
+	"github.com/m110/airplanes/engine"
 	"github.com/samber/lo"
 	"github.com/yohamta/donburi"
 
@@ -24,6 +27,7 @@ func NewEnemy(
 			component.AI,
 			component.Despawnable,
 			component.Collider,
+			component.Health,
 		),
 	)
 
@@ -61,6 +65,11 @@ func NewEnemy(
 			Speed: speed,
 		})
 	}
+
+	donburi.SetValue(enemy, component.Health, component.HealthData{
+		Health:               3,
+		DamageIndicatorTimer: engine.NewTimer(time.Millisecond * 100),
+	})
 
 	return enemy
 }

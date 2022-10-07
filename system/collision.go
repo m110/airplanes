@@ -27,8 +27,7 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 	component.CollisionLayerBullets: {
 		component.CollisionLayerEnemies: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
 			w.Remove(entry.Entity())
-			w.Remove(other.Entity())
-			// TODO damage enemy
+			component.GetHealth(other).Damage()
 		},
 	},
 	component.CollisionLayerEnemies: {
