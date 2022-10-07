@@ -25,7 +25,7 @@ func NewRenderer() *Render {
 			filter.Contains(component.Position, component.Sprite),
 		),
 		// TODO figure out the proper size
-		offscreen: ebiten.NewImage(1000, 2000),
+		offscreen: ebiten.NewImage(3000, 3000),
 	}
 }
 

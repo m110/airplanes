@@ -28,18 +28,27 @@ func (d *Despawn) Update(w donburi.World) {
 	cameraPos := component.GetPosition(archetypes.MustFindCamera(w))
 
 	d.query.EachEntity(w, func(entry *donburi.Entry) {
+		position := component.GetPosition(entry)
+		sprite := component.GetSprite(entry)
 		despawnable := component.GetDespawnable(entry)
+
+		maxX := position.X + float64(sprite.Image.Bounds().Dx())
+		maxY := position.Y + float64(sprite.Image.Bounds().Dy())
+
+		cameraMaxY := cameraPos.Y + float64(d.screenHeight)
+		cameraMaxX := cameraPos.X + float64(d.screenWidth)
+
 		if !despawnable.Spawned {
+			if position.Y > cameraPos.Y && maxY < cameraMaxY &&
+				position.X > cameraPos.X && maxX < cameraMaxX {
+				despawnable.Spawned = true
+			}
+
 			return
 		}
 
-		position := component.GetPosition(entry)
-		sprite := component.GetSprite(entry)
-
-		if position.Y+float64(sprite.Image.Bounds().Dy()) < cameraPos.Y ||
-			position.Y > cameraPos.Y+float64(d.screenHeight) ||
-			position.X+float64(sprite.Image.Bounds().Dx()) < cameraPos.X ||
-			position.X > cameraPos.X+float64(d.screenWidth) {
+		if maxY < cameraPos.Y || position.Y > cameraMaxY ||
+			maxX < cameraPos.X || position.X > cameraMaxX {
 			w.Remove(entry.Entity())
 		}
 	})

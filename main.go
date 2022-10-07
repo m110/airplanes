@@ -17,7 +17,7 @@ import (
 
 var (
 	screenWidth  = 480
-	screenHeight = 600
+	screenHeight = 640
 )
 
 type System interface {
@@ -42,6 +42,8 @@ func NewGame() *Game {
 		level: 0,
 	}
 
+	debug := system.NewDebug()
+
 	g.systems = []System{
 		system.NewControls(),
 		system.NewVelocity(),
@@ -50,9 +52,12 @@ func NewGame() *Game {
 		system.NewAI(),
 		system.NewDespawn(screenWidth, screenHeight),
 		system.NewProgression(g.nextLevel),
+		debug,
 	}
+
 	g.drawables = []Drawable{
 		system.NewRenderer(),
+		debug,
 	}
 
 	g.loadLevel()
@@ -101,9 +106,12 @@ func createWorld(levelIndex int) donburi.World {
 			world,
 			component.PositionData(enemy.Position),
 			enemy.Rotation,
+			enemy.Speed,
 			enemy.Path,
 		)
 	}
+
+	world.Create(component.Debug)
 
 	return world
 }

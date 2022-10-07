@@ -47,6 +47,7 @@ type Level struct {
 type Enemy struct {
 	Position Position
 	Rotation float64
+	Speed    float64
 	Path     []Position
 }
 
@@ -137,6 +138,18 @@ func mustLoadLevel(levelPath string) Level {
 
 						enemy.Path = path
 					}
+					if p.Name == "speed" {
+						speed, err := strconv.ParseFloat(p.Value, 64)
+						if err != nil {
+							panic("invalid speed: " + err.Error())
+						}
+
+						enemy.Speed = speed
+					}
+				}
+
+				if enemy.Speed == 0 {
+					enemy.Speed = 1
 				}
 
 				level.Enemies = append(level.Enemies, enemy)

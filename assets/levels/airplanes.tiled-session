@@ -8,6 +8,9 @@
         "."
     ],
     "fileStates": {
+        ":/automap-tiles.tsx": {
+            "scaleInDock": 1
+        },
         "level1.tmx": {
             "expandedObjectLayers": [
                 2
@@ -50,13 +53,14 @@
         "level1.tmx"
     ],
     "project": "airplanes.tiled-project",
-    "property.type": "object",
+    "property.type": "int",
     "recentFiles": [
         "level1.tmx",
         "tiles.tsx",
         "level2.tmx",
         "ships.tsx"
     ],
+    "resizeMap.removeObjects": false,
     "tileset.lastUsedFormat": "tsx",
     "tileset.spacing": 1,
     "tileset.tileSize": {

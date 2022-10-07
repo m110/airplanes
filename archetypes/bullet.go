@@ -23,7 +23,5 @@ func NewBullet(w donburi.World) *donburi.Entry {
 	sprite.Image = assets.LaserSingle
 	sprite.Layer = component.SpriteLayerUnits
 
-	component.GetDespawnable(bullet).Spawned = true
-
 	return bullet
 }

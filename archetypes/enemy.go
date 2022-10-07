@@ -12,6 +12,7 @@ func NewEnemy(
 	w donburi.World,
 	position component.PositionData,
 	rotation float64,
+	speed float64,
 	path []assets.Position,
 ) *donburi.Entry {
 	enemy := w.Entry(
@@ -39,13 +40,13 @@ func NewEnemy(
 
 		donburi.SetValue(enemy, component.AI, component.AIData{
 			Type:  component.AITypeFollowPath,
-			Speed: 1,
+			Speed: speed,
 			Path:  componentPath,
 		})
 	} else {
 		donburi.SetValue(enemy, component.AI, component.AIData{
 			Type:  component.AITypeConstantVelocity,
-			Speed: 1,
+			Speed: speed,
 		})
 	}
 
