@@ -84,7 +84,6 @@ func (c *Collision) Update(w donburi.World) {
 			rect := engine.NewRect(pos.X, pos.Y, collider.Width, collider.Height)
 			otherRect := engine.NewRect(otherPos.X, otherPos.Y, otherCollider.Width, otherCollider.Height)
 
-			// TODO Take rotation into account
 			if rect.Intersects(otherRect) {
 				effect(w, entry, other)
 			}

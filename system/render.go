@@ -76,25 +76,52 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 			position := component.GetPosition(entry)
 			sprite := component.GetSprite(entry)
 
+			w, h := sprite.Image.Size()
+			halfW, halfH := float64(w)/2, float64(h)/2
+
 			op := &ebiten.DrawImageOptions{}
 			if entry.HasComponent(component.Rotation) {
-				w, h := sprite.Image.Size()
-				op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
+				op.GeoM.Translate(-halfW, -halfH)
 				angle := component.GetRotation(entry).Angle
 				op.GeoM.Rotate(float64(int(angle)%360) * 2 * math.Pi / 360)
+				op.GeoM.Translate(halfW, halfH)
 			}
-			op.GeoM.Translate(position.X, position.Y)
+
+			x := position.X
+			y := position.Y
+
+			switch sprite.Pivot {
+			case component.SpritePivotCenter:
+				x -= halfW
+				y -= halfH
+			}
+
+			op.GeoM.Translate(x, y)
 			r.offscreen.DrawImage(sprite.Image, op)
 
 			if r.debug != nil && r.debug.Enabled {
-				ebitenutil.DebugPrintAt(r.offscreen, fmt.Sprintf("%v", entry.Entity().Id()), int(position.X-5), int(position.Y-5))
+				ebitenutil.DrawRect(r.offscreen, position.X-2, position.Y-2, 4, 4, colornames.Lime)
+				ebitenutil.DebugPrintAt(r.offscreen, fmt.Sprintf("%v", entry.Entity().Id()), int(x), int(y))
+
 				if entry.HasComponent(component.Collider) {
 					collider := component.GetCollider(entry)
-					ebitenutil.DrawLine(r.offscreen, position.X, position.Y, position.X+collider.Width, position.Y, colornames.Lime)
-					ebitenutil.DrawLine(r.offscreen, position.X, position.Y, position.X, position.Y+collider.Height, colornames.Lime)
-					ebitenutil.DrawLine(r.offscreen, position.X+collider.Width, position.Y, position.X+collider.Width, position.Y+collider.Height, colornames.Lime)
-					ebitenutil.DrawLine(r.offscreen, position.X, position.Y+collider.Height, position.X+collider.Width, position.Y+collider.Height, colornames.Lime)
+					ebitenutil.DrawLine(r.offscreen, x, y, x+collider.Width, y, colornames.Lime)
+					ebitenutil.DrawLine(r.offscreen, x, y, x, y+collider.Height, colornames.Lime)
+					ebitenutil.DrawLine(r.offscreen, x+collider.Width, y, x+collider.Width, y+collider.Height, colornames.Lime)
+					ebitenutil.DrawLine(r.offscreen, x, y+collider.Height, x+collider.Width, y+collider.Height, colornames.Lime)
 				}
+
+				if entry.HasComponent(component.AI) {
+					ai := component.GetAI(entry)
+					for i, p := range ai.Path {
+						ebitenutil.DrawRect(r.offscreen, p.X-2, p.Y-2, 4, 4, colornames.Red)
+						if i < len(ai.Path)-1 {
+							next := ai.Path[i+1]
+							ebitenutil.DrawLine(r.offscreen, p.X, p.Y, next.X, next.Y, colornames.Red)
+						}
+					}
+				}
+
 			}
 		}
 	}

@@ -66,6 +66,7 @@ func newPlayer(
 	donburi.SetValue(player, component.Sprite, component.SpriteData{
 		Image: image,
 		Layer: component.SpriteLayerUnits,
+		Pivot: component.SpritePivotCenter,
 	})
 
 	width, height := image.Size()

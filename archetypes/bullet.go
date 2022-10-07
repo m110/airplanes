@@ -22,9 +22,11 @@ func NewBullet(w donburi.World) *donburi.Entry {
 
 	image := assets.LaserSingle
 
-	sprite := component.GetSprite(bullet)
-	sprite.Image = image
-	sprite.Layer = component.SpriteLayerUnits
+	donburi.SetValue(bullet, component.Sprite, component.SpriteData{
+		Image: image,
+		Layer: component.SpriteLayerUnits,
+		Pivot: component.SpritePivotCenter,
+	})
 
 	width, height := image.Size()
 

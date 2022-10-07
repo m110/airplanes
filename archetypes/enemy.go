@@ -34,6 +34,7 @@ func NewEnemy(
 	donburi.SetValue(enemy, component.Sprite, component.SpriteData{
 		Image: image,
 		Layer: component.SpriteLayerUnits,
+		Pivot: component.SpritePivotCenter,
 	})
 
 	width, height := image.Size()

@@ -5,16 +5,24 @@ import (
 	"github.com/yohamta/donburi"
 )
 
+type SpriteLayer int
+
 const (
 	SpriteLayerBackground SpriteLayer = iota
 	SpriteLayerUnits
 )
 
-type SpriteLayer int
+type SpritePivot int
+
+const (
+	SpritePivotCenter SpritePivot = iota
+	SpritePivotTopLeft
+)
 
 type SpriteData struct {
 	Image *ebiten.Image
 	Layer SpriteLayer
+	Pivot SpritePivot
 }
 
 var Sprite = donburi.NewComponentType[SpriteData]()

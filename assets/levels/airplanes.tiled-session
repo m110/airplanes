@@ -15,11 +15,11 @@
             "expandedObjectLayers": [
                 2
             ],
-            "scale": 1.6124,
+            "scale": 2.3097,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 245.59662614735797,
-                "y": 952.3071198213843
+                "x": 215.3959388665195,
+                "y": 2212.625016235875
             }
         },
         "level2.tmx": {
@@ -53,7 +53,7 @@
         "level1.tmx"
     ],
     "project": "airplanes.tiled-project",
-    "property.type": "int",
+    "property.type": "float",
     "recentFiles": [
         "level1.tmx",
         "tiles.tsx",

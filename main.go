@@ -102,6 +102,7 @@ func createWorld(levelIndex int) donburi.World {
 	donburi.SetValue(levelEntry, component.Sprite, component.SpriteData{
 		Image: levelAsset.Background,
 		Layer: component.SpriteLayerBackground,
+		Pivot: component.SpritePivotTopLeft,
 	})
 
 	for _, enemy := range levelAsset.Enemies {
