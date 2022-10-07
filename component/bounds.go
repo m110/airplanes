@@ -6,6 +6,7 @@ type BoundsData struct {
 	Disabled bool
 }
 
+// Bounds indicates that the entity can't move of out the screen.
 var Bounds = donburi.NewComponentType[BoundsData]()
 
 func GetBounds(entry *donburi.Entry) *BoundsData {

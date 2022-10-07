@@ -11,47 +11,44 @@ import (
 	"github.com/m110/airplanes/engine"
 )
 
+type playerInputs struct {
+	Up    ebiten.Key
+	Right ebiten.Key
+	Down  ebiten.Key
+	Left  ebiten.Key
+	Shoot ebiten.Key
+}
+
 func NewPlayerOne(w donburi.World, position component.PositionData) *donburi.Entry {
-	player := newPlayer(w, position)
+	inputs := playerInputs{
+		Up:    ebiten.KeyW,
+		Right: ebiten.KeyD,
+		Down:  ebiten.KeyS,
+		Left:  ebiten.KeyA,
+		Shoot: ebiten.KeySpace,
+	}
 
-	donburi.SetValue(player, component.Sprite, component.SpriteData{
-		Image: assets.ShipYellowSmall,
-		Layer: component.SpriteLayerUnits,
-	})
-	donburi.SetValue(player, component.Input, component.InputData{
-		MoveUpKey:    ebiten.KeyW,
-		MoveRightKey: ebiten.KeyD,
-		MoveDownKey:  ebiten.KeyS,
-		MoveLeftKey:  ebiten.KeyA,
-		MoveSpeed:    3.5,
-		ShootKey:     ebiten.KeySpace,
-		ShootTimer:   engine.NewTimer(time.Millisecond * 400),
-	})
-
-	return player
+	return newPlayer(w, position, assets.ShipYellowSmall, inputs)
 }
 
 func NewPlayerTwo(w donburi.World, position component.PositionData) *donburi.Entry {
-	player := newPlayer(w, position)
+	inputs := playerInputs{
+		Up:    ebiten.KeyUp,
+		Right: ebiten.KeyRight,
+		Down:  ebiten.KeyDown,
+		Left:  ebiten.KeyLeft,
+		Shoot: ebiten.KeyK,
+	}
 
-	donburi.SetValue(player, component.Sprite, component.SpriteData{
-		Image: assets.ShipGreenSmall,
-		Layer: component.SpriteLayerUnits,
-	})
-	donburi.SetValue(player, component.Input, component.InputData{
-		MoveUpKey:    ebiten.KeyUp,
-		MoveRightKey: ebiten.KeyRight,
-		MoveDownKey:  ebiten.KeyDown,
-		MoveLeftKey:  ebiten.KeyLeft,
-		MoveSpeed:    3.5,
-		ShootKey:     ebiten.KeyK,
-		ShootTimer:   engine.NewTimer(time.Millisecond * 400),
-	})
-
-	return player
+	return newPlayer(w, position, assets.ShipGreenSmall, inputs)
 }
 
-func newPlayer(w donburi.World, position component.PositionData) *donburi.Entry {
+func newPlayer(
+	w donburi.World,
+	position component.PositionData,
+	image *ebiten.Image,
+	inputs playerInputs,
+) *donburi.Entry {
 	player := w.Entry(
 		w.Create(
 			component.PlayerTag,
@@ -60,9 +57,33 @@ func newPlayer(w donburi.World, position component.PositionData) *donburi.Entry 
 			component.Sprite,
 			component.Input,
 			component.Bounds,
+			component.Collider,
 		),
 	)
+
 	donburi.SetValue(player, component.Position, position)
+
+	donburi.SetValue(player, component.Sprite, component.SpriteData{
+		Image: image,
+		Layer: component.SpriteLayerUnits,
+	})
+
+	width, height := image.Size()
+	donburi.SetValue(player, component.Collider, component.ColliderData{
+		Width:  width,
+		Height: height,
+		Layer:  component.CollisionLayerPlayers,
+	})
+
+	donburi.SetValue(player, component.Input, component.InputData{
+		MoveUpKey:    inputs.Up,
+		MoveRightKey: inputs.Right,
+		MoveDownKey:  inputs.Down,
+		MoveLeftKey:  inputs.Left,
+		MoveSpeed:    3.5,
+		ShootKey:     inputs.Shoot,
+		ShootTimer:   engine.NewTimer(time.Millisecond * 400),
+	})
 
 	return player
 }

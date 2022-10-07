@@ -14,14 +14,25 @@ func NewBullet(w donburi.World) *donburi.Entry {
 			component.Position,
 			component.Sprite,
 			component.Despawnable,
+			component.Collider,
 		),
 	)
 
 	component.GetVelocity(bullet).Y = -10
 
+	image := assets.LaserSingle
+
 	sprite := component.GetSprite(bullet)
-	sprite.Image = assets.LaserSingle
+	sprite.Image = image
 	sprite.Layer = component.SpriteLayerUnits
+
+	width, height := image.Size()
+
+	donburi.SetValue(bullet, component.Collider, component.ColliderData{
+		Width:  width,
+		Height: height,
+		Layer:  component.CollisionLayerBullets,
+	})
 
 	return bullet
 }

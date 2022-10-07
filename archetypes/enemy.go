@@ -23,14 +23,25 @@ func NewEnemy(
 			component.Sprite,
 			component.AI,
 			component.Despawnable,
+			component.Collider,
 		),
 	)
 
 	donburi.SetValue(enemy, component.Position, position)
 	component.GetRotation(enemy).Angle = rotation
+
+	image := assets.ShipGraySmall
 	donburi.SetValue(enemy, component.Sprite, component.SpriteData{
-		Image: assets.ShipGraySmall,
+		Image: image,
 		Layer: component.SpriteLayerUnits,
+	})
+
+	width, height := image.Size()
+
+	donburi.SetValue(enemy, component.Collider, component.ColliderData{
+		Width:  width,
+		Height: height,
+		Layer:  component.CollisionLayerEnemies,
 	})
 
 	if len(path) > 0 {
