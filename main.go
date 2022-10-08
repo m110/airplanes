@@ -48,14 +48,14 @@ func NewGame() *Game {
 	g.systems = []System{
 		system.NewControls(),
 		system.NewVelocity(),
-		system.NewBounds(screenWidth, screenHeight),
+		system.NewBounds(),
 		system.NewCameraBounds(),
 		system.NewAI(),
-		system.NewDespawn(screenWidth, screenHeight),
+		system.NewDespawn(),
 		system.NewCollision(),
 		system.NewProgression(g.nextLevel),
 		system.NewHealth(),
-		system.NewRespawn(screenWidth, screenHeight),
+		system.NewRespawn(),
 		system.NewInvulnerable(),
 		render,
 		debug,
@@ -64,7 +64,7 @@ func NewGame() *Game {
 	g.drawables = []Drawable{
 		render,
 		debug,
-		system.NewHUD(screenWidth, screenHeight),
+		system.NewHUD(),
 	}
 
 	g.loadLevel()
@@ -82,19 +82,23 @@ func (g *Game) nextLevel() {
 }
 
 func (g *Game) loadLevel() {
-	g.world = createWorld(g.level)
+	// TODO Customizable number of players
+	g.world = createWorld(g.level, 2)
 }
 
-func createWorld(levelIndex int) donburi.World {
+func createWorld(levelIndex int, players int) donburi.World {
 	levelAsset := assets.Levels[levelIndex]
 
 	world := donburi.NewWorld()
 
+	settings := world.Entry(world.Create(component.Settings))
+	donburi.SetValue(settings, component.Settings, component.SettingsData{
+		ScreenWidth:  screenWidth,
+		ScreenHeight: screenHeight,
+	})
+
 	level := world.Entry(world.Create(component.Level))
 	component.GetLevel(level).ProgressionTimer = engine.NewTimer(time.Second * 3)
-
-	archetypes.NewPlayerOne(world, component.PositionData(levelAsset.Player1Spawn))
-	archetypes.NewPlayerTwo(world, component.PositionData(levelAsset.Player2Spawn))
 
 	archetypes.NewCamera(world, component.PositionData{
 		X: 0,
@@ -117,6 +121,11 @@ func createWorld(levelIndex int) donburi.World {
 			enemy.Speed,
 			enemy.Path,
 		)
+	}
+
+	for i := 1; i <= players; i++ {
+		archetypes.NewPlayer(world, i)
+		archetypes.NewPlayerAirplane(world, i)
 	}
 
 	world.Create(component.Debug)

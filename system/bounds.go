@@ -11,11 +11,11 @@ import (
 )
 
 type Bounds struct {
-	query                     *query.Query
-	screenWidth, screenHeight int
+	query    *query.Query
+	settings *component.SettingsData
 }
 
-func NewBounds(screenWidth, screenHeight int) *Bounds {
+func NewBounds() *Bounds {
 	return &Bounds{
 		query: query.NewQuery(filter.Contains(
 			component.PlayerAirplane,
@@ -23,12 +23,17 @@ func NewBounds(screenWidth, screenHeight int) *Bounds {
 			component.Sprite,
 			component.Bounds,
 		)),
-		screenWidth:  screenWidth,
-		screenHeight: screenHeight,
 	}
 }
 
 func (b *Bounds) Update(w donburi.World) {
+	if b.settings == nil {
+		b.settings = component.MustFindSettings(w)
+		if b.settings == nil {
+			return
+		}
+	}
+
 	camera := archetypes.MustFindCamera(w)
 	cameraPos := component.GetPosition(camera)
 
@@ -49,16 +54,16 @@ func (b *Bounds) Update(w donburi.World) {
 		switch sprite.Pivot {
 		case component.SpritePivotTopLeft:
 			minX = cameraPos.X
-			maxX = cameraPos.X + float64(b.screenWidth) - width
+			maxX = cameraPos.X + float64(b.settings.ScreenWidth) - width
 
 			minY = cameraPos.Y
-			maxY = cameraPos.Y + float64(b.screenHeight) - height
+			maxY = cameraPos.Y + float64(b.settings.ScreenHeight) - height
 		case component.SpritePivotCenter:
 			minX = cameraPos.X + width/2
-			maxX = cameraPos.X + float64(b.screenWidth) - width/2
+			maxX = cameraPos.X + float64(b.settings.ScreenWidth) - width/2
 
 			minY = cameraPos.Y + height/2
-			maxY = cameraPos.Y + float64(b.screenHeight) - height/2
+			maxY = cameraPos.Y + float64(b.settings.ScreenHeight) - height/2
 		}
 
 		position.X = engine.Clamp(position.X, minX, maxX)

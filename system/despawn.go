@@ -10,21 +10,24 @@ import (
 )
 
 type Despawn struct {
-	query        *query.Query
-	screenWidth  int
-	screenHeight int
+	query    *query.Query
+	settings *component.SettingsData
 }
 
-func NewDespawn(screenWidth int, screenHeight int) *Despawn {
+func NewDespawn() *Despawn {
 	return &Despawn{
 		query: query.NewQuery(filter.Contains(component.Despawnable)),
-		// TODO Move these out to "settings"?
-		screenWidth:  screenWidth,
-		screenHeight: screenHeight,
 	}
 }
 
 func (d *Despawn) Update(w donburi.World) {
+	if d.settings == nil {
+		d.settings = component.MustFindSettings(w)
+		if d.settings == nil {
+			return
+		}
+	}
+
 	cameraPos := component.GetPosition(archetypes.MustFindCamera(w))
 
 	d.query.EachEntity(w, func(entry *donburi.Entry) {
@@ -35,8 +38,8 @@ func (d *Despawn) Update(w donburi.World) {
 		maxX := position.X + float64(sprite.Image.Bounds().Dx())
 		maxY := position.Y + float64(sprite.Image.Bounds().Dy())
 
-		cameraMaxY := cameraPos.Y + float64(d.screenHeight)
-		cameraMaxX := cameraPos.X + float64(d.screenWidth)
+		cameraMaxY := cameraPos.Y + float64(d.settings.ScreenHeight)
+		cameraMaxX := cameraPos.X + float64(d.settings.ScreenWidth)
 
 		if !despawnable.Spawned {
 			if position.Y > cameraPos.Y && maxY < cameraMaxY &&

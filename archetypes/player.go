@@ -1,12 +1,11 @@
 package archetypes
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
-	"github.com/yohamta/donburi/filter"
-	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/component"
@@ -21,62 +20,74 @@ type playerInputs struct {
 	Shoot ebiten.Key
 }
 
-func NewPlayerOne(w donburi.World, position component.PositionData) {
-	inputs := playerInputs{
-		Up:    ebiten.KeyW,
-		Right: ebiten.KeyD,
-		Down:  ebiten.KeyS,
-		Left:  ebiten.KeyA,
-		Shoot: ebiten.KeySpace,
-	}
-
-	newPlayerAirplane(w, position, assets.AirplaneYellowSmall, inputs, 1)
-	newPlayerIfNotExists(w, 1)
+type playerSettings struct {
+	Image  func() *ebiten.Image
+	Inputs playerInputs
 }
 
-func NewPlayerTwo(w donburi.World, position component.PositionData) {
-	inputs := playerInputs{
-		Up:    ebiten.KeyUp,
-		Right: ebiten.KeyRight,
-		Down:  ebiten.KeyDown,
-		Left:  ebiten.KeyLeft,
-		Shoot: ebiten.KeyK,
-	}
-
-	newPlayerAirplane(w, position, assets.AirplaneGreenSmall, inputs, 2)
-	newPlayerIfNotExists(w, 2)
+var players = map[int]playerSettings{
+	1: {
+		Image: func() *ebiten.Image { return assets.AirplaneYellowSmall },
+		Inputs: playerInputs{
+			Up:    ebiten.KeyW,
+			Right: ebiten.KeyD,
+			Down:  ebiten.KeyS,
+			Left:  ebiten.KeyA,
+			Shoot: ebiten.KeySpace,
+		},
+	},
+	2: {
+		Image: func() *ebiten.Image { return assets.AirplaneGreenSmall },
+		Inputs: playerInputs{
+			Up:    ebiten.KeyUp,
+			Right: ebiten.KeyRight,
+			Down:  ebiten.KeyDown,
+			Left:  ebiten.KeyLeft,
+			Shoot: ebiten.KeyK,
+		},
+	},
 }
 
-func newPlayerIfNotExists(
-	w donburi.World,
-	number int,
-) {
-	exists := false
-	query.NewQuery(filter.Contains(component.Player)).EachEntity(w, func(entry *donburi.Entry) {
-		if component.GetPlayer(entry).PlayerNumber == number {
-			exists = true
+func playerSpawn(w donburi.World, playerNumber int) component.PositionData {
+	settings := component.MustFindSettings(w)
+	cameraPos := component.GetPosition(MustFindCamera(w))
+
+	switch playerNumber {
+	case 1:
+		return component.PositionData{
+			X: float64(settings.ScreenWidth) * 0.25,
+			Y: cameraPos.Y + float64(settings.ScreenHeight)*0.9,
 		}
-	})
+	case 2:
+		return component.PositionData{
+			X: float64(settings.ScreenWidth) * 0.75,
+			Y: cameraPos.Y + float64(settings.ScreenHeight)*0.9,
+		}
+	default:
+		panic(fmt.Sprintf("unknown player number: %v", playerNumber))
+	}
+}
 
-	if exists {
-		return
+func NewPlayer(w donburi.World, playerNumber int) {
+	_, ok := players[playerNumber]
+	if !ok {
+		panic(fmt.Sprintf("unknown player number: %v", playerNumber))
 	}
 
 	player := w.Entry(w.Create(component.Player))
 	donburi.SetValue(player, component.Player, component.PlayerData{
-		PlayerNumber: number,
+		PlayerNumber: playerNumber,
 		Lives:        3,
 		RespawnTimer: engine.NewTimer(time.Second * 3),
 	})
 }
 
-func newPlayerAirplane(
-	w donburi.World,
-	position component.PositionData,
-	image *ebiten.Image,
-	inputs playerInputs,
-	number int,
-) {
+func NewPlayerAirplane(w donburi.World, playerNumber int) {
+	settings, ok := players[playerNumber]
+	if !ok {
+		panic(fmt.Sprintf("unknown player number: %v", playerNumber))
+	}
+
 	airplane := w.Entry(
 		w.Create(
 			component.PlayerAirplane,
@@ -90,12 +101,14 @@ func newPlayerAirplane(
 	)
 
 	donburi.SetValue(airplane, component.PlayerAirplane, component.PlayerAirplaneData{
-		PlayerNumber:      number,
+		PlayerNumber:      playerNumber,
 		InvulnerableTimer: engine.NewTimer(time.Second * 3),
 		Invulnerable:      true,
 	})
 
-	donburi.SetValue(airplane, component.Position, position)
+	donburi.SetValue(airplane, component.Position, playerSpawn(w, playerNumber))
+
+	image := settings.Image()
 
 	donburi.SetValue(airplane, component.Sprite, component.SpriteData{
 		Image: image,
@@ -110,6 +123,7 @@ func newPlayerAirplane(
 		Layer:  component.CollisionLayerPlayers,
 	})
 
+	inputs := settings.Inputs
 	donburi.SetValue(airplane, component.Input, component.InputData{
 		MoveUpKey:    inputs.Up,
 		MoveRightKey: inputs.Right,

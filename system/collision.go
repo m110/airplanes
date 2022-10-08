@@ -34,6 +34,10 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 		component.CollisionLayerPlayers: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
 			w.Remove(entry.Entity())
 
+			if component.GetPlayerAirplane(other).Invulnerable {
+				return
+			}
+
 			playerNumber := component.GetPlayerAirplane(other).PlayerNumber
 			w.Remove(other.Entity())
 
@@ -60,6 +64,10 @@ func (c *Collision) Update(w donburi.World) {
 	})
 
 	for _, entry := range entries {
+		if !w.Valid(entry.Entity()) {
+			continue
+		}
+
 		collider := component.GetCollider(entry)
 
 		for _, other := range entries {

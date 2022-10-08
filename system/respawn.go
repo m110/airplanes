@@ -12,16 +12,12 @@ import (
 )
 
 type Respawn struct {
-	query        *query.Query
-	screenWidth  int
-	screenHeight int
+	query *query.Query
 }
 
-func NewRespawn(screenWidth int, screenHeight int) *Respawn {
+func NewRespawn() *Respawn {
 	return &Respawn{
-		query:        query.NewQuery(filter.Contains(component.Player)),
-		screenWidth:  screenWidth,
-		screenHeight: screenHeight,
+		query: query.NewQuery(filter.Contains(component.Player)),
 	}
 }
 
@@ -39,24 +35,7 @@ func (r *Respawn) Update(w donburi.World) {
 			player.RespawnTimer.Update()
 			if player.RespawnTimer.IsReady() {
 				player.Respawning = false
-
-				cameraPos := component.GetPosition(archetypes.MustFindCamera(w))
-
-				// TODO Make this more elegant somehow - move to archetypes?
-				switch player.PlayerNumber {
-				case 1:
-					pos := component.PositionData{
-						X: float64(r.screenWidth) * 0.25,
-						Y: cameraPos.Y + float64(r.screenHeight)*0.9,
-					}
-					archetypes.NewPlayerOne(w, pos)
-				case 2:
-					pos := component.PositionData{
-						X: float64(r.screenWidth) * 0.75,
-						Y: cameraPos.Y + float64(r.screenHeight)*0.9,
-					}
-					archetypes.NewPlayerTwo(w, pos)
-				}
+				archetypes.NewPlayerAirplane(w, player.PlayerNumber)
 			}
 		}
 	})

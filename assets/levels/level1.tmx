@@ -155,8 +155,6 @@
     <property name="path" type="object" value="29"/>
    </properties>
   </object>
-  <object id="23" class="player1-spawn" gid="132" x="216" y="2172" width="32" height="32"/>
-  <object id="24" class="player2-spawn" gid="131" x="280" y="2172" width="32" height="32"/>
   <object id="25" class="enemy-airplane" gid="142" x="328" y="1748" width="32" height="32" rotation="180"/>
   <object id="26" class="enemy-airplane" gid="142" x="364" y="1748" width="32" height="32" rotation="180"/>
   <object id="27" class="enemy-airplane" gid="142" x="392" y="1520" width="32" height="32" rotation="220">

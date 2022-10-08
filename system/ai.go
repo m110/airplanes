@@ -3,11 +3,11 @@ package system
 import (
 	"math"
 
-	"github.com/m110/airplanes/archetypes"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
+	"github.com/m110/airplanes/archetypes"
 	"github.com/m110/airplanes/component"
 )
 

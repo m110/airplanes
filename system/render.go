@@ -14,6 +14,7 @@ import (
 	"golang.org/x/image/colornames"
 
 	"github.com/m110/airplanes/archetypes"
+	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/component"
 )
 
@@ -103,6 +104,17 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 			if entry.HasComponent(component.Health) {
 				if component.GetHealth(entry).JustDamaged {
 					op.ColorM.Translate(1.0, 1.0, 1.0, 0)
+				}
+			}
+
+			// TODO: Shouldn't be here, consider a child object instead
+			if entry.HasComponent(component.PlayerAirplane) {
+				airplane := component.GetPlayerAirplane(entry)
+				if airplane.Invulnerable {
+					op := &ebiten.DrawImageOptions{}
+					shieldW, shieldH := assets.AirplaneShield.Size()
+					op.GeoM.Translate(x-float64(shieldW)*0.25, y-float64(shieldH)*0.25)
+					r.offscreen.DrawImage(assets.AirplaneShield, op)
 				}
 			}
 

@@ -87,8 +87,6 @@
 </data>
  </layer>
  <objectgroup id="2" name="Object Layer 1">
-  <object id="1" class="player1-spawn" gid="132" x="200" y="1236" width="32" height="32"/>
-  <object id="2" class="player2-spawn" gid="131" x="264" y="1236" width="32" height="32"/>
   <object id="3" class="enemy-airplane" gid="142" x="100" y="716" width="32" height="32">
    <properties>
     <property name="path" type="object" value="12"/>

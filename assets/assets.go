@@ -53,6 +53,8 @@ var (
 	powerupData []byte
 	//go:embed tiles/tile_0026.png
 	shieldData []byte
+	//go:embed tiles/airplane_shield.png
+	airplaneShieldData []byte
 
 	AirplaneYellowSmall *ebiten.Image
 	AirplaneGreenSmall  *ebiten.Image
@@ -73,9 +75,10 @@ var (
 	Smoke *ebiten.Image
 	Flash *ebiten.Image
 
-	Health  *ebiten.Image
-	PowerUp *ebiten.Image
-	Shield  *ebiten.Image
+	Health         *ebiten.Image
+	PowerUp        *ebiten.Image
+	Shield         *ebiten.Image
+	AirplaneShield *ebiten.Image
 
 	Levels []Level
 )
@@ -86,10 +89,8 @@ type Position struct {
 }
 
 type Level struct {
-	Background   *ebiten.Image
-	Player1Spawn Position
-	Player2Spawn Position
-	Enemies      []Enemy
+	Background *ebiten.Image
+	Enemies    []Enemy
 }
 
 type Enemy struct {
@@ -122,6 +123,7 @@ func MustLoadAssets() {
 	Health = mustNewEbitenImage(healthData)
 	PowerUp = mustNewEbitenImage(powerupData)
 	Shield = mustNewEbitenImage(shieldData)
+	AirplaneShield = mustNewEbitenImage(airplaneShieldData)
 
 	levelPaths, err := filepath.Glob("assets/levels/*.tmx")
 	if err != nil {
@@ -169,18 +171,6 @@ func mustLoadLevel(levelPath string) Level {
 
 	for _, og := range levelMap.ObjectGroups {
 		for _, o := range og.Objects {
-			if o.Class == "player1-spawn" {
-				level.Player1Spawn = Position{
-					X: o.X,
-					Y: o.Y,
-				}
-			}
-			if o.Class == "player2-spawn" {
-				level.Player2Spawn = Position{
-					X: o.X,
-					Y: o.Y,
-				}
-			}
 			if o.Class == "enemy-airplane" {
 				enemy := Enemy{
 					Position: Position{
@@ -218,14 +208,6 @@ func mustLoadLevel(levelPath string) Level {
 				level.Enemies = append(level.Enemies, enemy)
 			}
 		}
-	}
-
-	if level.Player1Spawn == (Position{}) {
-		panic("player1-spawn not found")
-	}
-
-	if level.Player2Spawn == (Position{}) {
-		panic("player2-spawn not found")
 	}
 
 	renderer, err := render.NewRenderer(levelMap)
