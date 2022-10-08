@@ -22,6 +22,12 @@ func (d *HealthData) Damage() {
 	d.DamageIndicatorTimer.Reset()
 }
 
+func (d *HealthData) Destroy() {
+	d.Health = 0
+	d.JustDamaged = true
+	d.DamageIndicatorTimer.Reset()
+}
+
 var Health = donburi.NewComponentType[HealthData]()
 
 func GetHealth(entry *donburi.Entry) *HealthData {

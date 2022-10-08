@@ -50,7 +50,7 @@ var (
 	//go:embed tiles/tile_0024.png
 	healthData []byte
 	//go:embed tiles/tile_0025.png
-	powerupData []byte
+	weaponUpgradeData []byte
 	//go:embed tiles/tile_0026.png
 	shieldData []byte
 	//go:embed tiles/airplane_shield.png
@@ -76,7 +76,7 @@ var (
 	Flash *ebiten.Image
 
 	Health         *ebiten.Image
-	PowerUp        *ebiten.Image
+	WeaponUpgrade  *ebiten.Image
 	Shield         *ebiten.Image
 	AirplaneShield *ebiten.Image
 
@@ -121,7 +121,7 @@ func MustLoadAssets() {
 	Smoke = mustNewEbitenImage(smokeData)
 
 	Health = mustNewEbitenImage(healthData)
-	PowerUp = mustNewEbitenImage(powerupData)
+	WeaponUpgrade = mustNewEbitenImage(weaponUpgradeData)
 	Shield = mustNewEbitenImage(shieldData)
 	AirplaneShield = mustNewEbitenImage(airplaneShieldData)
 

@@ -7,6 +7,7 @@ import (
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
+	"github.com/m110/airplanes/archetypes"
 	"github.com/m110/airplanes/component"
 	"github.com/m110/airplanes/engine"
 )
@@ -30,9 +31,27 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 			component.GetHealth(other).Damage()
 		},
 	},
+	component.CollisionLayerPlayers: {
+		component.CollisionLayerCollectibles: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
+			airplane := component.GetPlayerAirplane(entry)
+			player := archetypes.MustFindPlayerByNumber(w, airplane.PlayerNumber)
+
+			// TODO Is this the best place to do this?
+			switch component.GetCollectible(other).Type {
+			case component.CollectibleTypeWeaponUpgrade:
+				// TODO weapon upgrade
+			case component.CollectibleTypeShield:
+				airplane.StartInvulnerability()
+			case component.CollectibleTypeHealth:
+				player.AddLive()
+			}
+
+			w.Remove(other.Entity())
+		},
+	},
 	component.CollisionLayerEnemies: {
 		component.CollisionLayerPlayers: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
-			w.Remove(entry.Entity())
+			component.GetHealth(entry).Destroy()
 
 			if component.GetPlayerAirplane(other).Invulnerable {
 				return
@@ -41,12 +60,8 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 			playerNumber := component.GetPlayerAirplane(other).PlayerNumber
 			w.Remove(other.Entity())
 
-			query.NewQuery(filter.Contains(component.Player)).EachEntity(w, func(e *donburi.Entry) {
-				player := component.GetPlayer(e)
-				if player.PlayerNumber == playerNumber {
-					player.Damage()
-				}
-			})
+			player := archetypes.MustFindPlayerByNumber(w, playerNumber)
+			player.Damage()
 		},
 	},
 }

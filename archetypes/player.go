@@ -6,6 +6,8 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/filter"
+	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/component"
@@ -133,4 +135,20 @@ func NewPlayerAirplane(w donburi.World, playerNumber int) {
 		ShootKey:     inputs.Shoot,
 		ShootTimer:   engine.NewTimer(time.Millisecond * 400),
 	})
+}
+
+func MustFindPlayerByNumber(w donburi.World, playerNumber int) *component.PlayerData {
+	var foundPlayer *component.PlayerData
+	query.NewQuery(filter.Contains(component.Player)).EachEntity(w, func(e *donburi.Entry) {
+		player := component.GetPlayer(e)
+		if player.PlayerNumber == playerNumber {
+			foundPlayer = player
+		}
+	})
+
+	if foundPlayer == nil {
+		panic(fmt.Sprintf("player not found: %v", playerNumber))
+	}
+
+	return foundPlayer
 }

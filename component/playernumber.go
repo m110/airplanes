@@ -13,6 +13,11 @@ type PlayerAirplaneData struct {
 	InvulnerableTimer *engine.Timer
 }
 
+func (d *PlayerAirplaneData) StartInvulnerability() {
+	d.Invulnerable = true
+	d.InvulnerableTimer.Reset()
+}
+
 var PlayerAirplane = donburi.NewComponentType[PlayerAirplaneData]()
 
 func GetPlayerAirplane(entry *donburi.Entry) *PlayerAirplaneData {

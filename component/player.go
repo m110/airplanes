@@ -14,6 +14,10 @@ type PlayerData struct {
 	RespawnTimer *engine.Timer
 }
 
+func (d *PlayerData) AddLive() {
+	d.Lives++
+}
+
 func (d *PlayerData) Damage() {
 	if d.Respawning {
 		return

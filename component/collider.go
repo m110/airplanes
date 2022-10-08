@@ -8,6 +8,7 @@ const (
 	CollisionLayerBullets ColliderLayer = iota
 	CollisionLayerEnemies
 	CollisionLayerPlayers
+	CollisionLayerCollectibles
 )
 
 type ColliderLayer int
