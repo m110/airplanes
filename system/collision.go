@@ -32,7 +32,17 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 	},
 	component.CollisionLayerEnemies: {
 		component.CollisionLayerPlayers: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
-			// TODO damage player
+			w.Remove(entry.Entity())
+
+			playerNumber := component.GetPlayerNumber(other).Number
+			w.Remove(other.Entity())
+
+			query.NewQuery(filter.Contains(component.Player)).EachEntity(w, func(e *donburi.Entry) {
+				player := component.GetPlayer(e)
+				if player.PlayerNumber == playerNumber {
+					player.Damage()
+				}
+			})
 		},
 	},
 }

@@ -55,6 +55,7 @@ func NewGame() *Game {
 		system.NewCollision(),
 		system.NewProgression(g.nextLevel),
 		system.NewHealth(),
+		system.NewRespawn(screenWidth, screenHeight),
 		render,
 		debug,
 	}
@@ -62,6 +63,7 @@ func NewGame() *Game {
 	g.drawables = []Drawable{
 		render,
 		debug,
+		system.NewHUD(screenWidth, screenHeight),
 	}
 
 	g.loadLevel()

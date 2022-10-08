@@ -1,11 +1,11 @@
 package system
 
 import (
-	"github.com/m110/airplanes/archetypes"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
+	"github.com/m110/airplanes/archetypes"
 	"github.com/m110/airplanes/component"
 	"github.com/m110/airplanes/engine"
 )
@@ -18,7 +18,7 @@ type Bounds struct {
 func NewBounds(screenWidth, screenHeight int) *Bounds {
 	return &Bounds{
 		query: query.NewQuery(filter.Contains(
-			component.PlayerTag,
+			component.PlayerNumber,
 			component.Position,
 			component.Sprite,
 			component.Bounds,

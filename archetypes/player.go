@@ -5,6 +5,8 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/filter"
+	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/component"
@@ -19,7 +21,7 @@ type playerInputs struct {
 	Shoot ebiten.Key
 }
 
-func NewPlayerOne(w donburi.World, position component.PositionData) *donburi.Entry {
+func NewPlayerOne(w donburi.World, position component.PositionData) {
 	inputs := playerInputs{
 		Up:    ebiten.KeyW,
 		Right: ebiten.KeyD,
@@ -28,10 +30,11 @@ func NewPlayerOne(w donburi.World, position component.PositionData) *donburi.Ent
 		Shoot: ebiten.KeySpace,
 	}
 
-	return newPlayer(w, position, assets.ShipYellowSmall, inputs)
+	newPlayerShip(w, position, assets.ShipYellowSmall, inputs, 1)
+	newPlayerIfNotExists(w, 1)
 }
 
-func NewPlayerTwo(w donburi.World, position component.PositionData) *donburi.Entry {
+func NewPlayerTwo(w donburi.World, position component.PositionData) {
 	inputs := playerInputs{
 		Up:    ebiten.KeyUp,
 		Right: ebiten.KeyRight,
@@ -40,18 +43,43 @@ func NewPlayerTwo(w donburi.World, position component.PositionData) *donburi.Ent
 		Shoot: ebiten.KeyK,
 	}
 
-	return newPlayer(w, position, assets.ShipGreenSmall, inputs)
+	newPlayerShip(w, position, assets.ShipGreenSmall, inputs, 2)
+	newPlayerIfNotExists(w, 2)
 }
 
-func newPlayer(
+func newPlayerIfNotExists(
+	w donburi.World,
+	number int,
+) {
+	exists := false
+	query.NewQuery(filter.Contains(component.Player)).EachEntity(w, func(entry *donburi.Entry) {
+		if component.GetPlayer(entry).PlayerNumber == number {
+			exists = true
+		}
+	})
+
+	if exists {
+		return
+	}
+
+	player := w.Entry(w.Create(component.Player))
+	donburi.SetValue(player, component.Player, component.PlayerData{
+		PlayerNumber: number,
+		Lives:        3,
+		RespawnTimer: engine.NewTimer(time.Second * 3),
+	})
+}
+
+func newPlayerShip(
 	w donburi.World,
 	position component.PositionData,
 	image *ebiten.Image,
 	inputs playerInputs,
-) *donburi.Entry {
-	player := w.Entry(
+	number int,
+) {
+	ship := w.Entry(
 		w.Create(
-			component.PlayerTag,
+			component.PlayerNumber,
 			component.Position,
 			component.Velocity,
 			component.Sprite,
@@ -61,22 +89,26 @@ func newPlayer(
 		),
 	)
 
-	donburi.SetValue(player, component.Position, position)
+	donburi.SetValue(ship, component.PlayerNumber, component.PlayerNumberData{
+		Number: number,
+	})
 
-	donburi.SetValue(player, component.Sprite, component.SpriteData{
+	donburi.SetValue(ship, component.Position, position)
+
+	donburi.SetValue(ship, component.Sprite, component.SpriteData{
 		Image: image,
 		Layer: component.SpriteLayerUnits,
 		Pivot: component.SpritePivotCenter,
 	})
 
 	width, height := image.Size()
-	donburi.SetValue(player, component.Collider, component.ColliderData{
+	donburi.SetValue(ship, component.Collider, component.ColliderData{
 		Width:  float64(width),
 		Height: float64(height),
 		Layer:  component.CollisionLayerPlayers,
 	})
 
-	donburi.SetValue(player, component.Input, component.InputData{
+	donburi.SetValue(ship, component.Input, component.InputData{
 		MoveUpKey:    inputs.Up,
 		MoveRightKey: inputs.Right,
 		MoveDownKey:  inputs.Down,
@@ -85,6 +117,4 @@ func newPlayer(
 		ShootKey:     inputs.Shoot,
 		ShootTimer:   engine.NewTimer(time.Millisecond * 400),
 	})
-
-	return player
 }
