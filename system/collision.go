@@ -34,7 +34,7 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 		component.CollisionLayerPlayers: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
 			w.Remove(entry.Entity())
 
-			playerNumber := component.GetPlayerNumber(other).Number
+			playerNumber := component.GetPlayerAirplane(other).PlayerNumber
 			w.Remove(other.Entity())
 
 			query.NewQuery(filter.Contains(component.Player)).EachEntity(w, func(e *donburi.Entry) {

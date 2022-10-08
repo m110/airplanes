@@ -30,7 +30,7 @@ func NewPlayerOne(w donburi.World, position component.PositionData) {
 		Shoot: ebiten.KeySpace,
 	}
 
-	newPlayerShip(w, position, assets.ShipYellowSmall, inputs, 1)
+	newPlayerAirplane(w, position, assets.AirplaneYellowSmall, inputs, 1)
 	newPlayerIfNotExists(w, 1)
 }
 
@@ -43,7 +43,7 @@ func NewPlayerTwo(w donburi.World, position component.PositionData) {
 		Shoot: ebiten.KeyK,
 	}
 
-	newPlayerShip(w, position, assets.ShipGreenSmall, inputs, 2)
+	newPlayerAirplane(w, position, assets.AirplaneGreenSmall, inputs, 2)
 	newPlayerIfNotExists(w, 2)
 }
 
@@ -70,16 +70,16 @@ func newPlayerIfNotExists(
 	})
 }
 
-func newPlayerShip(
+func newPlayerAirplane(
 	w donburi.World,
 	position component.PositionData,
 	image *ebiten.Image,
 	inputs playerInputs,
 	number int,
 ) {
-	ship := w.Entry(
+	airplane := w.Entry(
 		w.Create(
-			component.PlayerNumber,
+			component.PlayerAirplane,
 			component.Position,
 			component.Velocity,
 			component.Sprite,
@@ -89,26 +89,28 @@ func newPlayerShip(
 		),
 	)
 
-	donburi.SetValue(ship, component.PlayerNumber, component.PlayerNumberData{
-		Number: number,
+	donburi.SetValue(airplane, component.PlayerAirplane, component.PlayerAirplaneData{
+		PlayerNumber:      number,
+		InvulnerableTimer: engine.NewTimer(time.Second * 3),
+		Invulnerable:      true,
 	})
 
-	donburi.SetValue(ship, component.Position, position)
+	donburi.SetValue(airplane, component.Position, position)
 
-	donburi.SetValue(ship, component.Sprite, component.SpriteData{
+	donburi.SetValue(airplane, component.Sprite, component.SpriteData{
 		Image: image,
 		Layer: component.SpriteLayerUnits,
 		Pivot: component.SpritePivotCenter,
 	})
 
 	width, height := image.Size()
-	donburi.SetValue(ship, component.Collider, component.ColliderData{
+	donburi.SetValue(airplane, component.Collider, component.ColliderData{
 		Width:  float64(width),
 		Height: float64(height),
 		Layer:  component.CollisionLayerPlayers,
 	})
 
-	donburi.SetValue(ship, component.Input, component.InputData{
+	donburi.SetValue(airplane, component.Input, component.InputData{
 		MoveUpKey:    inputs.Up,
 		MoveRightKey: inputs.Right,
 		MoveDownKey:  inputs.Down,

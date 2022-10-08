@@ -34,7 +34,7 @@ func NewEnemy(
 	donburi.SetValue(enemy, component.Position, position)
 	component.GetRotation(enemy).Angle = rotation
 
-	image := assets.ShipGraySmall
+	image := assets.AirplaneGraySmall
 	donburi.SetValue(enemy, component.Sprite, component.SpriteData{
 		Image: image,
 		Layer: component.SpriteLayerUnits,

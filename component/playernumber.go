@@ -1,13 +1,20 @@
 package component
 
-import "github.com/yohamta/donburi"
+import (
+	"github.com/yohamta/donburi"
 
-type PlayerNumberData struct {
-	Number int
+	"github.com/m110/airplanes/engine"
+)
+
+type PlayerAirplaneData struct {
+	PlayerNumber int
+
+	Invulnerable      bool
+	InvulnerableTimer *engine.Timer
 }
 
-var PlayerNumber = donburi.NewComponentType[PlayerNumberData]()
+var PlayerAirplane = donburi.NewComponentType[PlayerAirplaneData]()
 
-func GetPlayerNumber(entry *donburi.Entry) *PlayerNumberData {
-	return donburi.Get[PlayerNumberData](entry, PlayerNumber)
+func GetPlayerAirplane(entry *donburi.Entry) *PlayerAirplaneData {
+	return donburi.Get[PlayerAirplaneData](entry, PlayerAirplane)
 }

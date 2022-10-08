@@ -14,12 +14,12 @@ import (
 )
 
 var (
-	//go:embed ships/ship_0011.png
-	shipYellowSmallData []byte
-	//go:embed ships/ship_0010.png
-	shipGreenSmallData []byte
-	//go:embed ships/ship_0018.png
-	shipGraySmallData []byte
+	//go:embed airplanes/0011.png
+	airplaneYellowSmallData []byte
+	//go:embed airplanes/0010.png
+	airplaneGreenSmallData []byte
+	//go:embed airplanes/0018.png
+	airplaneGraySmallData []byte
 
 	//go:embed tiles/tile_0029.png
 	tankBaseData []byte
@@ -54,9 +54,9 @@ var (
 	//go:embed tiles/tile_0026.png
 	shieldData []byte
 
-	ShipYellowSmall *ebiten.Image
-	ShipGreenSmall  *ebiten.Image
-	ShipGraySmall   *ebiten.Image
+	AirplaneYellowSmall *ebiten.Image
+	AirplaneGreenSmall  *ebiten.Image
+	AirplaneGraySmall   *ebiten.Image
 
 	TankBase *ebiten.Image
 	TankGun  *ebiten.Image
@@ -100,9 +100,9 @@ type Enemy struct {
 }
 
 func MustLoadAssets() {
-	ShipYellowSmall = mustNewEbitenImage(shipYellowSmallData)
-	ShipGreenSmall = mustNewEbitenImage(shipGreenSmallData)
-	ShipGraySmall = mustNewEbitenImage(shipGraySmallData)
+	AirplaneYellowSmall = mustNewEbitenImage(airplaneYellowSmallData)
+	AirplaneGreenSmall = mustNewEbitenImage(airplaneGreenSmallData)
+	AirplaneGraySmall = mustNewEbitenImage(airplaneGraySmallData)
 
 	TankBase = mustNewEbitenImage(tankBaseData)
 	TankGun = mustNewEbitenImage(tankGunData)

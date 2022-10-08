@@ -15,50 +15,50 @@
             "expandedObjectLayers": [
                 2
             ],
-            "scale": 2.3097,
+            "scale": 2.57,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 215.3959388665195,
-                "y": 2212.625016235875
+                "x": 335.2140077821012,
+                "y": 1878.4046692607003
             }
         },
         "level2.tmx": {
             "expandedObjectLayers": [
                 2
             ],
-            "scale": 1.3692,
+            "scale": 1.36,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 240.28629856850716,
-                "y": 639.4244814490213
+                "x": 237.13235294117644,
+                "y": 895.9558823529411
             }
         },
-        "ships.tsx": {
+        "airplanes.tsx": {
             "scaleInDock": 1,
-            "scaleInEditor": 1
+            "scaleInEditor": 2.14
         },
         "tiles.tsx": {
-            "scaleInDock": 2.7075,
-            "scaleInEditor": 1
+            "scaleInDock": 2.7679,
+            "scaleInEditor": 2.14
         }
     },
-    "last.imagePath": "/Users/milosz/src/gamedev/airplanes/assets/ships",
+    "last.imagePath": "/Users/milosz/src/gamedev/airplanes/assets/airplanes",
     "map.height": 80,
     "map.lastUsedFormat": "tmx",
     "openFiles": [
         "tiles.tsx",
         "level2.tmx",
-        "ships.tsx",
-        "ships.tsx",
+        "airplanes.tsx",
+        "airplanes.tsx",
         "level1.tmx"
     ],
     "project": "airplanes.tiled-project",
     "property.type": "float",
     "recentFiles": [
-        "level1.tmx",
         "tiles.tsx",
-        "level2.tmx",
-        "ships.tsx"
+        "level1.tmx",
+        "airplanes.tsx",
+        "level2.tmx"
     ],
     "resizeMap.removeObjects": false,
     "tileset.lastUsedFormat": "tsx",

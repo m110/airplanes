@@ -56,6 +56,7 @@ func NewGame() *Game {
 		system.NewProgression(g.nextLevel),
 		system.NewHealth(),
 		system.NewRespawn(screenWidth, screenHeight),
+		system.NewInvulnerable(),
 		render,
 		debug,
 	}

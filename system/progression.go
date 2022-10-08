@@ -18,7 +18,7 @@ func NewProgression(nextLevelFunc func()) *Progression {
 	return &Progression{
 		query: query.NewQuery(
 			filter.Contains(
-				component.PlayerNumber,
+				component.PlayerAirplane,
 				component.Velocity,
 				component.Input,
 				component.Bounds,

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="140" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="55">
  <tileset firstgid="1" source="tiles.tsx"/>
- <tileset firstgid="121" source="ships.tsx"/>
+ <tileset firstgid="121" source="airplanes.tsx"/>
  <layer id="1" name="Tile Layer 1" width="30" height="140">
   <data encoding="csv">
 43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,

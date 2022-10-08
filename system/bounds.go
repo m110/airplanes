@@ -18,7 +18,7 @@ type Bounds struct {
 func NewBounds(screenWidth, screenHeight int) *Bounds {
 	return &Bounds{
 		query: query.NewQuery(filter.Contains(
-			component.PlayerNumber,
+			component.PlayerAirplane,
 			component.Position,
 			component.Sprite,
 			component.Bounds,
