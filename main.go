@@ -36,7 +36,7 @@ type Game struct {
 }
 
 func NewGame() *Game {
-	assets.LoadAssets()
+	assets.MustLoadAssets()
 
 	g := &Game{
 		level: 0,

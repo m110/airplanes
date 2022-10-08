@@ -8,10 +8,9 @@ import (
 	"path/filepath"
 	"strconv"
 
+	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/lafriks/go-tiled"
 	"github.com/lafriks/go-tiled/render"
-
-	"github.com/hajimehoshi/ebiten/v2"
 )
 
 var (
@@ -21,13 +20,62 @@ var (
 	shipGreenSmallData []byte
 	//go:embed ships/ship_0018.png
 	shipGraySmallData []byte
+
+	//go:embed tiles/tile_0029.png
+	tankBaseData []byte
+	//go:embed tiles/tile_0030.png
+	tankGunData []byte
+
+	//go:embed tiles/tile_0016.png
+	turretBaseData []byte
+	//go:embed tiles/tile_0018.png
+	turretGunSingleData []byte
+	//go:embed tiles/tile_0017.png
+	turretGunDoubleData []byte
+
 	//go:embed tiles/tile_0000.png
 	laserSingleData []byte
+	//go:embed tiles/tile_0001.png
+	laserDoubleData []byte
+	//go:embed tiles/tile_0012.png
+	rocketData []byte
+	//go:embed tiles/tile_0006.png
+	bombData []byte
+
+	//go:embed tiles/tile_0007.png
+	flashData []byte
+	//go:embed tiles/tile_0008.png
+	smokeData []byte
+
+	//go:embed tiles/tile_0024.png
+	healthData []byte
+	//go:embed tiles/tile_0025.png
+	powerupData []byte
+	//go:embed tiles/tile_0026.png
+	shieldData []byte
 
 	ShipYellowSmall *ebiten.Image
 	ShipGreenSmall  *ebiten.Image
 	ShipGraySmall   *ebiten.Image
-	LaserSingle     *ebiten.Image
+
+	TankBase *ebiten.Image
+	TankGun  *ebiten.Image
+
+	TurretBase      *ebiten.Image
+	TurretGunSingle *ebiten.Image
+	TurretGunDouble *ebiten.Image
+
+	LaserSingle *ebiten.Image
+	LaserDouble *ebiten.Image
+	Rocket      *ebiten.Image
+	Bomb        *ebiten.Image
+
+	Smoke *ebiten.Image
+	Flash *ebiten.Image
+
+	Health  *ebiten.Image
+	PowerUp *ebiten.Image
+	Shield  *ebiten.Image
 
 	Levels []Level
 )
@@ -51,11 +99,29 @@ type Enemy struct {
 	Path     []Position
 }
 
-func LoadAssets() {
+func MustLoadAssets() {
 	ShipYellowSmall = mustNewEbitenImage(shipYellowSmallData)
 	ShipGreenSmall = mustNewEbitenImage(shipGreenSmallData)
 	ShipGraySmall = mustNewEbitenImage(shipGraySmallData)
+
+	TankBase = mustNewEbitenImage(tankBaseData)
+	TankGun = mustNewEbitenImage(tankGunData)
+
+	TurretBase = mustNewEbitenImage(turretBaseData)
+	TurretGunSingle = mustNewEbitenImage(turretGunSingleData)
+	TurretGunDouble = mustNewEbitenImage(turretGunDoubleData)
+
 	LaserSingle = mustNewEbitenImage(laserSingleData)
+	LaserDouble = mustNewEbitenImage(laserDoubleData)
+	Rocket = mustNewEbitenImage(rocketData)
+	Bomb = mustNewEbitenImage(bombData)
+
+	Flash = mustNewEbitenImage(flashData)
+	Smoke = mustNewEbitenImage(smokeData)
+
+	Health = mustNewEbitenImage(healthData)
+	PowerUp = mustNewEbitenImage(powerupData)
+	Shield = mustNewEbitenImage(shieldData)
 
 	levelPaths, err := filepath.Glob("assets/levels/*.tmx")
 	if err != nil {
@@ -122,6 +188,7 @@ func mustLoadLevel(levelPath string) Level {
 						Y: o.Y,
 					},
 					Rotation: o.Rotation,
+					Speed:    1,
 				}
 
 				for _, p := range o.Properties {
@@ -146,10 +213,6 @@ func mustLoadLevel(levelPath string) Level {
 
 						enemy.Speed = speed
 					}
-				}
-
-				if enemy.Speed == 0 {
-					enemy.Speed = 1
 				}
 
 				level.Enemies = append(level.Enemies, enemy)

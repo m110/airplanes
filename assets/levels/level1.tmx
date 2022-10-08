@@ -220,15 +220,5 @@
   <object id="48" x="56" y="2000">
    <polyline points="0,0 0,-148 264,-144 260,-4 16,0"/>
   </object>
-  <object id="50" class="enemy-airplane" gid="142" x="248" y="1904" width="32" height="32" rotation="180">
-   <properties>
-    <property name="speed" type="float" value="0"/>
-   </properties>
-  </object>
-  <object id="53" class="enemy-airplane" gid="142" x="248" y="2012" width="32" height="32">
-   <properties>
-    <property name="speed" type="float" value="0"/>
-   </properties>
-  </object>
  </objectgroup>
 </map>

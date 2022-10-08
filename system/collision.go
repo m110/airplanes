@@ -80,6 +80,7 @@ func (c *Collision) Update(w donburi.World) {
 			pos := component.GetPosition(entry)
 			otherPos := component.GetPosition(other)
 
+			// TODO The current approach doesn't take rotation into account
 			rect := engine.NewRect(pos.X, pos.Y, collider.Width, collider.Height)
 			otherRect := engine.NewRect(otherPos.X, otherPos.Y, otherCollider.Width, otherCollider.Height)
 
