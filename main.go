@@ -7,6 +7,8 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/filter"
+	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/archetypes"
 	"github.com/m110/airplanes/assets"
@@ -83,10 +85,10 @@ func (g *Game) nextLevel() {
 
 func (g *Game) loadLevel() {
 	// TODO Customizable number of players
-	g.world = createWorld(g.level, 2)
+	g.world = g.createWorld(g.level, 2)
 }
 
-func createWorld(levelIndex int, players int) donburi.World {
+func (g *Game) createWorld(levelIndex int, players int) donburi.World {
 	levelAsset := assets.Levels[levelIndex]
 
 	world := donburi.NewWorld()
@@ -123,9 +125,24 @@ func createWorld(levelIndex int, players int) donburi.World {
 		)
 	}
 
-	for i := 1; i <= players; i++ {
-		archetypes.NewPlayer(world, i)
-		archetypes.NewPlayerAirplane(world, i)
+	if g.world == nil {
+		// Spawn new players
+		for i := 1; i <= players; i++ {
+			archetypes.NewPlayer(world, i)
+			archetypes.NewPlayerAirplane(world, i)
+		}
+	} else {
+		// Transfer existing players from the previous level
+		query.NewQuery(filter.Contains(component.Player)).EachEntity(g.world, func(entry *donburi.Entry) {
+			player := *component.GetPlayer(entry)
+			// In case the level ends while the player's respawning
+			player.Respawning = false
+
+			archetypes.NewPlayerFromPlayerData(world, player)
+			if player.Lives > 0 {
+				archetypes.NewPlayerAirplane(world, player.PlayerNumber)
+			}
+		})
 	}
 
 	world.Create(component.Debug)

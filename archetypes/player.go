@@ -76,12 +76,18 @@ func NewPlayer(w donburi.World, playerNumber int) {
 		panic(fmt.Sprintf("unknown player number: %v", playerNumber))
 	}
 
-	player := w.Entry(w.Create(component.Player))
-	donburi.SetValue(player, component.Player, component.PlayerData{
+	player := component.PlayerData{
 		PlayerNumber: playerNumber,
 		Lives:        3,
 		RespawnTimer: engine.NewTimer(time.Second * 3),
-	})
+	}
+
+	NewPlayerFromPlayerData(w, player)
+}
+
+func NewPlayerFromPlayerData(w donburi.World, playerData component.PlayerData) {
+	player := w.Entry(w.Create(component.Player))
+	donburi.SetValue(player, component.Player, playerData)
 }
 
 func NewPlayerAirplane(w donburi.World, playerNumber int) {
