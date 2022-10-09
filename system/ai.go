@@ -38,7 +38,7 @@ func (a *AI) Update(w donburi.World) {
 					return
 				}
 
-				position := component.GetPosition(entry)
+				position := component.GetPosition(entry).Position
 				velocity := component.GetVelocity(entry)
 
 				target := ai.Path[ai.NextTarget]
@@ -49,6 +49,9 @@ func (a *AI) Update(w donburi.World) {
 				dist := math.Sqrt(x*x + y*y)
 				if dist < 1 {
 					ai.NextTarget++
+					if ai.PathLoops && ai.NextTarget >= len(ai.Path) {
+						ai.NextTarget = 0
+					}
 					return
 				}
 
@@ -57,7 +60,7 @@ func (a *AI) Update(w donburi.World) {
 				rotation := component.GetRotation(entry)
 
 				maxRotation := 2.0 * ai.Speed
-				targetAngle := angle + 90
+				targetAngle := angle - rotation.OriginalAngle
 				diff := targetAngle - rotation.Angle
 				if math.Abs(diff) > maxRotation {
 					if diff > 0 {
@@ -83,17 +86,17 @@ func spawnEnemy(w donburi.World, entry *donburi.Entry) {
 	cameraPos := component.GetPosition(archetypes.MustFindCamera(w))
 
 	ai := component.GetAI(entry)
-	position := component.GetPosition(entry)
+	position := component.GetPosition(entry).Position
 	rotation := component.GetRotation(entry)
 	sprite := component.GetSprite(entry)
 
-	if position.Y+float64(sprite.Image.Bounds().Dy()) > cameraPos.Y {
+	if position.Y+float64(sprite.Image.Bounds().Dy()) > cameraPos.Position.Y {
 		ai.Spawned = true
 
 		velocity := component.GetVelocity(entry)
 
 		if ai.Type == component.AITypeConstantVelocity {
-			radians := float64(rotation.Angle-90) / 180.0 * math.Pi
+			radians := float64(rotation.Angle+rotation.OriginalAngle) / 180.0 * math.Pi
 			velocity.X = math.Cos(radians) * ai.Speed
 			velocity.Y = math.Sin(radians) * ai.Speed
 		}

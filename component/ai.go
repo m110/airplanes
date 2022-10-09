@@ -1,6 +1,10 @@
 package component
 
-import "github.com/yohamta/donburi"
+import (
+	"github.com/yohamta/donburi"
+
+	"github.com/m110/airplanes/engine"
+)
 
 const (
 	AITypeConstantVelocity AIType = iota
@@ -15,13 +19,9 @@ type AIData struct {
 
 	Speed float64
 
-	Path       []PathPosition
+	Path       []engine.Vector
+	PathLoops  bool
 	NextTarget int
-}
-
-type PathPosition struct {
-	X float64
-	Y float64
 }
 
 var AI = donburi.NewComponentType[AIData]()

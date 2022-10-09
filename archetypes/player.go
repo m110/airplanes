@@ -50,18 +50,18 @@ var players = map[int]playerSettings{
 	},
 }
 
-func playerSpawn(w donburi.World, playerNumber int) component.PositionData {
+func playerSpawn(w donburi.World, playerNumber int) engine.Vector {
 	settings := component.MustFindSettings(w)
-	cameraPos := component.GetPosition(MustFindCamera(w))
+	cameraPos := component.GetPosition(MustFindCamera(w)).Position
 
 	switch playerNumber {
 	case 1:
-		return component.PositionData{
+		return engine.Vector{
 			X: float64(settings.ScreenWidth) * 0.25,
 			Y: cameraPos.Y + float64(settings.ScreenHeight)*0.9,
 		}
 	case 2:
-		return component.PositionData{
+		return engine.Vector{
 			X: float64(settings.ScreenWidth) * 0.75,
 			Y: cameraPos.Y + float64(settings.ScreenHeight)*0.9,
 		}
@@ -120,7 +120,7 @@ func NewPlayerAirplane(w donburi.World, playerNumber int) {
 
 	donburi.SetValue(airplane, component.Sprite, component.SpriteData{
 		Image: image,
-		Layer: component.SpriteLayerUnits,
+		Layer: component.SpriteLayerAirUnits,
 		Pivot: component.SpritePivotCenter,
 	})
 

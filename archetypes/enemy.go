@@ -3,20 +3,19 @@ package archetypes
 import (
 	"time"
 
-	"github.com/m110/airplanes/engine"
-	"github.com/samber/lo"
 	"github.com/yohamta/donburi"
 
 	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/component"
+	"github.com/m110/airplanes/engine"
 )
 
-func NewEnemy(
+func NewEnemyAirplane(
 	w donburi.World,
-	position component.PositionData,
+	position engine.Vector,
 	rotation float64,
 	speed float64,
-	path []assets.Position,
+	path assets.Path,
 ) *donburi.Entry {
 	enemy := w.Entry(
 		w.Create(
@@ -31,13 +30,18 @@ func NewEnemy(
 		),
 	)
 
-	donburi.SetValue(enemy, component.Position, position)
-	component.GetRotation(enemy).Angle = rotation
+	donburi.SetValue(enemy, component.Position, component.PositionData{
+		Position: position,
+	})
+	donburi.SetValue(enemy, component.Rotation, component.RotationData{
+		Angle:         rotation,
+		OriginalAngle: -90,
+	})
 
 	image := assets.AirplaneGraySmall
 	donburi.SetValue(enemy, component.Sprite, component.SpriteData{
 		Image: image,
-		Layer: component.SpriteLayerUnits,
+		Layer: component.SpriteLayerAirUnits,
 		Pivot: component.SpritePivotCenter,
 	})
 
@@ -46,18 +50,15 @@ func NewEnemy(
 	donburi.SetValue(enemy, component.Collider, component.ColliderData{
 		Width:  float64(width),
 		Height: float64(height),
-		Layer:  component.CollisionLayerEnemies,
+		Layer:  component.CollisionLayerAirEnemies,
 	})
 
-	if len(path) > 0 {
-		componentPath := lo.Map(path, func(p assets.Position, _ int) component.PathPosition {
-			return component.PathPosition(p)
-		})
-
+	if len(path.Points) > 0 {
 		donburi.SetValue(enemy, component.AI, component.AIData{
-			Type:  component.AITypeFollowPath,
-			Speed: speed,
-			Path:  componentPath,
+			Type:      component.AITypeFollowPath,
+			Speed:     speed,
+			Path:      path.Points,
+			PathLoops: path.Loops,
 		})
 	} else {
 		donburi.SetValue(enemy, component.AI, component.AIData{
@@ -68,6 +69,71 @@ func NewEnemy(
 
 	donburi.SetValue(enemy, component.Health, component.HealthData{
 		Health:               3,
+		DamageIndicatorTimer: engine.NewTimer(time.Millisecond * 100),
+	})
+
+	return enemy
+}
+
+func NewEnemyTank(
+	w donburi.World,
+	position engine.Vector,
+	rotation float64,
+	speed float64,
+	path assets.Path,
+) *donburi.Entry {
+	enemy := w.Entry(
+		w.Create(
+			component.Position,
+			component.Rotation,
+			component.Velocity,
+			component.Sprite,
+			component.AI,
+			component.Despawnable,
+			component.Collider,
+			component.Health,
+		),
+	)
+
+	donburi.SetValue(enemy, component.Position, component.PositionData{
+		Position: position,
+	})
+	donburi.SetValue(enemy, component.Rotation, component.RotationData{
+		Angle:         rotation,
+		OriginalAngle: 0,
+	})
+
+	image := assets.TankBase
+	donburi.SetValue(enemy, component.Sprite, component.SpriteData{
+		Image: image,
+		Layer: component.SpriteLayerGroundUnits,
+		Pivot: component.SpritePivotCenter,
+	})
+
+	width, height := image.Size()
+
+	donburi.SetValue(enemy, component.Collider, component.ColliderData{
+		Width:  float64(width),
+		Height: float64(height),
+		Layer:  component.CollisionLayerGroundEnemies,
+	})
+
+	if len(path.Points) > 0 {
+		donburi.SetValue(enemy, component.AI, component.AIData{
+			Type:      component.AITypeFollowPath,
+			Speed:     speed,
+			Path:      path.Points,
+			PathLoops: path.Loops,
+		})
+	} else {
+		donburi.SetValue(enemy, component.AI, component.AIData{
+			Type:  component.AITypeConstantVelocity,
+			Speed: speed,
+		})
+	}
+
+	donburi.SetValue(enemy, component.Health, component.HealthData{
+		Health:               5,
 		DamageIndicatorTimer: engine.NewTimer(time.Millisecond * 100),
 	})
 

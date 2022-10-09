@@ -9,7 +9,8 @@ type SpriteLayer int
 
 const (
 	SpriteLayerBackground SpriteLayer = iota
-	SpriteLayerUnits
+	SpriteLayerGroundUnits
+	SpriteLayerAirUnits
 )
 
 type SpritePivot int

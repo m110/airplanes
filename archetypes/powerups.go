@@ -8,9 +8,10 @@ import (
 
 	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/component"
+	"github.com/m110/airplanes/engine"
 )
 
-func NewRandomCollectible(w donburi.World, position component.PositionData) {
+func NewRandomCollectible(w donburi.World, position engine.Vector) {
 	collectible := w.Entry(w.Create(
 		component.Position,
 		component.Sprite,
@@ -32,11 +33,13 @@ func NewRandomCollectible(w donburi.World, position component.PositionData) {
 		collectibleType = component.CollectibleTypeHealth
 	}
 
-	donburi.SetValue(collectible, component.Position, position)
+	donburi.SetValue(collectible, component.Position, component.PositionData{
+		Position: position,
+	})
 
 	donburi.SetValue(collectible, component.Sprite, component.SpriteData{
 		Image: image,
-		Layer: component.SpriteLayerUnits,
+		Layer: component.SpriteLayerAirUnits,
 		Pivot: component.SpritePivotCenter,
 	})
 

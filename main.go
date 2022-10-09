@@ -102,7 +102,7 @@ func (g *Game) createWorld(levelIndex int, players int) donburi.World {
 	level := world.Entry(world.Create(component.Level))
 	component.GetLevel(level).ProgressionTimer = engine.NewTimer(time.Second * 3)
 
-	archetypes.NewCamera(world, component.PositionData{
+	archetypes.NewCamera(world, engine.Vector{
 		X: 0,
 		Y: float64(levelAsset.Background.Bounds().Dy() - screenHeight),
 	})
@@ -116,13 +116,26 @@ func (g *Game) createWorld(levelIndex int, players int) donburi.World {
 	})
 
 	for _, enemy := range levelAsset.Enemies {
-		archetypes.NewEnemy(
-			world,
-			component.PositionData(enemy.Position),
-			enemy.Rotation,
-			enemy.Speed,
-			enemy.Path,
-		)
+		switch enemy.Class {
+		case assets.EnemyClassAirplane:
+			archetypes.NewEnemyAirplane(
+				world,
+				enemy.Position,
+				enemy.Rotation,
+				enemy.Speed,
+				enemy.Path,
+			)
+		case assets.EnemyClassTank:
+			archetypes.NewEnemyTank(
+				world,
+				enemy.Position,
+				enemy.Rotation,
+				enemy.Speed,
+				enemy.Path,
+			)
+		default:
+			panic("unknown enemy class: " + enemy.Class)
+		}
 	}
 
 	if g.world == nil {

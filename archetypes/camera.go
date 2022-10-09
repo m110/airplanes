@@ -11,7 +11,7 @@ import (
 	"github.com/m110/airplanes/engine"
 )
 
-func NewCamera(w donburi.World, startPosition component.PositionData) *donburi.Entry {
+func NewCamera(w donburi.World, startPosition engine.Vector) *donburi.Entry {
 	camera := w.Entry(
 		w.Create(
 			component.Position,
@@ -22,7 +22,9 @@ func NewCamera(w donburi.World, startPosition component.PositionData) *donburi.E
 
 	cameraCamera := component.GetCamera(camera)
 	cameraCamera.MoveTimer = engine.NewTimer(time.Second * 3)
-	donburi.SetValue(camera, component.Position, startPosition)
+	donburi.SetValue(camera, component.Position, component.PositionData{
+		Position: startPosition,
+	})
 
 	return camera
 }

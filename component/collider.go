@@ -6,7 +6,8 @@ import (
 
 const (
 	CollisionLayerBullets ColliderLayer = iota
-	CollisionLayerEnemies
+	CollisionLayerGroundEnemies
+	CollisionLayerAirEnemies
 	CollisionLayerPlayers
 	CollisionLayerCollectibles
 )

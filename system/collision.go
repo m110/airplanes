@@ -26,7 +26,11 @@ type collisionEffect func(w donburi.World, entry *donburi.Entry, other *donburi.
 
 var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]collisionEffect{
 	component.CollisionLayerBullets: {
-		component.CollisionLayerEnemies: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
+		component.CollisionLayerAirEnemies: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
+			w.Remove(entry.Entity())
+			component.GetHealth(other).Damage()
+		},
+		component.CollisionLayerGroundEnemies: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
 			w.Remove(entry.Entity())
 			component.GetHealth(other).Damage()
 		},
@@ -49,7 +53,7 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 			w.Remove(other.Entity())
 		},
 	},
-	component.CollisionLayerEnemies: {
+	component.CollisionLayerAirEnemies: {
 		component.CollisionLayerPlayers: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
 			component.GetHealth(entry).Destroy()
 
@@ -110,8 +114,8 @@ func (c *Collision) Update(w donburi.World) {
 			if !entry.HasComponent(component.Position) {
 				panic(fmt.Sprintf("%#v missing position\n", entry.Entity().Id()))
 			}
-			pos := component.GetPosition(entry)
-			otherPos := component.GetPosition(other)
+			pos := component.GetPosition(entry).Position
+			otherPos := component.GetPosition(other).Position
 
 			// TODO The current approach doesn't take rotation into account
 			rect := engine.NewRect(pos.X, pos.Y, collider.Width, collider.Height)

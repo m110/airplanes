@@ -1,10 +1,13 @@
 package component
 
-import "github.com/yohamta/donburi"
+import (
+	"github.com/yohamta/donburi"
+
+	"github.com/m110/airplanes/engine"
+)
 
 type PositionData struct {
-	X float64
-	Y float64
+	Position engine.Vector
 }
 
 var Position = donburi.NewComponentType[PositionData]()

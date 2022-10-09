@@ -3,9 +3,8 @@ package component
 import "github.com/yohamta/donburi"
 
 type VelocityData struct {
-	X        float64
-	Y        float64
-	Rotation float64
+	X float64
+	Y float64
 }
 
 var Velocity = donburi.NewComponentType[VelocityData]()

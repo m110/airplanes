@@ -24,7 +24,7 @@ func NewBullet(w donburi.World) *donburi.Entry {
 
 	donburi.SetValue(bullet, component.Sprite, component.SpriteData{
 		Image: image,
-		Layer: component.SpriteLayerUnits,
+		Layer: component.SpriteLayerAirUnits,
 		Pivot: component.SpritePivotCenter,
 	})
 

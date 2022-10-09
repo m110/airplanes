@@ -11,6 +11,9 @@
         ":/automap-tiles.tsx": {
             "scaleInDock": 1
         },
+        "airplanes.tsx": {
+            "scaleInDock": 1
+        },
         "level1.tmx": {
             "expandedObjectLayers": [
                 2
@@ -19,7 +22,7 @@
             "selectedLayer": 1,
             "viewCenter": {
                 "x": 256.1809573908469,
-                "y": 2045.7653866386113
+                "y": 2044.7133087848501
             }
         },
         "level2.tmx": {
@@ -29,8 +32,8 @@
             "scale": 1.36,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 237.13235294117644,
-                "y": 895.9558823529411
+                "x": 234.1911764705882,
+                "y": 1404.7794117647059
             }
         },
         "ships.tsx": {
@@ -46,19 +49,16 @@
     "map.height": 80,
     "map.lastUsedFormat": "tmx",
     "openFiles": [
-        "tiles.tsx",
-        "level2.tmx",
-        "airplanes.tsx",
-        "airplanes.tsx",
-        "level1.tmx"
+        "level1.tmx",
+        "level2.tmx"
     ],
     "project": "airplanes.tiled-project",
-    "property.type": "float",
+    "property.type": "object",
     "recentFiles": [
-        "tiles.tsx",
+        "level2.tmx",
         "level1.tmx",
-        "airplanes.tsx",
-        "level2.tmx"
+        "tiles.tsx",
+        "ships.tsx"
     ],
     "resizeMap.removeObjects": false,
     "tileset.lastUsedFormat": "tsx",

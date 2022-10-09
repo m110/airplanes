@@ -11,6 +11,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/lafriks/go-tiled"
 	"github.com/lafriks/go-tiled/render"
+
+	"github.com/m110/airplanes/engine"
 )
 
 var (
@@ -83,10 +85,10 @@ var (
 	Levels []Level
 )
 
-type Position struct {
-	X float64
-	Y float64
-}
+const (
+	EnemyClassAirplane = "enemy-airplane"
+	EnemyClassTank     = "enemy-tank"
+)
 
 type Level struct {
 	Background *ebiten.Image
@@ -94,10 +96,16 @@ type Level struct {
 }
 
 type Enemy struct {
-	Position Position
+	Class    string
+	Position engine.Vector
 	Rotation float64
 	Speed    float64
-	Path     []Position
+	Path     Path
+}
+
+type Path struct {
+	Points []engine.Vector
+	Loops  bool
 }
 
 func MustLoadAssets() {
@@ -152,18 +160,37 @@ func mustLoadLevel(levelPath string) Level {
 
 	level := Level{}
 
-	paths := map[uint32][]Position{}
+	paths := map[uint32]Path{}
 	for _, og := range levelMap.ObjectGroups {
 		for _, o := range og.Objects {
 			if len(o.PolyLines) > 0 {
-				paths[o.ID] = []Position{}
+				var points []engine.Vector
 				for _, p := range o.PolyLines {
 					for _, pp := range *p.Points {
-						paths[o.ID] = append(paths[o.ID], Position{
+						points = append(points, engine.Vector{
 							X: o.X + pp.X,
 							Y: o.Y + pp.Y,
 						})
 					}
+				}
+				paths[o.ID] = Path{
+					Loops:  false,
+					Points: points,
+				}
+			}
+			if len(o.Polygons) > 0 {
+				var points []engine.Vector
+				for _, p := range o.Polygons {
+					for _, pp := range *p.Points {
+						points = append(points, engine.Vector{
+							X: o.X + pp.X,
+							Y: o.Y + pp.Y,
+						})
+					}
+				}
+				paths[o.ID] = Path{
+					Loops:  true,
+					Points: points,
 				}
 			}
 		}
@@ -171,9 +198,10 @@ func mustLoadLevel(levelPath string) Level {
 
 	for _, og := range levelMap.ObjectGroups {
 		for _, o := range og.Objects {
-			if o.Class == "enemy-airplane" {
+			if o.Class == EnemyClassAirplane || o.Class == EnemyClassTank {
 				enemy := Enemy{
-					Position: Position{
+					Class: o.Class,
+					Position: engine.Vector{
 						X: o.X,
 						Y: o.Y,
 					},

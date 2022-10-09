@@ -57,7 +57,7 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 		}
 	}
 
-	cameraPos := component.GetPosition(camera)
+	cameraPos := component.GetPosition(camera).Position
 
 	r.offscreen.Clear()
 
@@ -74,7 +74,7 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 
 	for _, layer := range layers {
 		for _, entry := range byLayer[layer] {
-			position := component.GetPosition(entry)
+			position := component.GetPosition(entry).Position
 			sprite := component.GetSprite(entry)
 
 			w, h := sprite.Image.Size()
