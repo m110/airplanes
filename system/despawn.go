@@ -52,7 +52,7 @@ func (d *Despawn) Update(w donburi.World) {
 
 		if maxY < cameraPos.Y || position.Y > cameraMaxY ||
 			maxX < cameraPos.X || position.X > cameraMaxX {
-			w.Remove(entry.Entity())
+			component.Destroy(w, entry)
 		}
 	})
 }

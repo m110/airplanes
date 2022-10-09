@@ -74,7 +74,7 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 
 	for _, layer := range layers {
 		for _, entry := range byLayer[layer] {
-			position := component.GetPosition(entry).Position
+			position := component.GetPosition(entry).AbsolutePosition()
 			sprite := component.GetSprite(entry)
 
 			w, h := sprite.Image.Size()
