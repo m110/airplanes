@@ -90,7 +90,6 @@ func NewEnemyTank(
 			component.Despawnable,
 			component.Collider,
 			component.Health,
-			component.Parent,
 		),
 	)
 
@@ -160,5 +159,5 @@ func NewEnemyTank(
 		Pivot: component.SpritePivotCenter,
 	})
 
-	component.GetParent(tank).AppendChild(tank, gun)
+	component.GetPosition(tank).AppendChild(tank, gun)
 }

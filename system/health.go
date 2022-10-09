@@ -37,7 +37,7 @@ func (h *Health) Update(w donburi.World) {
 					archetypes.NewRandomCollectible(w, component.GetPosition(entry).Position)
 				}
 
-				component.Destroy(w, entry)
+				Destroy(w, entry)
 			}
 		}
 	})

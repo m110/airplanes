@@ -27,11 +27,11 @@ type collisionEffect func(w donburi.World, entry *donburi.Entry, other *donburi.
 var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]collisionEffect{
 	component.CollisionLayerBullets: {
 		component.CollisionLayerAirEnemies: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
-			component.Destroy(w, entry)
+			Destroy(w, entry)
 			component.GetHealth(other).Damage()
 		},
 		component.CollisionLayerGroundEnemies: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
-			component.Destroy(w, entry)
+			Destroy(w, entry)
 			component.GetHealth(other).Damage()
 		},
 	},
@@ -50,7 +50,7 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 				player.AddLive()
 			}
 
-			component.Destroy(w, other)
+			Destroy(w, other)
 		},
 	},
 	component.CollisionLayerAirEnemies: {
@@ -62,7 +62,7 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 			}
 
 			playerNumber := component.GetPlayerAirplane(other).PlayerNumber
-			component.Destroy(w, other)
+			Destroy(w, other)
 
 			player := archetypes.MustFindPlayerByNumber(w, playerNumber)
 			player.Damage()

@@ -8,24 +8,31 @@ import (
 
 type PositionData struct {
 	Position engine.Vector
+
 	Parent   *donburi.Entry
+	Children []*donburi.Entry
+}
+
+func (d *PositionData) AppendChild(parent, child *donburi.Entry) {
+	d.Children = append(d.Children, child)
+	GetPosition(child).SetParent(parent)
 }
 
 func (d *PositionData) SetParent(parent *donburi.Entry) {
-	absPos := GetPosition(parent).AbsolutePosition()
+	absPos := GetPosition(parent).WorldPosition()
 
 	d.Parent = parent
 	d.Position.X -= absPos.X
 	d.Position.Y -= absPos.Y
 }
 
-func (d *PositionData) AbsolutePosition() engine.Vector {
+func (d *PositionData) WorldPosition() engine.Vector {
 	if d.Parent == nil {
 		return d.Position
 	}
 
 	parent := GetPosition(d.Parent)
-	return parent.AbsolutePosition().Add(d.Position)
+	return parent.WorldPosition().Add(d.Position)
 }
 
 var Position = donburi.NewComponentType[PositionData]()

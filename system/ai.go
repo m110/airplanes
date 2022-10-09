@@ -1,6 +1,7 @@
 package system
 
 import (
+	"fmt"
 	"math"
 
 	"github.com/yohamta/donburi"
@@ -56,8 +57,12 @@ func (a *AI) Update(w donburi.World) {
 				}
 
 				// TODO Could be simplified perhaps ^^'
-				angle := math.Atan2(y, x) * 180.0 / math.Pi
+				angle := math.Round(math.Atan2(y, x) * 180.0 / math.Pi)
 				rotation := component.GetRotation(entry)
+
+				if entry.Entity().Id() == 9 {
+					fmt.Println(entry.Entity().Id(), angle)
+				}
 
 				maxRotation := 2.0 * ai.Speed
 				targetAngle := angle - rotation.OriginalAngle
