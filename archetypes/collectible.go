@@ -17,6 +17,7 @@ func NewRandomCollectible(w donburi.World, position engine.Vector) {
 		component.Sprite,
 		component.Collider,
 		component.Collectible,
+		component.Despawnable,
 	))
 
 	var image *ebiten.Image
