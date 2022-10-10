@@ -111,6 +111,9 @@ func (d *Debug) Draw(w donburi.World, screen *ebiten.Image) {
 				if i < len(ai.Path)-1 {
 					next := ai.Path[i+1]
 					ebitenutil.DrawLine(d.offscreen, p.X, p.Y, next.X, next.Y, colornames.Red)
+				} else if ai.PathLoops {
+					next := ai.Path[0]
+					ebitenutil.DrawLine(d.offscreen, p.X, p.Y, next.X, next.Y, colornames.Red)
 				}
 			}
 		}
