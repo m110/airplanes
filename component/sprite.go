@@ -11,6 +11,7 @@ const (
 	SpriteLayerBackground SpriteLayer = iota
 	SpriteLayerGroundUnits
 	SpriteLayerShadows
+	SpriteLayerCollectibles
 	SpriteLayerAirUnits
 )
 

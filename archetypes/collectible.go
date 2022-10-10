@@ -40,7 +40,7 @@ func NewRandomCollectible(w donburi.World, position engine.Vector) {
 
 	donburi.SetValue(collectible, component.Sprite, component.SpriteData{
 		Image: image,
-		Layer: component.SpriteLayerAirUnits,
+		Layer: component.SpriteLayerCollectibles,
 		Pivot: component.SpritePivotCenter,
 	})
 
