@@ -72,9 +72,11 @@ func newBullet(w donburi.World, position engine.Vector, rotation float64) {
 
 	image := assets.LaserSingle
 
+	originalRotation := -90.0
+
 	donburi.SetValue(bullet, component.Transform, component.TransformData{
 		Position: position,
-		Rotation: -90 + rotation,
+		Rotation: originalRotation + rotation,
 	})
 
 	donburi.SetValue(bullet, component.Velocity, component.VelocityData{
@@ -85,7 +87,7 @@ func newBullet(w donburi.World, position engine.Vector, rotation float64) {
 		Image:            image,
 		Layer:            component.SpriteLayerAirUnits,
 		Pivot:            component.SpritePivotCenter,
-		OriginalRotation: -90,
+		OriginalRotation: originalRotation,
 	})
 
 	width, height := image.Size()

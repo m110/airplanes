@@ -119,10 +119,12 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData) {
 		Invulnerable:      true,
 	})
 
+	originalRotation := -90.0
+
 	pos := playerSpawn(w, player.PlayerNumber)
 	donburi.SetValue(airplane, component.Transform, component.TransformData{
 		Position: pos,
-		Rotation: -90,
+		Rotation: originalRotation,
 	})
 
 	image := settings.Image()
@@ -131,7 +133,7 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData) {
 		Image:            image,
 		Layer:            component.SpriteLayerAirUnits,
 		Pivot:            component.SpritePivotCenter,
-		OriginalRotation: -90,
+		OriginalRotation: originalRotation,
 	})
 
 	width, height := image.Size()

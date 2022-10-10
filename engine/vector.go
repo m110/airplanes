@@ -5,6 +5,10 @@ type Vector struct {
 	Y float64
 }
 
+func (v Vector) IsZero() bool {
+	return v.X == 0 && v.Y == 0
+}
+
 func (v Vector) Add(other Vector) Vector {
 	return Vector{
 		X: v.X + other.X,

@@ -29,9 +29,11 @@ func NewEnemyAirplane(
 		),
 	)
 
+	originalRotation := -90.0
+
 	donburi.SetValue(airplane, component.Transform, component.TransformData{
 		Position: position,
-		Rotation: rotation,
+		Rotation: originalRotation + rotation,
 	})
 
 	image := assets.AirplaneGraySmall
@@ -39,7 +41,7 @@ func NewEnemyAirplane(
 		Image:            image,
 		Layer:            component.SpriteLayerAirUnits,
 		Pivot:            component.SpritePivotCenter,
-		OriginalRotation: -90,
+		OriginalRotation: originalRotation,
 	})
 
 	width, height := image.Size()
@@ -137,16 +139,18 @@ func NewEnemyTank(
 		),
 	)
 
+	originalRotation := 90.0
+
 	donburi.SetValue(gun, component.Transform, component.TransformData{
 		Position: position,
-		Rotation: rotation,
+		Rotation: originalRotation + rotation,
 	})
 
 	donburi.SetValue(gun, component.Sprite, component.SpriteData{
 		Image:            assets.TankGun,
 		Layer:            component.SpriteLayerGroundUnits,
 		Pivot:            component.SpritePivotCenter,
-		OriginalRotation: 90,
+		OriginalRotation: originalRotation,
 	})
 
 	component.GetTransform(tank).AppendChild(tank, gun)

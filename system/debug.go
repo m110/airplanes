@@ -13,12 +13,15 @@ import (
 
 	"github.com/m110/airplanes/archetypes"
 	"github.com/m110/airplanes/component"
+	"github.com/m110/airplanes/engine"
 )
 
 type Debug struct {
 	query     *query.Query
 	debug     *component.DebugData
 	offscreen *ebiten.Image
+
+	pausedCameraVelocity engine.Vector
 }
 
 func NewDebug() *Debug {
@@ -63,6 +66,16 @@ func (d *Debug) Update(w donburi.World) {
 				transform := component.GetTransform(entry)
 				transform.Rotation += 10
 			})
+		}
+		if inpututil.IsKeyJustPressed(ebiten.KeyP) {
+			velocity := component.GetVelocity(archetypes.MustFindCamera(w))
+			if d.pausedCameraVelocity.IsZero() {
+				d.pausedCameraVelocity = velocity.Velocity
+				velocity.Velocity = engine.Vector{}
+			} else {
+				velocity.Velocity = d.pausedCameraVelocity
+				d.pausedCameraVelocity = engine.Vector{}
+			}
 		}
 	}
 }
