@@ -1,17 +1,14 @@
 package system
 
 import (
-	"fmt"
 	"math"
 	"sort"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/samber/lo"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
-	"golang.org/x/image/colornames"
 
 	"github.com/m110/airplanes/archetypes"
 	"github.com/m110/airplanes/assets"
@@ -118,31 +115,6 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 			}
 
 			r.offscreen.DrawImage(sprite.Image, op)
-
-			if r.debug != nil && r.debug.Enabled {
-				ebitenutil.DrawRect(r.offscreen, position.X-2, position.Y-2, 4, 4, colornames.Lime)
-				ebitenutil.DebugPrintAt(r.offscreen, fmt.Sprintf("%v", entry.Entity().Id()), int(x), int(y))
-
-				if entry.HasComponent(component.Collider) {
-					collider := component.GetCollider(entry)
-					ebitenutil.DrawLine(r.offscreen, x, y, x+collider.Width, y, colornames.Lime)
-					ebitenutil.DrawLine(r.offscreen, x, y, x, y+collider.Height, colornames.Lime)
-					ebitenutil.DrawLine(r.offscreen, x+collider.Width, y, x+collider.Width, y+collider.Height, colornames.Lime)
-					ebitenutil.DrawLine(r.offscreen, x, y+collider.Height, x+collider.Width, y+collider.Height, colornames.Lime)
-				}
-
-				if entry.HasComponent(component.AI) {
-					ai := component.GetAI(entry)
-					for i, p := range ai.Path {
-						ebitenutil.DrawRect(r.offscreen, p.X-2, p.Y-2, 4, 4, colornames.Red)
-						if i < len(ai.Path)-1 {
-							next := ai.Path[i+1]
-							ebitenutil.DrawLine(r.offscreen, p.X, p.Y, next.X, next.Y, colornames.Red)
-						}
-					}
-				}
-
-			}
 		}
 	}
 
