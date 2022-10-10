@@ -39,7 +39,7 @@ func (d *TransformData) WorldPosition() engine.Vector {
 }
 
 func (d *TransformData) Right() engine.Vector {
-	radians := d.Rotation * math.Pi / 180.0
+	radians := engine.ToRadians(d.Rotation)
 	return engine.Vector{
 		X: math.Cos(radians),
 		Y: math.Sin(radians),
@@ -47,7 +47,7 @@ func (d *TransformData) Right() engine.Vector {
 }
 
 func (d *TransformData) Up() engine.Vector {
-	radians := (d.Rotation - 90.0) * math.Pi / 180.0
+	radians := engine.ToRadians(d.Rotation - 90.0)
 	return engine.Vector{
 		X: math.Cos(radians),
 		Y: math.Sin(radians),

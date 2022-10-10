@@ -55,7 +55,7 @@ func NewBullet(w donburi.World, player *component.PlayerData, position engine.Ve
 			},
 		})
 		component.GetTransform(bulletNW).Rotation = -30
-		radians := float64(-30-90) / 180.0 * math.Pi
+		radians := engine.ToRadians(-30 - 90)
 		component.GetVelocity(bulletNW).X = 10 * math.Cos(radians)
 		component.GetVelocity(bulletNW).Y = 10 * math.Sin(radians)
 		donburi.SetValue(bulletNE, component.Transform, component.TransformData{
@@ -64,7 +64,7 @@ func NewBullet(w donburi.World, player *component.PlayerData, position engine.Ve
 				Y: position.Y - width,
 			},
 		})
-		radians = float64(30-90) / 180.0 * math.Pi
+		radians = engine.ToRadians(30 - 90)
 		component.GetVelocity(bulletNE).X = 10 * math.Cos(radians)
 		component.GetVelocity(bulletNE).Y = 10 * math.Sin(radians)
 		component.GetTransform(bulletNE).Rotation = 30
@@ -80,7 +80,7 @@ func NewBullet(w donburi.World, player *component.PlayerData, position engine.Ve
 			},
 		})
 		component.GetTransform(bulletNW).Rotation = -30
-		radians := float64(-30-90) / 180.0 * math.Pi
+		radians := engine.ToRadians(-30 - 90)
 		component.GetVelocity(bulletNW).X = 10 * math.Cos(radians)
 		component.GetVelocity(bulletNW).Y = 10 * math.Sin(radians)
 		donburi.SetValue(bulletNE, component.Transform, component.TransformData{
@@ -89,7 +89,7 @@ func NewBullet(w donburi.World, player *component.PlayerData, position engine.Ve
 				Y: position.Y,
 			},
 		})
-		radians = float64(30-90) / 180.0 * math.Pi
+		radians = engine.ToRadians(30 - 90)
 		component.GetVelocity(bulletNE).X = 10 * math.Cos(radians)
 		component.GetVelocity(bulletNE).Y = 10 * math.Sin(radians)
 		component.GetTransform(bulletNE).Rotation = 30

@@ -9,6 +9,7 @@ import (
 
 	"github.com/m110/airplanes/archetypes"
 	"github.com/m110/airplanes/component"
+	"github.com/m110/airplanes/engine"
 )
 
 type AI struct {
@@ -57,7 +58,7 @@ func (a *AI) Update(w donburi.World) {
 				transform := component.GetTransform(entry)
 
 				// TODO Could be simplified perhaps ^^'
-				angle := math.Round(math.Atan2(y, x) * 180.0 / math.Pi)
+				angle := math.Round(engine.ToDegrees(math.Atan2(y, x)))
 
 				// TODO Learn trigonometry
 				if transform.Rotation-angle > 180.0 {
@@ -79,7 +80,7 @@ func (a *AI) Update(w donburi.World) {
 				}
 				transform.Rotation += diff
 
-				radians := float64(angle) / 180.0 * math.Pi
+				radians := engine.ToRadians(angle)
 
 				velocity.X = math.Cos(radians) * ai.Speed
 				velocity.Y = math.Sin(radians) * ai.Speed
@@ -103,7 +104,7 @@ func spawnEnemy(w donburi.World, entry *donburi.Entry) {
 		velocity := component.GetVelocity(entry)
 
 		if ai.Type == component.AITypeConstantVelocity {
-			radians := float64(transform.Rotation) / 180.0 * math.Pi
+			radians := engine.ToRadians(transform.Rotation)
 			velocity.X = math.Cos(radians) * ai.Speed
 			velocity.Y = math.Sin(radians) * ai.Speed
 		}
