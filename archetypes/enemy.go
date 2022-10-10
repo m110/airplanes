@@ -19,8 +19,7 @@ func NewEnemyAirplane(
 ) {
 	airplane := w.Entry(
 		w.Create(
-			component.Position,
-			component.Rotation,
+			component.Transform,
 			component.Velocity,
 			component.Sprite,
 			component.AI,
@@ -30,19 +29,17 @@ func NewEnemyAirplane(
 		),
 	)
 
-	donburi.SetValue(airplane, component.Position, component.PositionData{
+	donburi.SetValue(airplane, component.Transform, component.TransformData{
 		Position: position,
-	})
-	donburi.SetValue(airplane, component.Rotation, component.RotationData{
-		Angle:         rotation,
-		OriginalAngle: -90,
+		Rotation: rotation,
 	})
 
 	image := assets.AirplaneGraySmall
 	donburi.SetValue(airplane, component.Sprite, component.SpriteData{
-		Image: image,
-		Layer: component.SpriteLayerAirUnits,
-		Pivot: component.SpritePivotCenter,
+		Image:            image,
+		Layer:            component.SpriteLayerAirUnits,
+		Pivot:            component.SpritePivotCenter,
+		OriginalRotation: -90,
 	})
 
 	width, height := image.Size()
@@ -82,8 +79,7 @@ func NewEnemyTank(
 ) {
 	tank := w.Entry(
 		w.Create(
-			component.Position,
-			component.Rotation,
+			component.Transform,
 			component.Velocity,
 			component.Sprite,
 			component.AI,
@@ -93,19 +89,17 @@ func NewEnemyTank(
 		),
 	)
 
-	donburi.SetValue(tank, component.Position, component.PositionData{
+	donburi.SetValue(tank, component.Transform, component.TransformData{
 		Position: position,
-	})
-	donburi.SetValue(tank, component.Rotation, component.RotationData{
-		Angle:         rotation,
-		OriginalAngle: 0,
+		Rotation: rotation,
 	})
 
 	image := assets.TankBase
 	donburi.SetValue(tank, component.Sprite, component.SpriteData{
-		Image: image,
-		Layer: component.SpriteLayerGroundUnits,
-		Pivot: component.SpritePivotCenter,
+		Image:            image,
+		Layer:            component.SpriteLayerGroundUnits,
+		Pivot:            component.SpritePivotCenter,
+		OriginalRotation: 0,
 	})
 
 	width, height := image.Size()
@@ -137,27 +131,23 @@ func NewEnemyTank(
 
 	gun := w.Entry(
 		w.Create(
-			component.Position,
-			component.Rotation,
+			component.Transform,
 			component.Sprite,
 			component.Despawnable,
 		),
 	)
 
-	donburi.SetValue(gun, component.Position, component.PositionData{
+	donburi.SetValue(gun, component.Transform, component.TransformData{
 		Position: position,
-	})
-
-	donburi.SetValue(gun, component.Rotation, component.RotationData{
-		Angle:         rotation,
-		OriginalAngle: 90,
+		Rotation: rotation,
 	})
 
 	donburi.SetValue(gun, component.Sprite, component.SpriteData{
-		Image: assets.TankGun,
-		Layer: component.SpriteLayerGroundUnits,
-		Pivot: component.SpritePivotCenter,
+		Image:            assets.TankGun,
+		Layer:            component.SpriteLayerGroundUnits,
+		Pivot:            component.SpritePivotCenter,
+		OriginalRotation: 90,
 	})
 
-	component.GetPosition(tank).AppendChild(tank, gun)
+	component.GetTransform(tank).AppendChild(tank, gun)
 }

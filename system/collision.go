@@ -111,11 +111,11 @@ func (c *Collision) Update(w donburi.World) {
 				continue
 			}
 
-			if !entry.HasComponent(component.Position) {
+			if !entry.HasComponent(component.Transform) {
 				panic(fmt.Sprintf("%#v missing position\n", entry.Entity().Id()))
 			}
-			pos := component.GetPosition(entry).Position
-			otherPos := component.GetPosition(other).Position
+			pos := component.GetTransform(entry).Position
+			otherPos := component.GetTransform(other).Position
 
 			// TODO The current approach doesn't take rotation into account
 			rect := engine.NewRect(pos.X, pos.Y, collider.Width, collider.Height)

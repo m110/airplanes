@@ -19,7 +19,7 @@ func NewBounds() *Bounds {
 	return &Bounds{
 		query: query.NewQuery(filter.Contains(
 			component.PlayerAirplane,
-			component.Position,
+			component.Transform,
 			component.Sprite,
 			component.Bounds,
 		)),
@@ -35,7 +35,7 @@ func (b *Bounds) Update(w donburi.World) {
 	}
 
 	camera := archetypes.MustFindCamera(w)
-	cameraPos := component.GetPosition(camera).Position
+	cameraPos := component.GetTransform(camera).Position
 
 	b.query.EachEntity(w, func(entry *donburi.Entry) {
 		bounds := component.GetBounds(entry)
@@ -43,7 +43,7 @@ func (b *Bounds) Update(w donburi.World) {
 			return
 		}
 
-		position := component.GetPosition(entry)
+		transform := component.GetTransform(entry)
 		sprite := component.GetSprite(entry)
 
 		w, h := sprite.Image.Size()
@@ -66,7 +66,7 @@ func (b *Bounds) Update(w donburi.World) {
 			maxY = cameraPos.Y + float64(b.settings.ScreenHeight) - height/2
 		}
 
-		position.Position.X = engine.Clamp(position.Position.X, minX, maxX)
-		position.Position.Y = engine.Clamp(position.Position.Y, minY, maxY)
+		transform.Position.X = engine.Clamp(transform.Position.X, minX, maxX)
+		transform.Position.Y = engine.Clamp(transform.Position.Y, minY, maxY)
 	})
 }

@@ -24,6 +24,10 @@ type SpriteData struct {
 	Image *ebiten.Image
 	Layer SpriteLayer
 	Pivot SpritePivot
+
+	// The original rotation of the sprite
+	// "Facing right" is considered 0 degrees
+	OriginalRotation float64
 }
 
 var Sprite = donburi.NewComponentType[SpriteData]()

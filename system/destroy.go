@@ -7,8 +7,8 @@ import (
 )
 
 func Destroy(w donburi.World, entry *donburi.Entry) {
-	if entry.HasComponent(component.Position) {
-		parent := component.GetPosition(entry)
+	if entry.HasComponent(component.Transform) {
+		parent := component.GetTransform(entry)
 		for _, child := range parent.Children {
 			Destroy(w, child)
 		}

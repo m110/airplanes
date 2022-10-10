@@ -19,11 +19,10 @@ func NewAI() *AI {
 	return &AI{
 		query: query.NewQuery(
 			filter.Contains(
-				component.Position,
+				component.Transform,
 				component.Velocity,
 				component.Sprite,
 				component.AI,
-				component.Rotation,
 			),
 		),
 	}
@@ -38,7 +37,7 @@ func (a *AI) Update(w donburi.World) {
 					return
 				}
 
-				position := component.GetPosition(entry).Position
+				position := component.GetTransform(entry).Position
 				velocity := component.GetVelocity(entry)
 
 				target := ai.Path[ai.NextTarget]
@@ -57,11 +56,13 @@ func (a *AI) Update(w donburi.World) {
 
 				// TODO Could be simplified perhaps ^^'
 				angle := math.Round(math.Atan2(y, x) * 180.0 / math.Pi)
-				rotation := component.GetRotation(entry)
+				sprite := component.GetSprite(entry)
+				transform := component.GetTransform(entry)
 
 				maxRotation := 2.0 * ai.Speed
-				targetAngle := angle - rotation.OriginalAngle
-				diff := targetAngle - rotation.Angle
+				// TODO sprite's original rotation should matter only for the Render system?
+				targetAngle := angle - sprite.OriginalRotation
+				diff := targetAngle - transform.Rotation
 				if math.Abs(diff) > maxRotation {
 					if diff > 0 {
 						diff = maxRotation
@@ -69,7 +70,7 @@ func (a *AI) Update(w donburi.World) {
 						diff = -maxRotation
 					}
 				}
-				rotation.Angle += diff
+				transform.Rotation += diff
 
 				radians := float64(angle) / 180.0 * math.Pi
 
@@ -83,20 +84,20 @@ func (a *AI) Update(w donburi.World) {
 }
 
 func spawnEnemy(w donburi.World, entry *donburi.Entry) {
-	cameraPos := component.GetPosition(archetypes.MustFindCamera(w))
+	cameraPos := component.GetTransform(archetypes.MustFindCamera(w)).WorldPosition()
 
 	ai := component.GetAI(entry)
-	position := component.GetPosition(entry).Position
-	rotation := component.GetRotation(entry)
+	transform := component.GetTransform(entry)
 	sprite := component.GetSprite(entry)
 
-	if position.Y+float64(sprite.Image.Bounds().Dy()) > cameraPos.Position.Y {
+	if transform.Position.Y+float64(sprite.Image.Bounds().Dy()) > cameraPos.Y {
 		ai.Spawned = true
 
 		velocity := component.GetVelocity(entry)
 
 		if ai.Type == component.AITypeConstantVelocity {
-			radians := float64(rotation.Angle+rotation.OriginalAngle) / 180.0 * math.Pi
+			// TODO sprite's original rotation should matter only for the Render system?
+			radians := float64(transform.Rotation+sprite.OriginalRotation) / 180.0 * math.Pi
 			velocity.X = math.Cos(radians) * ai.Speed
 			velocity.Y = math.Sin(radians) * ai.Speed
 		}

@@ -107,7 +107,7 @@ func (g *Game) createWorld(levelIndex int, players int) donburi.World {
 		Y: float64(levelAsset.Background.Bounds().Dy() - screenHeight),
 	})
 
-	levelEntity := world.Create(component.Position, component.Sprite)
+	levelEntity := world.Create(component.Transform, component.Sprite)
 	levelEntry := world.Entry(levelEntity)
 	donburi.SetValue(levelEntry, component.Sprite, component.SpriteData{
 		Image: levelAsset.Background,

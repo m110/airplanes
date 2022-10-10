@@ -16,7 +16,7 @@ func NewBullet(w donburi.World, player *component.PlayerData, position engine.Ve
 	if player.WeaponLevel == component.WeaponLevelSingle ||
 		player.WeaponLevel == component.WeaponLevelSingleFast {
 		bullet := newBullet(w)
-		donburi.SetValue(bullet, component.Position, component.PositionData{
+		donburi.SetValue(bullet, component.Transform, component.TransformData{
 			Position: engine.Vector{
 				X: position.X,
 				Y: position.Y - width,
@@ -30,13 +30,13 @@ func NewBullet(w donburi.World, player *component.PlayerData, position engine.Ve
 		player.WeaponLevel == component.WeaponLevelDoubleDiagonal {
 		bullet1 := newBullet(w)
 		bullet2 := newBullet(w)
-		donburi.SetValue(bullet1, component.Position, component.PositionData{
+		donburi.SetValue(bullet1, component.Transform, component.TransformData{
 			Position: engine.Vector{
 				X: position.X - width/2,
 				Y: position.Y - width/2,
 			},
 		})
-		donburi.SetValue(bullet2, component.Position, component.PositionData{
+		donburi.SetValue(bullet2, component.Transform, component.TransformData{
 			Position: engine.Vector{
 				X: position.X + width/2,
 				Y: position.Y - width/2,
@@ -48,17 +48,17 @@ func NewBullet(w donburi.World, player *component.PlayerData, position engine.Ve
 		player.WeaponLevel == component.WeaponLevelDoubleDiagonal {
 		bulletNW := newBullet(w)
 		bulletNE := newBullet(w)
-		donburi.SetValue(bulletNW, component.Position, component.PositionData{
+		donburi.SetValue(bulletNW, component.Transform, component.TransformData{
 			Position: engine.Vector{
 				X: position.X - width,
 				Y: position.Y - width,
 			},
 		})
-		component.GetRotation(bulletNW).Angle = -30
+		component.GetTransform(bulletNW).Rotation = -30
 		radians := float64(-30-90) / 180.0 * math.Pi
 		component.GetVelocity(bulletNW).X = 10 * math.Cos(radians)
 		component.GetVelocity(bulletNW).Y = 10 * math.Sin(radians)
-		donburi.SetValue(bulletNE, component.Position, component.PositionData{
+		donburi.SetValue(bulletNE, component.Transform, component.TransformData{
 			Position: engine.Vector{
 				X: position.X + width,
 				Y: position.Y - width,
@@ -67,23 +67,23 @@ func NewBullet(w donburi.World, player *component.PlayerData, position engine.Ve
 		radians = float64(30-90) / 180.0 * math.Pi
 		component.GetVelocity(bulletNE).X = 10 * math.Cos(radians)
 		component.GetVelocity(bulletNE).Y = 10 * math.Sin(radians)
-		component.GetRotation(bulletNE).Angle = 30
+		component.GetTransform(bulletNE).Rotation = 30
 	}
 
 	if player.WeaponLevel == component.WeaponLevelDoubleDiagonal {
 		bulletNW := newBullet(w)
 		bulletNE := newBullet(w)
-		donburi.SetValue(bulletNW, component.Position, component.PositionData{
+		donburi.SetValue(bulletNW, component.Transform, component.TransformData{
 			Position: engine.Vector{
 				X: position.X - width*1.1,
 				Y: position.Y,
 			},
 		})
-		component.GetRotation(bulletNW).Angle = -30
+		component.GetTransform(bulletNW).Rotation = -30
 		radians := float64(-30-90) / 180.0 * math.Pi
 		component.GetVelocity(bulletNW).X = 10 * math.Cos(radians)
 		component.GetVelocity(bulletNW).Y = 10 * math.Sin(radians)
-		donburi.SetValue(bulletNE, component.Position, component.PositionData{
+		donburi.SetValue(bulletNE, component.Transform, component.TransformData{
 			Position: engine.Vector{
 				X: position.X + width*1.1,
 				Y: position.Y,
@@ -92,7 +92,7 @@ func NewBullet(w donburi.World, player *component.PlayerData, position engine.Ve
 		radians = float64(30-90) / 180.0 * math.Pi
 		component.GetVelocity(bulletNE).X = 10 * math.Cos(radians)
 		component.GetVelocity(bulletNE).Y = 10 * math.Sin(radians)
-		component.GetRotation(bulletNE).Angle = 30
+		component.GetTransform(bulletNE).Rotation = 30
 	}
 }
 
@@ -100,8 +100,7 @@ func newBullet(w donburi.World) *donburi.Entry {
 	bullet := w.Entry(
 		w.Create(
 			component.Velocity,
-			component.Position,
-			component.Rotation,
+			component.Transform,
 			component.Sprite,
 			component.Despawnable,
 			component.Collider,
@@ -112,15 +111,11 @@ func newBullet(w donburi.World) *donburi.Entry {
 
 	component.GetVelocity(bullet).Y = -10
 
-	donburi.SetValue(bullet, component.Rotation, component.RotationData{
-		Angle:         0,
-		OriginalAngle: -90,
-	})
-
 	donburi.SetValue(bullet, component.Sprite, component.SpriteData{
-		Image: image,
-		Layer: component.SpriteLayerAirUnits,
-		Pivot: component.SpritePivotCenter,
+		Image:            image,
+		Layer:            component.SpriteLayerAirUnits,
+		Pivot:            component.SpritePivotCenter,
+		OriginalRotation: -90,
 	})
 
 	width, height := image.Size()

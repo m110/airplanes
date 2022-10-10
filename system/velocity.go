@@ -15,17 +15,17 @@ type Velocity struct {
 func NewVelocity() *Velocity {
 	return &Velocity{
 		query: query.NewQuery(
-			filter.Contains(component.Position, component.Velocity),
+			filter.Contains(component.Transform, component.Velocity),
 		),
 	}
 }
 
 func (v *Velocity) Update(w donburi.World) {
 	v.query.EachEntity(w, func(entry *donburi.Entry) {
-		position := component.GetPosition(entry)
+		transform := component.GetTransform(entry)
 		velocity := component.GetVelocity(entry)
 
-		position.Position.X += velocity.X
-		position.Position.Y += velocity.Y
+		transform.Position.X += velocity.X
+		transform.Position.Y += velocity.Y
 	})
 }

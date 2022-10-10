@@ -27,7 +27,7 @@ type Render struct {
 func NewRenderer() *Render {
 	return &Render{
 		query: query.NewQuery(
-			filter.Contains(component.Position, component.Sprite),
+			filter.Contains(component.Transform, component.Sprite),
 		),
 		// TODO figure out the proper size
 		offscreen: ebiten.NewImage(3000, 3000),
@@ -57,7 +57,7 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 		}
 	}
 
-	cameraPos := component.GetPosition(camera).Position
+	cameraPos := component.GetTransform(camera).Position
 
 	r.offscreen.Clear()
 
@@ -74,19 +74,18 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 
 	for _, layer := range layers {
 		for _, entry := range byLayer[layer] {
-			position := component.GetPosition(entry).WorldPosition()
+			transform := component.GetTransform(entry)
 			sprite := component.GetSprite(entry)
 
 			w, h := sprite.Image.Size()
 			halfW, halfH := float64(w)/2, float64(h)/2
 
 			op := &ebiten.DrawImageOptions{}
-			if entry.HasComponent(component.Rotation) {
-				op.GeoM.Translate(-halfW, -halfH)
-				angle := component.GetRotation(entry).Angle
-				op.GeoM.Rotate(float64(int(angle)%360) * 2 * math.Pi / 360)
-				op.GeoM.Translate(halfW, halfH)
-			}
+			op.GeoM.Translate(-halfW, -halfH)
+			op.GeoM.Rotate(float64(int(transform.Rotation)%360) * 2 * math.Pi / 360)
+			op.GeoM.Translate(halfW, halfH)
+
+			position := transform.WorldPosition()
 
 			x := position.X
 			y := position.Y

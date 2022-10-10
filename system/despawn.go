@@ -28,10 +28,10 @@ func (d *Despawn) Update(w donburi.World) {
 		}
 	}
 
-	cameraPos := component.GetPosition(archetypes.MustFindCamera(w)).Position
+	cameraPos := component.GetTransform(archetypes.MustFindCamera(w)).Position
 
 	d.query.EachEntity(w, func(entry *donburi.Entry) {
-		position := component.GetPosition(entry).Position
+		position := component.GetTransform(entry).Position
 		sprite := component.GetSprite(entry)
 		despawnable := component.GetDespawnable(entry)
 

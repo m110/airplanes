@@ -18,7 +18,7 @@ func NewControls() *Controls {
 	return &Controls{
 		query: query.NewQuery(
 			filter.Contains(
-				component.Position,
+				component.Transform,
 				component.Input,
 				component.Velocity,
 				component.Sprite,
@@ -59,7 +59,7 @@ func (i *Controls) Update(w donburi.World) {
 		player := archetypes.MustFindPlayerByNumber(w, airplane.PlayerNumber)
 		player.ShootTimer.Update()
 		if ebiten.IsKeyPressed(input.ShootKey) && player.ShootTimer.IsReady() {
-			position := component.GetPosition(entry).Position
+			position := component.GetTransform(entry).Position
 
 			archetypes.NewBullet(w, player, position)
 			player.ShootTimer.Reset()

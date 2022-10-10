@@ -13,7 +13,7 @@ import (
 
 func NewRandomCollectible(w donburi.World, position engine.Vector) {
 	collectible := w.Entry(w.Create(
-		component.Position,
+		component.Transform,
 		component.Sprite,
 		component.Collider,
 		component.Collectible,
@@ -33,7 +33,7 @@ func NewRandomCollectible(w donburi.World, position engine.Vector) {
 		collectibleType = component.CollectibleTypeHealth
 	}
 
-	donburi.SetValue(collectible, component.Position, component.PositionData{
+	donburi.SetValue(collectible, component.Transform, component.TransformData{
 		Position: position,
 	})
 
