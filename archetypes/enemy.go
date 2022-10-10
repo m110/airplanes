@@ -70,6 +70,8 @@ func NewEnemyAirplane(
 		Health:               3,
 		DamageIndicatorTimer: engine.NewTimer(time.Millisecond * 100),
 	})
+
+	NewShadow(w, airplane)
 }
 
 func NewEnemyTank(

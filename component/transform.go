@@ -38,6 +38,15 @@ func (d *TransformData) WorldPosition() engine.Vector {
 	return parent.WorldPosition().Add(d.Position)
 }
 
+func (d TransformData) WorldRotation() float64 {
+	if d.Parent == nil {
+		return d.Rotation
+	}
+
+	parent := GetTransform(d.Parent)
+	return parent.WorldRotation() + d.Rotation
+}
+
 func (d *TransformData) Right() engine.Vector {
 	radians := engine.ToRadians(d.Rotation)
 	return engine.Vector{

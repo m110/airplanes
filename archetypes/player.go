@@ -152,6 +152,8 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData) {
 		MoveSpeed:    3.5,
 		ShootKey:     inputs.Shoot,
 	})
+
+	NewShadow(w, airplane)
 }
 
 func MustFindPlayerByNumber(w donburi.World, playerNumber int) *component.PlayerData {
