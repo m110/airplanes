@@ -80,7 +80,10 @@ func (a *AI) Update(w donburi.World) {
 				}
 				transform.Rotation += diff
 
-				velocity.Velocity = transform.Right().MulScalar(ai.Speed)
+				// TODO Should use transform.Right() instead but it doesn't work
+				radians := engine.ToRadians(angle)
+				velocity.Velocity.X = math.Cos(radians) * ai.Speed
+				velocity.Velocity.Y = math.Sin(radians) * ai.Speed
 			}
 		} else {
 			spawnEnemy(w, entry)
