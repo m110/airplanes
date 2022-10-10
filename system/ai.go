@@ -61,16 +61,16 @@ func (a *AI) Update(w donburi.World) {
 				angle := math.Round(engine.ToDegrees(math.Atan2(y, x)))
 
 				// TODO Learn trigonometry
-				if transform.Rotation-angle > 180.0 {
+				if transform.WorldRotation()-angle > 180.0 {
 					angle = float64(int(angle+360.0) % 360)
-				} else if transform.Rotation-angle < -180.0 {
+				} else if transform.WorldRotation()-angle < -180.0 {
 					angle = float64(int(angle-360.0) % 360)
 				}
 
 				maxRotation := 2.0 * ai.Speed
 				targetAngle := angle
 
-				diff := targetAngle - transform.Rotation
+				diff := targetAngle - transform.WorldRotation()
 				if math.Abs(diff) > maxRotation {
 					if diff > 0 {
 						diff = maxRotation

@@ -121,7 +121,7 @@ func (d *Debug) Draw(w donburi.World, screen *ebiten.Image) {
 		ebitenutil.DrawRect(d.offscreen, transform.Position.X-2, transform.Position.Y-2, 4, 4, colornames.Lime)
 		ebitenutil.DebugPrintAt(d.offscreen, fmt.Sprintf("%v", entry.Entity().Id()), int(x), int(y))
 		ebitenutil.DebugPrintAt(d.offscreen, fmt.Sprintf("pos: %.0f, %.0f", position.X, position.Y), int(x), int(y)+40)
-		ebitenutil.DebugPrintAt(d.offscreen, fmt.Sprintf("rot: %v", transform.Rotation), int(x), int(y)+60)
+		ebitenutil.DebugPrintAt(d.offscreen, fmt.Sprintf("rot: %v", transform.WorldRotation()), int(x), int(y)+60)
 
 		length := 50.0
 		right := transform.WorldPosition().Add(transform.Right().MulScalar(length))

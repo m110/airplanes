@@ -48,7 +48,7 @@ func (d TransformData) WorldRotation() float64 {
 }
 
 func (d *TransformData) Right() engine.Vector {
-	radians := engine.ToRadians(d.Rotation)
+	radians := engine.ToRadians(d.WorldRotation())
 	return engine.Vector{
 		X: math.Cos(radians),
 		Y: math.Sin(radians),
@@ -56,7 +56,7 @@ func (d *TransformData) Right() engine.Vector {
 }
 
 func (d *TransformData) Up() engine.Vector {
-	radians := engine.ToRadians(d.Rotation - 90.0)
+	radians := engine.ToRadians(d.WorldRotation() - 90.0)
 	return engine.Vector{
 		X: math.Cos(radians),
 		Y: math.Sin(radians),
