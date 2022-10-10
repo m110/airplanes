@@ -29,6 +29,17 @@ func (d *TransformData) SetParent(parent *donburi.Entry) {
 	d.Position.Y -= absPos.Y
 }
 
+func (d *TransformData) SetWorldPosition(pos engine.Vector) {
+	if d.Parent == nil {
+		d.Position = pos
+		return
+	}
+
+	parentPos := GetTransform(d.Parent).WorldPosition()
+	d.Position.X = pos.X - parentPos.X
+	d.Position.Y = pos.Y - parentPos.Y
+}
+
 func (d *TransformData) WorldPosition() engine.Vector {
 	if d.Parent == nil {
 		return d.Position
@@ -38,7 +49,17 @@ func (d *TransformData) WorldPosition() engine.Vector {
 	return parent.WorldPosition().Add(d.Position)
 }
 
-func (d TransformData) WorldRotation() float64 {
+func (d *TransformData) SetWorldRotation(rotation float64) {
+	if d.Parent == nil {
+		d.Rotation = rotation
+		return
+	}
+
+	parent := GetTransform(d.Parent)
+	d.Rotation = rotation - parent.WorldRotation()
+}
+
+func (d *TransformData) WorldRotation() float64 {
 	if d.Parent == nil {
 		return d.Rotation
 	}
