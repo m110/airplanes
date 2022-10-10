@@ -141,19 +141,19 @@ func (g *Game) createWorld(levelIndex int, players int) donburi.World {
 	if g.world == nil {
 		// Spawn new players
 		for i := 1; i <= players; i++ {
-			archetypes.NewPlayer(world, i)
-			archetypes.NewPlayerAirplane(world, i)
+			player := archetypes.NewPlayer(world, i)
+			archetypes.NewPlayerAirplane(world, *component.GetPlayer(player))
 		}
 	} else {
 		// Transfer existing players from the previous level
 		query.NewQuery(filter.Contains(component.Player)).EachEntity(g.world, func(entry *donburi.Entry) {
-			player := *component.GetPlayer(entry)
+			player := component.GetPlayer(entry)
 			// In case the level ends while the player's respawning
 			player.Respawning = false
 
-			archetypes.NewPlayerFromPlayerData(world, player)
+			archetypes.NewPlayerFromPlayerData(world, *player)
 			if player.Lives > 0 {
-				archetypes.NewPlayerAirplane(world, player.PlayerNumber)
+				archetypes.NewPlayerAirplane(world, *player)
 			}
 		})
 	}

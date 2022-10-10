@@ -35,7 +35,7 @@ func (r *Respawn) Update(w donburi.World) {
 			player.RespawnTimer.Update()
 			if player.RespawnTimer.IsReady() {
 				player.Respawning = false
-				archetypes.NewPlayerAirplane(w, player.PlayerNumber)
+				archetypes.NewPlayerAirplane(w, *player)
 			}
 		}
 	})

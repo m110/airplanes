@@ -43,7 +43,7 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 			// TODO Is this the best place to do this?
 			switch component.GetCollectible(other).Type {
 			case component.CollectibleTypeWeaponUpgrade:
-				// TODO weapon upgrade
+				player.UpgradeWeapon()
 			case component.CollectibleTypeShield:
 				airplane.StartInvulnerability()
 			case component.CollectibleTypeHealth:

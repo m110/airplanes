@@ -70,7 +70,7 @@ func playerSpawn(w donburi.World, playerNumber int) engine.Vector {
 	}
 }
 
-func NewPlayer(w donburi.World, playerNumber int) {
+func NewPlayer(w donburi.World, playerNumber int) *donburi.Entry {
 	_, ok := players[playerNumber]
 	if !ok {
 		panic(fmt.Sprintf("unknown player number: %v", playerNumber))
@@ -80,20 +80,25 @@ func NewPlayer(w donburi.World, playerNumber int) {
 		PlayerNumber: playerNumber,
 		Lives:        3,
 		RespawnTimer: engine.NewTimer(time.Second * 3),
+		WeaponLevel:  component.WeaponLevelSingle,
 	}
 
-	NewPlayerFromPlayerData(w, player)
+	// TODO It looks like a constructor would fit here
+	player.ShootTimer = engine.NewTimer(player.WeaponCooldown())
+
+	return NewPlayerFromPlayerData(w, player)
 }
 
-func NewPlayerFromPlayerData(w donburi.World, playerData component.PlayerData) {
+func NewPlayerFromPlayerData(w donburi.World, playerData component.PlayerData) *donburi.Entry {
 	player := w.Entry(w.Create(component.Player))
 	donburi.SetValue(player, component.Player, playerData)
+	return player
 }
 
-func NewPlayerAirplane(w donburi.World, playerNumber int) {
-	settings, ok := players[playerNumber]
+func NewPlayerAirplane(w donburi.World, player component.PlayerData) {
+	settings, ok := players[player.PlayerNumber]
 	if !ok {
-		panic(fmt.Sprintf("unknown player number: %v", playerNumber))
+		panic(fmt.Sprintf("unknown player number: %v", player.PlayerNumber))
 	}
 
 	airplane := w.Entry(
@@ -109,12 +114,12 @@ func NewPlayerAirplane(w donburi.World, playerNumber int) {
 	)
 
 	donburi.SetValue(airplane, component.PlayerAirplane, component.PlayerAirplaneData{
-		PlayerNumber:      playerNumber,
+		PlayerNumber:      player.PlayerNumber,
 		InvulnerableTimer: engine.NewTimer(time.Second * 3),
 		Invulnerable:      true,
 	})
 
-	donburi.SetValue(airplane, component.Position, playerSpawn(w, playerNumber))
+	donburi.SetValue(airplane, component.Position, playerSpawn(w, player.PlayerNumber))
 
 	image := settings.Image()
 
@@ -139,7 +144,6 @@ func NewPlayerAirplane(w donburi.World, playerNumber int) {
 		MoveLeftKey:  inputs.Left,
 		MoveSpeed:    3.5,
 		ShootKey:     inputs.Shoot,
-		ShootTimer:   engine.NewTimer(time.Millisecond * 400),
 	})
 }
 

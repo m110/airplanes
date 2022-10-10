@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="140" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="64">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="140" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="67">
  <tileset firstgid="1" source="tiles.tsx"/>
  <tileset firstgid="121" source="airplanes.tsx"/>
  <layer id="1" name="Background" width="30" height="140">
@@ -241,5 +241,8 @@
   <object id="48" x="56" y="2000">
    <polyline points="0,0 0,-148 264,-144 260,-4 16,0"/>
   </object>
+  <object id="64" class="enemy-airplane" gid="142" x="316" y="1272" width="32" height="32" rotation="180"/>
+  <object id="65" class="enemy-airplane" gid="142" x="336" y="1296" width="32" height="32" rotation="180"/>
+  <object id="66" class="enemy-airplane" gid="142" x="352" y="1320" width="32" height="32" rotation="180"/>
  </objectgroup>
 </map>

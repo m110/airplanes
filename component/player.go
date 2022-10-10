@@ -1,9 +1,23 @@
 package component
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/yohamta/donburi"
 
 	"github.com/m110/airplanes/engine"
+)
+
+type WeaponLevel int
+
+const (
+	WeaponLevelSingle WeaponLevel = iota
+	WeaponLevelSingleFast
+	WeaponLevelDouble
+	WeaponLevelDoubleFast
+	WeaponLevelDiagonal
+	WeaponLevelDoubleDiagonal
 )
 
 type PlayerData struct {
@@ -12,6 +26,9 @@ type PlayerData struct {
 	Lives        int
 	Respawning   bool
 	RespawnTimer *engine.Timer
+
+	WeaponLevel WeaponLevel
+	ShootTimer  *engine.Timer
 }
 
 func (d *PlayerData) AddLive() {
@@ -28,6 +45,33 @@ func (d *PlayerData) Damage() {
 	if d.Lives > 0 {
 		d.Respawning = true
 		d.RespawnTimer.Reset()
+	}
+}
+
+func (d *PlayerData) UpgradeWeapon() {
+	if d.WeaponLevel == WeaponLevelDoubleDiagonal {
+		return
+	}
+	d.WeaponLevel++
+	d.ShootTimer = engine.NewTimer(d.WeaponCooldown())
+}
+
+func (d *PlayerData) WeaponCooldown() time.Duration {
+	switch d.WeaponLevel {
+	case WeaponLevelSingle:
+		return 400 * time.Millisecond
+	case WeaponLevelSingleFast:
+		return 300 * time.Millisecond
+	case WeaponLevelDouble:
+		return 300 * time.Millisecond
+	case WeaponLevelDoubleFast:
+		return 200 * time.Millisecond
+	case WeaponLevelDiagonal:
+		return 200 * time.Millisecond
+	case WeaponLevelDoubleDiagonal:
+		return 200 * time.Millisecond
+	default:
+		panic(fmt.Sprintf("unknown weapon level: %v", d.WeaponLevel))
 	}
 }
 

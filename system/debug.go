@@ -34,6 +34,15 @@ func (d *Debug) Update(w donburi.World) {
 	if inpututil.IsKeyJustPressed(ebiten.KeySlash) {
 		d.debug.Enabled = !d.debug.Enabled
 	}
+
+	if d.debug.Enabled {
+		if inpututil.IsKeyJustPressed(ebiten.Key1) {
+			query.NewQuery(filter.Contains(component.Player)).EachEntity(w, func(entry *donburi.Entry) {
+				player := component.GetPlayer(entry)
+				player.UpgradeWeapon()
+			})
+		}
+	}
 }
 
 func (d *Debug) Draw(w donburi.World, screen *ebiten.Image) {
