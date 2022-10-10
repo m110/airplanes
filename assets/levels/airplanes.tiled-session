@@ -53,7 +53,7 @@
         "level2.tmx"
     ],
     "project": "airplanes.tiled-project",
-    "property.type": "object",
+    "property.type": "float",
     "recentFiles": [
         "level2.tmx",
         "level1.tmx",

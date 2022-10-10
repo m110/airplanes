@@ -79,7 +79,7 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 
 			op := &ebiten.DrawImageOptions{}
 			op.GeoM.Translate(-halfW, -halfH)
-			op.GeoM.Rotate(float64(int(transform.Rotation)%360) * 2 * math.Pi / 360)
+			op.GeoM.Rotate(float64(int(transform.Rotation-sprite.OriginalRotation)%360) * 2 * math.Pi / 360)
 			op.GeoM.Translate(halfW, halfH)
 
 			position := transform.WorldPosition()

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="140" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="67">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="140" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="69">
  <tileset firstgid="1" source="tiles.tsx"/>
  <tileset firstgid="121" source="airplanes.tsx"/>
  <layer id="1" name="Background" width="30" height="140">
@@ -242,7 +242,21 @@
    <polyline points="0,0 0,-148 264,-144 260,-4 16,0"/>
   </object>
   <object id="64" class="enemy-airplane" gid="142" x="316" y="1272" width="32" height="32" rotation="180"/>
-  <object id="65" class="enemy-airplane" gid="142" x="336" y="1296" width="32" height="32" rotation="180"/>
+  <object id="65" class="enemy-airplane" gid="142" x="244" y="1892" width="32" height="32">
+   <properties>
+    <property name="speed" type="float" value="0"/>
+   </properties>
+  </object>
   <object id="66" class="enemy-airplane" gid="142" x="352" y="1320" width="32" height="32" rotation="180"/>
+  <object id="67" class="enemy-airplane" gid="142" x="292" y="1888" width="32" height="32" rotation="90">
+   <properties>
+    <property name="speed" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="68" class="enemy-airplane" gid="142" x="348" y="1888" width="32" height="32" rotation="180">
+   <properties>
+    <property name="speed" type="float" value="0"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>
