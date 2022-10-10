@@ -8,6 +8,7 @@ import (
 
 	"github.com/m110/airplanes/archetypes"
 	"github.com/m110/airplanes/component"
+	"github.com/m110/airplanes/engine"
 )
 
 type Controls struct {
@@ -38,20 +39,23 @@ func (i *Controls) Update(w donburi.World) {
 
 		velocity := component.GetVelocity(entry)
 
-		velocity.X = 0
-		velocity.Y = -0.5
+		velocity.Velocity = engine.Vector{
+			X: 0,
+			// TODO should match camera scroll speed, get this from settings?
+			Y: -0.5,
+		}
 
 		if ebiten.IsKeyPressed(input.MoveUpKey) {
-			velocity.Y = -input.MoveSpeed
+			velocity.Velocity.Y = -input.MoveSpeed
 		} else if ebiten.IsKeyPressed(input.MoveDownKey) {
-			velocity.Y = input.MoveSpeed
+			velocity.Velocity.Y = input.MoveSpeed
 		}
 
 		if ebiten.IsKeyPressed(input.MoveRightKey) {
-			velocity.X = input.MoveSpeed
+			velocity.Velocity.X = input.MoveSpeed
 		}
 		if ebiten.IsKeyPressed(input.MoveLeftKey) {
-			velocity.X = -input.MoveSpeed
+			velocity.Velocity.X = -input.MoveSpeed
 		}
 
 		// TODO Seems like a very complex way to get the weapon level and timer

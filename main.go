@@ -59,6 +59,7 @@ func NewGame() *Game {
 		system.NewHealth(),
 		system.NewRespawn(),
 		system.NewInvulnerable(),
+		system.NewCamera(),
 		render,
 		debug,
 	}

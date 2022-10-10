@@ -80,10 +80,7 @@ func (a *AI) Update(w donburi.World) {
 				}
 				transform.Rotation += diff
 
-				radians := engine.ToRadians(angle)
-
-				velocity.X = math.Cos(radians) * ai.Speed
-				velocity.Y = math.Sin(radians) * ai.Speed
+				velocity.Velocity = transform.Right().MulScalar(ai.Speed)
 			}
 		} else {
 			spawnEnemy(w, entry)
@@ -104,9 +101,7 @@ func spawnEnemy(w donburi.World, entry *donburi.Entry) {
 		velocity := component.GetVelocity(entry)
 
 		if ai.Type == component.AITypeConstantVelocity {
-			radians := engine.ToRadians(transform.Rotation)
-			velocity.X = math.Cos(radians) * ai.Speed
-			velocity.Y = math.Sin(radians) * ai.Speed
+			velocity.Velocity = transform.Right().MulScalar(ai.Speed)
 		}
 	}
 }

@@ -7,6 +7,7 @@ import (
 
 	"github.com/m110/airplanes/archetypes"
 	"github.com/m110/airplanes/component"
+	"github.com/m110/airplanes/engine"
 )
 
 type Progression struct {
@@ -56,8 +57,10 @@ func (p *Progression) Update(w donburi.World) {
 				input.Disabled = true
 
 				velocity := component.GetVelocity(entry)
-				velocity.X = 0
-				velocity.Y = -3
+				velocity.Velocity = engine.Vector{
+					X: 0,
+					Y: -3,
+				}
 
 				bounds := component.GetBounds(entry)
 				bounds.Disabled = true

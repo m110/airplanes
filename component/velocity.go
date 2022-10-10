@@ -1,10 +1,13 @@
 package component
 
-import "github.com/yohamta/donburi"
+import (
+	"github.com/yohamta/donburi"
+
+	"github.com/m110/airplanes/engine"
+)
 
 type VelocityData struct {
-	X float64
-	Y float64
+	Velocity engine.Vector
 }
 
 var Velocity = donburi.NewComponentType[VelocityData]()
