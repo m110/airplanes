@@ -54,14 +54,22 @@ func (a *AI) Update(w donburi.World) {
 					return
 				}
 
+				transform := component.GetTransform(entry)
+				sprite := component.GetSprite(entry)
+
 				// TODO Could be simplified perhaps ^^'
 				angle := math.Round(math.Atan2(y, x) * 180.0 / math.Pi)
-				sprite := component.GetSprite(entry)
-				transform := component.GetTransform(entry)
+
+				// TODO Learn trigonometry
+				if transform.Rotation-angle > 180.0 {
+					angle = float64(int(angle+360.0) % 360)
+				} else if transform.Rotation-angle < -180.0 {
+					angle = float64(int(angle-360.0) % 360)
+				}
 
 				maxRotation := 2.0 * ai.Speed
-				// TODO sprite's original rotation should matter only for the Render system?
 				targetAngle := angle - sprite.OriginalRotation
+
 				diff := targetAngle - transform.Rotation
 				if math.Abs(diff) > maxRotation {
 					if diff > 0 {
@@ -96,7 +104,6 @@ func spawnEnemy(w donburi.World, entry *donburi.Entry) {
 		velocity := component.GetVelocity(entry)
 
 		if ai.Type == component.AITypeConstantVelocity {
-			// TODO sprite's original rotation should matter only for the Render system?
 			radians := float64(transform.Rotation+sprite.OriginalRotation) / 180.0 * math.Pi
 			velocity.X = math.Cos(radians) * ai.Speed
 			velocity.Y = math.Sin(radians) * ai.Speed
