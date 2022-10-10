@@ -1,6 +1,8 @@
 package component
 
 import (
+	"math"
+
 	"github.com/yohamta/donburi"
 
 	"github.com/m110/airplanes/engine"
@@ -34,6 +36,22 @@ func (d *TransformData) WorldPosition() engine.Vector {
 
 	parent := GetTransform(d.Parent)
 	return parent.WorldPosition().Add(d.Position)
+}
+
+func (d *TransformData) Right() engine.Vector {
+	radians := d.Rotation * math.Pi / 180.0
+	return engine.Vector{
+		X: math.Cos(radians),
+		Y: math.Sin(radians),
+	}
+}
+
+func (d *TransformData) Up() engine.Vector {
+	radians := (d.Rotation - 90.0) * math.Pi / 180.0
+	return engine.Vector{
+		X: math.Cos(radians),
+		Y: math.Sin(radians),
+	}
 }
 
 var Transform = donburi.NewComponentType[TransformData]()

@@ -2,7 +2,6 @@ package system
 
 import (
 	"fmt"
-	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -112,15 +111,11 @@ func (d *Debug) Draw(w donburi.World, screen *ebiten.Image) {
 		ebitenutil.DebugPrintAt(d.offscreen, fmt.Sprintf("rot: %v", transform.Rotation), int(x), int(y)+60)
 
 		length := 50.0
-		rotRight := (transform.Rotation) * math.Pi / 180.0
-		rotUp := (transform.Rotation - 90) * math.Pi / 180.0
-		rightX := math.Cos(rotRight) * length
-		rightY := math.Sin(rotRight) * length
-		upX := math.Cos(rotUp) * length
-		upY := math.Sin(rotUp) * length
+		right := transform.WorldPosition().Add(transform.Right().MulScalar(length))
+		up := transform.WorldPosition().Add(transform.Up().MulScalar(length))
 
-		ebitenutil.DrawLine(d.offscreen, position.X, position.Y, position.X+rightX, position.Y+rightY, colornames.Blue)
-		ebitenutil.DrawLine(d.offscreen, position.X, position.Y, position.X+upX, position.Y+upY, colornames.Lime)
+		ebitenutil.DrawLine(d.offscreen, position.X, position.Y, right.X, right.Y, colornames.Blue)
+		ebitenutil.DrawLine(d.offscreen, position.X, position.Y, up.X, up.Y, colornames.Lime)
 
 		if entry.HasComponent(component.Collider) {
 			collider := component.GetCollider(entry)
