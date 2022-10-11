@@ -1,8 +1,8 @@
 package system
 
 import (
-	"fmt"
-
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
@@ -12,16 +12,33 @@ import (
 )
 
 type Respawn struct {
-	query *query.Query
+	query           *query.Query
+	game            *component.GameData
+	restartCallback func()
 }
 
-func NewRespawn() *Respawn {
+func NewRespawn(restartCallback func()) *Respawn {
 	return &Respawn{
-		query: query.NewQuery(filter.Contains(component.Player)),
+		query:           query.NewQuery(filter.Contains(component.Player)),
+		restartCallback: restartCallback,
 	}
 }
 
 func (r *Respawn) Update(w donburi.World) {
+	if r.game == nil {
+		r.game = component.MustFindGame(w)
+		if r.game == nil {
+			return
+		}
+	}
+
+	if r.game.GameOver {
+		if inpututil.IsKeyJustPressed(ebiten.KeyEnter) || inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+			r.restartCallback()
+		}
+		return
+	}
+
 	playersAlive := 0
 
 	r.query.EachEntity(w, func(entry *donburi.Entry) {
@@ -40,8 +57,13 @@ func (r *Respawn) Update(w donburi.World) {
 		}
 	})
 
+	// TODO Is this the proper system?
 	if playersAlive == 0 {
-		fmt.Println("Game Over")
-		// TODO Game Over
+		game := component.MustFindGame(w)
+		if !game.GameOver {
+			game.GameOver = true
+			cam := archetypes.MustFindCamera(w)
+			component.GetVelocity(cam).Velocity.Y = 0
+		}
 	}
 }

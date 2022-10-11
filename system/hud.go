@@ -15,8 +15,9 @@ import (
 )
 
 type HUD struct {
-	query *query.Query
-	game  *component.GameData
+	query              *query.Query
+	game               *component.GameData
+	gameOverBackground *ebiten.Image
 }
 
 func NewHUD() *HUD {
@@ -31,9 +32,10 @@ func (h *HUD) Draw(w donburi.World, screen *ebiten.Image) {
 		if h.game == nil {
 			return
 		}
+		// TODO I don't really like that it's done here
+		h.gameOverBackground = ebiten.NewImage(h.game.Settings.ScreenWidth, h.game.Settings.ScreenHeight)
+		h.gameOverBackground.Fill(colornames.Black)
 	}
-
-	text.Draw(screen, fmt.Sprintf("Score: %06d", h.game.Score), assets.NormalFont, h.game.Settings.ScreenWidth/4, 30, colornames.White)
 
 	h.query.EachEntity(w, func(entry *donburi.Entry) {
 		player := component.GetPlayer(entry)
@@ -59,4 +61,21 @@ func (h *HUD) Draw(w donburi.World, screen *ebiten.Image) {
 			screen.DrawImage(icon, op)
 		}
 	})
+
+	if h.game.GameOver {
+		op := &ebiten.DrawImageOptions{}
+		op.ColorM.Scale(0, 0, 0, 0.5)
+		screen.DrawImage(h.gameOverBackground, op)
+
+		text.Draw(
+			screen,
+			"GAME OVER",
+			assets.NormalFont,
+			h.game.Settings.ScreenWidth/4+20,
+			h.game.Settings.ScreenHeight/2,
+			colornames.White,
+		)
+	}
+
+	text.Draw(screen, fmt.Sprintf("Score: %06d", h.game.Score), assets.NormalFont, h.game.Settings.ScreenWidth/4, 30, colornames.White)
 }

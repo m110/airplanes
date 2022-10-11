@@ -53,7 +53,7 @@ func NewGame(screenWidth int, screenHeight int) *Game {
 		system.NewCollision(),
 		system.NewProgression(g.nextLevel),
 		system.NewHealth(),
-		system.NewRespawn(),
+		system.NewRespawn(g.restart),
 		system.NewInvulnerable(),
 		system.NewCamera(),
 		system.NewObserver(),
@@ -163,12 +163,22 @@ func (g *Game) createWorld(levelIndex int, players int) donburi.World {
 				archetypes.NewPlayerAirplane(world, *player)
 			}
 		})
-
 	}
 
 	world.Create(component.Debug)
 
 	return world
+}
+
+func (g *Game) restart() {
+	// TODO: Definitely a hack. Needed because GameData is cached in systems.
+	// Consider a different approach to GameData, perhaps not as a component?
+	component.MustFindGame(g.world).Score = 0
+	component.MustFindGame(g.world).GameOver = false
+
+	g.world = nil
+	g.level = 0
+	g.loadLevel()
 }
 
 func (g *Game) Update() {

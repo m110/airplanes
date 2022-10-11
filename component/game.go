@@ -8,6 +8,7 @@ import (
 
 type GameData struct {
 	Score    int
+	GameOver bool
 	Settings Settings
 }
 
