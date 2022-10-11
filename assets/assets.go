@@ -2,10 +2,10 @@ package assets
 
 import (
 	"bytes"
-	_ "embed"
+	"embed"
 	"image"
 	_ "image/png"
-	"path/filepath"
+	"io/fs"
 	"strconv"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -57,6 +57,9 @@ var (
 	shieldData []byte
 	//go:embed tiles/airplane_shield.png
 	airplaneShieldData []byte
+
+	//go:embed *
+	assetsFS embed.FS
 
 	AirplaneYellowSmall *ebiten.Image
 	AirplaneGreenSmall  *ebiten.Image
@@ -133,7 +136,7 @@ func MustLoadAssets() {
 	Shield = mustNewEbitenImage(shieldData)
 	AirplaneShield = mustNewEbitenImage(airplaneShieldData)
 
-	levelPaths, err := filepath.Glob("assets/levels/*.tmx")
+	levelPaths, err := fs.Glob(assetsFS, "levels/*.tmx")
 	if err != nil {
 		panic(err)
 	}
@@ -153,7 +156,7 @@ func mustNewEbitenImage(data []byte) *ebiten.Image {
 }
 
 func mustLoadLevel(levelPath string) Level {
-	levelMap, err := tiled.LoadFile(levelPath)
+	levelMap, err := tiled.LoadFile(levelPath, tiled.WithFileSystem(assetsFS))
 	if err != nil {
 		panic(err)
 	}
@@ -238,7 +241,7 @@ func mustLoadLevel(levelPath string) Level {
 		}
 	}
 
-	renderer, err := render.NewRenderer(levelMap)
+	renderer, err := render.NewRendererWithFileSystem(levelMap, assetsFS)
 	if err != nil {
 		panic(err)
 	}
