@@ -13,12 +13,11 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: '^1.18'
-      - run: |
-          go build -o web/game.wasm
+      - run: go build -o web/game.wasm
         env:
           GOOS: js
           GOARCH: wasm
-
+      - run: cp $(go env GOROOT)/misc/wasm/wasm_exec.js web/
       - uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: web
