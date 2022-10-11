@@ -60,6 +60,8 @@ func NewGame() *Game {
 		system.NewRespawn(),
 		system.NewInvulnerable(),
 		system.NewCamera(),
+		system.NewObserver(),
+		system.NewShooter(),
 		render,
 		debug,
 	}

@@ -25,6 +25,6 @@ func (v *Velocity) Update(w donburi.World) {
 		transform := component.GetTransform(entry)
 		velocity := component.GetVelocity(entry)
 
-		transform.Position = transform.Position.Add(velocity.Velocity)
+		transform.LocalPosition = transform.LocalPosition.Add(velocity.Velocity)
 	})
 }

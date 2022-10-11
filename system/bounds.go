@@ -35,7 +35,7 @@ func (b *Bounds) Update(w donburi.World) {
 	}
 
 	camera := archetypes.MustFindCamera(w)
-	cameraPos := component.GetTransform(camera).Position
+	cameraPos := component.GetTransform(camera).LocalPosition
 
 	b.query.EachEntity(w, func(entry *donburi.Entry) {
 		bounds := component.GetBounds(entry)
@@ -66,7 +66,7 @@ func (b *Bounds) Update(w donburi.World) {
 			maxY = cameraPos.Y + float64(b.settings.ScreenHeight) - height/2
 		}
 
-		transform.Position.X = engine.Clamp(transform.Position.X, minX, maxX)
-		transform.Position.Y = engine.Clamp(transform.Position.Y, minY, maxY)
+		transform.LocalPosition.X = engine.Clamp(transform.LocalPosition.X, minX, maxX)
+		transform.LocalPosition.Y = engine.Clamp(transform.LocalPosition.Y, minY, maxY)
 	})
 }

@@ -24,12 +24,12 @@ func NewCameraBounds() *CameraBounds {
 func (b *CameraBounds) Update(w donburi.World) {
 	b.query.EachEntity(w, func(entry *donburi.Entry) {
 		transform := component.GetTransform(entry)
-		if transform.Position.X < 0 {
-			transform.Position.X = 0
+		if transform.LocalPosition.X < 0 {
+			transform.LocalPosition.X = 0
 		}
 
-		if transform.Position.Y < 0 {
-			transform.Position.Y = 0
+		if transform.LocalPosition.Y < 0 {
+			transform.LocalPosition.Y = 0
 		}
 	})
 }

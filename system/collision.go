@@ -25,7 +25,7 @@ func NewCollision() *Collision {
 type collisionEffect func(w donburi.World, entry *donburi.Entry, other *donburi.Entry)
 
 var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]collisionEffect{
-	component.CollisionLayerBullets: {
+	component.CollisionLayerPlayerBullets: {
 		component.CollisionLayerAirEnemies: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
 			Destroy(w, entry)
 			component.GetHealth(other).Damage()
@@ -56,18 +56,27 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 	component.CollisionLayerAirEnemies: {
 		component.CollisionLayerPlayers: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
 			component.GetHealth(entry).Destroy()
-
-			if component.GetPlayerAirplane(other).Invulnerable {
-				return
-			}
-
-			playerNumber := component.GetPlayerAirplane(other).PlayerNumber
-			Destroy(w, other)
-
-			player := archetypes.MustFindPlayerByNumber(w, playerNumber)
-			player.Damage()
+			damagePlayer(w, other)
 		},
 	},
+	component.CollisionLayerEnemyBullets: {
+		component.CollisionLayerPlayers: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
+			Destroy(w, entry)
+			damagePlayer(w, other)
+		},
+	},
+}
+
+func damagePlayer(w donburi.World, entry *donburi.Entry) {
+	if component.GetPlayerAirplane(entry).Invulnerable {
+		return
+	}
+
+	playerNumber := component.GetPlayerAirplane(entry).PlayerNumber
+	Destroy(w, entry)
+
+	player := archetypes.MustFindPlayerByNumber(w, playerNumber)
+	player.Damage()
 }
 
 func (c *Collision) Update(w donburi.World) {
@@ -114,8 +123,8 @@ func (c *Collision) Update(w donburi.World) {
 			if !entry.HasComponent(component.Transform) {
 				panic(fmt.Sprintf("%#v missing position\n", entry.Entity().Id()))
 			}
-			pos := component.GetTransform(entry).Position
-			otherPos := component.GetTransform(other).Position
+			pos := component.GetTransform(entry).LocalPosition
+			otherPos := component.GetTransform(other).LocalPosition
 
 			// TODO The current approach doesn't take rotation into account
 			rect := engine.NewRect(pos.X, pos.Y, collider.Width, collider.Height)

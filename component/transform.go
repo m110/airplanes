@@ -9,8 +9,8 @@ import (
 )
 
 type TransformData struct {
-	Position engine.Vector
-	Rotation float64
+	LocalPosition engine.Vector
+	LocalRotation float64
 
 	Parent   *donburi.Entry
 	Children []*donburi.Entry
@@ -25,47 +25,47 @@ func (d *TransformData) SetParent(parent *donburi.Entry) {
 	absPos := GetTransform(parent).WorldPosition()
 
 	d.Parent = parent
-	d.Position.X -= absPos.X
-	d.Position.Y -= absPos.Y
+	d.LocalPosition.X -= absPos.X
+	d.LocalPosition.Y -= absPos.Y
 }
 
 func (d *TransformData) SetWorldPosition(pos engine.Vector) {
 	if d.Parent == nil {
-		d.Position = pos
+		d.LocalPosition = pos
 		return
 	}
 
 	parentPos := GetTransform(d.Parent).WorldPosition()
-	d.Position.X = pos.X - parentPos.X
-	d.Position.Y = pos.Y - parentPos.Y
+	d.LocalPosition.X = pos.X - parentPos.X
+	d.LocalPosition.Y = pos.Y - parentPos.Y
 }
 
 func (d *TransformData) WorldPosition() engine.Vector {
 	if d.Parent == nil {
-		return d.Position
+		return d.LocalPosition
 	}
 
 	parent := GetTransform(d.Parent)
-	return parent.WorldPosition().Add(d.Position)
+	return parent.WorldPosition().Add(d.LocalPosition)
 }
 
 func (d *TransformData) SetWorldRotation(rotation float64) {
 	if d.Parent == nil {
-		d.Rotation = rotation
+		d.LocalRotation = rotation
 		return
 	}
 
 	parent := GetTransform(d.Parent)
-	d.Rotation = rotation - parent.WorldRotation()
+	d.LocalRotation = rotation - parent.WorldRotation()
 }
 
 func (d *TransformData) WorldRotation() float64 {
 	if d.Parent == nil {
-		return d.Rotation
+		return d.LocalRotation
 	}
 
 	parent := GetTransform(d.Parent)
-	return parent.WorldRotation() + d.Rotation
+	return parent.WorldRotation() + d.LocalRotation
 }
 
 func (d *TransformData) Right() engine.Vector {
@@ -82,6 +82,13 @@ func (d *TransformData) Up() engine.Vector {
 		X: math.Cos(radians),
 		Y: math.Sin(radians),
 	}
+}
+
+func (d *TransformData) LookAt(target engine.Vector) {
+	x := target.X - d.WorldPosition().X
+	y := target.Y - d.WorldPosition().Y
+	radians := math.Atan2(y, x)
+	d.SetWorldRotation(engine.ToDegrees(radians))
 }
 
 var Transform = donburi.NewComponentType[TransformData]()

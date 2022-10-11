@@ -23,7 +23,7 @@ func NewCamera(w donburi.World, startPosition engine.Vector) *donburi.Entry {
 	cameraCamera := component.GetCamera(camera)
 	cameraCamera.MoveTimer = engine.NewTimer(time.Second * 3)
 	donburi.SetValue(camera, component.Transform, component.TransformData{
-		Position: startPosition,
+		LocalPosition: startPosition,
 	})
 
 	return camera

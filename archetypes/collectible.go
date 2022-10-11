@@ -35,7 +35,7 @@ func NewRandomCollectible(w donburi.World, position engine.Vector) {
 	}
 
 	donburi.SetValue(collectible, component.Transform, component.TransformData{
-		Position: position,
+		LocalPosition: position,
 	})
 
 	donburi.SetValue(collectible, component.Sprite, component.SpriteData{

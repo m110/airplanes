@@ -44,7 +44,7 @@ func (r *Render) Update(w donburi.World) {
 
 func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 	camera := archetypes.MustFindCamera(w)
-	cameraPos := component.GetTransform(camera).Position
+	cameraPos := component.GetTransform(camera).LocalPosition
 
 	r.offscreen.Clear()
 

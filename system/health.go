@@ -34,7 +34,7 @@ func (h *Health) Update(w donburi.World) {
 			if health.Health <= 0 {
 				r := rand.Intn(10)
 				if r < 7 {
-					archetypes.NewRandomCollectible(w, component.GetTransform(entry).Position)
+					archetypes.NewRandomCollectible(w, component.GetTransform(entry).LocalPosition)
 				}
 
 				Destroy(w, entry)

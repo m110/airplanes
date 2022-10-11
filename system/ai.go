@@ -38,7 +38,7 @@ func (a *AI) Update(w donburi.World) {
 					return
 				}
 
-				position := component.GetTransform(entry).Position
+				position := component.GetTransform(entry).LocalPosition
 				velocity := component.GetVelocity(entry)
 
 				target := ai.Path[ai.NextTarget]
@@ -78,7 +78,7 @@ func (a *AI) Update(w donburi.World) {
 						diff = -maxRotation
 					}
 				}
-				transform.Rotation += diff
+				transform.LocalRotation += diff
 
 				// TODO Should use transform.Right() instead but it doesn't work
 				radians := engine.ToRadians(angle)
@@ -98,7 +98,7 @@ func spawnEnemy(w donburi.World, entry *donburi.Entry) {
 	transform := component.GetTransform(entry)
 	sprite := component.GetSprite(entry)
 
-	if transform.Position.Y+float64(sprite.Image.Bounds().Dy()) > cameraPos.Y {
+	if transform.LocalPosition.Y+float64(sprite.Image.Bounds().Dy()) > cameraPos.Y {
 		ai.Spawned = true
 
 		velocity := component.GetVelocity(entry)

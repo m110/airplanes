@@ -23,7 +23,7 @@ func NewShadow(w donburi.World, parent *donburi.Entry) {
 	width, height := parentSprite.Image.Size()
 
 	transform := component.GetTransform(shadow)
-	transform.Position = engine.Vector{
+	transform.LocalPosition = engine.Vector{
 		X: -float64(width) * 0.35,
 		Y: float64(height) * 0.35,
 	}

@@ -52,7 +52,7 @@ var players = map[int]playerSettings{
 
 func playerSpawn(w donburi.World, playerNumber int) engine.Vector {
 	settings := component.MustFindSettings(w)
-	cameraPos := component.GetTransform(MustFindCamera(w)).Position
+	cameraPos := component.GetTransform(MustFindCamera(w)).LocalPosition
 
 	switch playerNumber {
 	case 1:
@@ -123,8 +123,8 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData) {
 
 	pos := playerSpawn(w, player.PlayerNumber)
 	donburi.SetValue(airplane, component.Transform, component.TransformData{
-		Position: pos,
-		Rotation: originalRotation,
+		LocalPosition: pos,
+		LocalRotation: originalRotation,
 	})
 
 	image := settings.Image()

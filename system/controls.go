@@ -63,9 +63,9 @@ func (i *Controls) Update(w donburi.World) {
 		player := archetypes.MustFindPlayerByNumber(w, airplane.PlayerNumber)
 		player.ShootTimer.Update()
 		if ebiten.IsKeyPressed(input.ShootKey) && player.ShootTimer.IsReady() {
-			position := component.GetTransform(entry).Position
+			position := component.GetTransform(entry).LocalPosition
 
-			archetypes.NewBullet(w, player, position)
+			archetypes.NewPlayerBullet(w, player, position)
 			player.ShootTimer.Reset()
 		}
 	})
