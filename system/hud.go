@@ -15,9 +15,9 @@ import (
 )
 
 type HUD struct {
-	query              *query.Query
-	game               *component.GameData
-	gameOverBackground *ebiten.Image
+	query         *query.Query
+	game          *component.GameStatus
+	shadowOverlay *ebiten.Image
 }
 
 func NewHUD() *HUD {
@@ -33,8 +33,8 @@ func (h *HUD) Draw(w donburi.World, screen *ebiten.Image) {
 			return
 		}
 		// TODO I don't really like that it's done here
-		h.gameOverBackground = ebiten.NewImage(h.game.Settings.ScreenWidth, h.game.Settings.ScreenHeight)
-		h.gameOverBackground.Fill(colornames.Black)
+		h.shadowOverlay = ebiten.NewImage(h.game.Settings.ScreenWidth, h.game.Settings.ScreenHeight)
+		h.shadowOverlay.Fill(colornames.Black)
 	}
 
 	h.query.EachEntity(w, func(entry *donburi.Entry) {
@@ -65,13 +65,26 @@ func (h *HUD) Draw(w donburi.World, screen *ebiten.Image) {
 	if h.game.GameOver {
 		op := &ebiten.DrawImageOptions{}
 		op.ColorM.Scale(0, 0, 0, 0.5)
-		screen.DrawImage(h.gameOverBackground, op)
+		screen.DrawImage(h.shadowOverlay, op)
 
 		text.Draw(
 			screen,
 			"GAME OVER",
 			assets.NormalFont,
 			h.game.Settings.ScreenWidth/4+20,
+			h.game.Settings.ScreenHeight/2,
+			colornames.White,
+		)
+	} else if h.game.Paused {
+		op := &ebiten.DrawImageOptions{}
+		op.ColorM.Scale(0, 0, 0, 0.5)
+		screen.DrawImage(h.shadowOverlay, op)
+
+		text.Draw(
+			screen,
+			"PAUSED",
+			assets.NormalFont,
+			h.game.Settings.ScreenWidth/4+40,
 			h.game.Settings.ScreenHeight/2,
 			colornames.White,
 		)

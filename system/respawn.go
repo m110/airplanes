@@ -13,7 +13,7 @@ import (
 
 type Respawn struct {
 	query           *query.Query
-	game            *component.GameData
+	game            *component.GameStatus
 	restartCallback func()
 }
 

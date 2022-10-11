@@ -11,7 +11,7 @@ import (
 
 type Despawn struct {
 	query *query.Query
-	game  *component.GameData
+	game  *component.GameStatus
 }
 
 func NewDespawn() *Despawn {

@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
@@ -41,7 +42,7 @@ func NewGame(screenWidth int, screenHeight int) *Game {
 	}
 
 	render := system.NewRenderer()
-	debug := system.NewDebug()
+	debug := system.NewDebug(g.loadLevel)
 
 	g.systems = []System{
 		system.NewControls(),
@@ -133,7 +134,7 @@ func (g *Game) createWorld(levelIndex int, players int) donburi.World {
 
 	if g.world == nil {
 		game := world.Entry(world.Create(component.Game))
-		donburi.SetValue(game, component.Game, component.GameData{
+		donburi.SetValue(game, component.Game, component.GameStatus{
 			Score: 0,
 			Settings: component.Settings{
 				ScreenWidth:  g.screenWidth,
@@ -171,8 +172,8 @@ func (g *Game) createWorld(levelIndex int, players int) donburi.World {
 }
 
 func (g *Game) restart() {
-	// TODO: Definitely a hack. Needed because GameData is cached in systems.
-	// Consider a different approach to GameData, perhaps not as a component?
+	// TODO: Definitely a hack. Needed because GameStatus is cached in systems.
+	// Consider a different approach to GameStatus, perhaps not as a component?
 	component.MustFindGame(g.world).Score = 0
 	component.MustFindGame(g.world).GameOver = false
 
@@ -182,6 +183,15 @@ func (g *Game) restart() {
 }
 
 func (g *Game) Update() {
+	gameData := component.MustFindGame(g.world)
+	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
+		gameData.Paused = !gameData.Paused
+	}
+
+	if gameData.Paused {
+		return
+	}
+
 	for _, s := range g.systems {
 		s.Update(g.world)
 	}

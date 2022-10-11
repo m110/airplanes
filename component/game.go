@@ -6,13 +6,14 @@ import (
 	"github.com/yohamta/donburi/query"
 )
 
-type GameData struct {
+type GameStatus struct {
 	Score    int
+	Paused   bool
 	GameOver bool
 	Settings Settings
 }
 
-func (d *GameData) AddScore(score int) {
+func (d *GameStatus) AddScore(score int) {
 	d.Score += score
 }
 
@@ -21,13 +22,13 @@ type Settings struct {
 	ScreenHeight int
 }
 
-var Game = donburi.NewComponentType[GameData]()
+var Game = donburi.NewComponentType[GameStatus]()
 
-func GetGame(entry *donburi.Entry) *GameData {
-	return donburi.Get[GameData](entry, Game)
+func GetGame(entry *donburi.Entry) *GameStatus {
+	return donburi.Get[GameStatus](entry, Game)
 }
 
-func MustFindGame(w donburi.World) *GameData {
+func MustFindGame(w donburi.World) *GameStatus {
 	game, ok := query.NewQuery(filter.Contains(Game)).FirstEntity(w)
 	if !ok {
 		panic("game not found")

@@ -22,15 +22,18 @@ type Debug struct {
 	offscreen *ebiten.Image
 
 	pausedCameraVelocity engine.Vector
+
+	restartLevelCallback func()
 }
 
-func NewDebug() *Debug {
+func NewDebug(restartLevelCallback func()) *Debug {
 	return &Debug{
 		query: query.NewQuery(
 			filter.Contains(component.Transform, component.Sprite),
 		),
 		// TODO figure out the proper size
-		offscreen: ebiten.NewImage(3000, 3000),
+		offscreen:            ebiten.NewImage(3000, 3000),
+		restartLevelCallback: restartLevelCallback,
 	}
 }
 
@@ -76,6 +79,9 @@ func (d *Debug) Update(w donburi.World) {
 				velocity.Velocity = d.pausedCameraVelocity
 				d.pausedCameraVelocity = engine.Vector{}
 			}
+		}
+		if inpututil.IsKeyJustPressed(ebiten.KeyR) {
+			d.restartLevelCallback()
 		}
 	}
 }
