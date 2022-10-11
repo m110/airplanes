@@ -7,7 +7,7 @@ import (
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
-	"github.com/m110/airplanes/archetypes"
+	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
 )
 
@@ -34,7 +34,7 @@ func (h *Health) Update(w donburi.World) {
 			if health.Health <= 0 {
 				r := rand.Intn(10)
 				if r < 7 {
-					archetypes.NewRandomCollectible(w, component.GetTransform(entry).LocalPosition)
+					archetype.NewRandomCollectible(w, component.GetTransform(entry).LocalPosition)
 				}
 
 				// TODO: It seems like a good candidate to be triggered by an event.

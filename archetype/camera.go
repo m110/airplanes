@@ -1,4 +1,4 @@
-package archetypes
+package archetype
 
 import (
 	"time"

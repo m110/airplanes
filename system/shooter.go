@@ -5,7 +5,7 @@ import (
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
-	"github.com/m110/airplanes/archetypes"
+	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
 )
 
@@ -41,7 +41,7 @@ func (s *Shooter) Update(w donburi.World) {
 
 			transform := component.GetTransform(entry)
 
-			archetypes.NewEnemyBullet(w, transform.WorldPosition(), transform.WorldRotation())
+			archetype.NewEnemyBullet(w, transform.WorldPosition(), transform.WorldRotation())
 		}
 	})
 }

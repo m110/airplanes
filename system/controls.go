@@ -6,7 +6,7 @@ import (
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
-	"github.com/m110/airplanes/archetypes"
+	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
 	"github.com/m110/airplanes/engine"
 )
@@ -60,12 +60,12 @@ func (i *Controls) Update(w donburi.World) {
 
 		// TODO Seems like a very complex way to get the weapon level and timer
 		airplane := component.GetPlayerAirplane(entry)
-		player := archetypes.MustFindPlayerByNumber(w, airplane.PlayerNumber)
+		player := archetype.MustFindPlayerByNumber(w, airplane.PlayerNumber)
 		player.ShootTimer.Update()
 		if ebiten.IsKeyPressed(input.ShootKey) && player.ShootTimer.IsReady() {
 			position := component.GetTransform(entry).LocalPosition
 
-			archetypes.NewPlayerBullet(w, player, position)
+			archetype.NewPlayerBullet(w, player, position)
 			player.ShootTimer.Reset()
 		}
 	})

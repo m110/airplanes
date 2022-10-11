@@ -7,7 +7,7 @@ import (
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
-	"github.com/m110/airplanes/archetypes"
+	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
 	"github.com/m110/airplanes/engine"
 )
@@ -38,7 +38,7 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 	component.CollisionLayerPlayers: {
 		component.CollisionLayerCollectibles: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
 			airplane := component.GetPlayerAirplane(entry)
-			player := archetypes.MustFindPlayerByNumber(w, airplane.PlayerNumber)
+			player := archetype.MustFindPlayerByNumber(w, airplane.PlayerNumber)
 
 			// TODO Is this the best place to do this?
 			switch component.GetCollectible(other).Type {
@@ -76,7 +76,7 @@ func damagePlayer(w donburi.World, entry *donburi.Entry) {
 	playerNumber := component.GetPlayerAirplane(entry).PlayerNumber
 	Destroy(w, entry)
 
-	player := archetypes.MustFindPlayerByNumber(w, playerNumber)
+	player := archetype.MustFindPlayerByNumber(w, playerNumber)
 	player.Damage()
 }
 

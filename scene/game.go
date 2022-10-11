@@ -1,4 +1,4 @@
-package scenes
+package scene
 
 import (
 	"time"
@@ -9,7 +9,7 @@ import (
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
-	"github.com/m110/airplanes/archetypes"
+	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/component"
 	"github.com/m110/airplanes/engine"
@@ -96,7 +96,7 @@ func (g *Game) createWorld(levelIndex int, players int) donburi.World {
 	level := world.Entry(world.Create(component.Level))
 	component.GetLevel(level).ProgressionTimer = engine.NewTimer(time.Second * 3)
 
-	archetypes.NewCamera(world, engine.Vector{
+	archetype.NewCamera(world, engine.Vector{
 		X: 0,
 		Y: float64(levelAsset.Background.Bounds().Dy() - g.screenHeight),
 	})
@@ -112,7 +112,7 @@ func (g *Game) createWorld(levelIndex int, players int) donburi.World {
 	for _, enemy := range levelAsset.Enemies {
 		switch enemy.Class {
 		case assets.EnemyClassAirplane:
-			archetypes.NewEnemyAirplane(
+			archetype.NewEnemyAirplane(
 				world,
 				enemy.Position,
 				enemy.Rotation,
@@ -120,7 +120,7 @@ func (g *Game) createWorld(levelIndex int, players int) donburi.World {
 				enemy.Path,
 			)
 		case assets.EnemyClassTank:
-			archetypes.NewEnemyTank(
+			archetype.NewEnemyTank(
 				world,
 				enemy.Position,
 				enemy.Rotation,
@@ -144,8 +144,8 @@ func (g *Game) createWorld(levelIndex int, players int) donburi.World {
 
 		// Spawn new players
 		for i := 1; i <= players; i++ {
-			player := archetypes.NewPlayer(world, i)
-			archetypes.NewPlayerAirplane(world, *component.GetPlayer(player))
+			player := archetype.NewPlayer(world, i)
+			archetype.NewPlayerAirplane(world, *component.GetPlayer(player))
 		}
 	} else {
 		// Keep the same game data across levels
@@ -159,9 +159,9 @@ func (g *Game) createWorld(levelIndex int, players int) donburi.World {
 			// In case the level ends while the player's respawning
 			player.Respawning = false
 
-			archetypes.NewPlayerFromPlayerData(world, *player)
+			archetype.NewPlayerFromPlayerData(world, *player)
 			if player.Lives > 0 {
-				archetypes.NewPlayerAirplane(world, *player)
+				archetype.NewPlayerAirplane(world, *player)
 			}
 		})
 	}

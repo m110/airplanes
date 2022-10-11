@@ -3,7 +3,7 @@ package system
 import (
 	"github.com/yohamta/donburi"
 
-	"github.com/m110/airplanes/archetypes"
+	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
 )
 
@@ -14,7 +14,7 @@ func NewCamera() *Camera {
 }
 
 func (c *Camera) Update(w donburi.World) {
-	camera := archetypes.MustFindCamera(w)
+	camera := archetype.MustFindCamera(w)
 	cam := component.GetCamera(camera)
 
 	if !cam.Moving {

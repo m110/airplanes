@@ -5,7 +5,7 @@ import (
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
-	"github.com/m110/airplanes/archetypes"
+	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
 )
 
@@ -28,7 +28,7 @@ func (d *Despawn) Update(w donburi.World) {
 		}
 	}
 
-	cameraPos := component.GetTransform(archetypes.MustFindCamera(w)).LocalPosition
+	cameraPos := component.GetTransform(archetype.MustFindCamera(w)).LocalPosition
 
 	d.query.EachEntity(w, func(entry *donburi.Entry) {
 		position := component.GetTransform(entry).LocalPosition

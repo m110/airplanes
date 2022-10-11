@@ -1,4 +1,4 @@
-package archetypes
+package archetype
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"

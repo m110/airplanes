@@ -10,7 +10,7 @@ import (
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
-	"github.com/m110/airplanes/archetypes"
+	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
 )
 
@@ -42,7 +42,7 @@ func (r *Render) Update(w donburi.World) {
 }
 
 func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
-	camera := archetypes.MustFindCamera(w)
+	camera := archetype.MustFindCamera(w)
 	cameraPos := component.GetTransform(camera).LocalPosition
 
 	r.offscreen.Clear()

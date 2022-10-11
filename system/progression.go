@@ -5,7 +5,7 @@ import (
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
-	"github.com/m110/airplanes/archetypes"
+	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
 	"github.com/m110/airplanes/engine"
 )
@@ -34,7 +34,7 @@ func (p *Progression) Update(w donburi.World) {
 	level := component.GetLevel(levelEntry)
 
 	if level.Progressed {
-		cameraPos := component.GetTransform(archetypes.MustFindCamera(w)).LocalPosition
+		cameraPos := component.GetTransform(archetype.MustFindCamera(w)).LocalPosition
 		playersVisible := false
 		p.query.EachEntity(w, func(entry *donburi.Entry) {
 			playerPos := component.GetTransform(entry).LocalPosition
@@ -69,7 +69,7 @@ func (p *Progression) Update(w donburi.World) {
 			level.Progressed = true
 		}
 	} else {
-		camera := archetypes.MustFindCamera(w)
+		camera := archetype.MustFindCamera(w)
 
 		cameraPos := component.GetTransform(camera).LocalPosition
 		if cameraPos.Y == 0 {

@@ -7,7 +7,7 @@ import (
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
-	"github.com/m110/airplanes/archetypes"
+	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
 )
 
@@ -52,7 +52,7 @@ func (r *Respawn) Update(w donburi.World) {
 			player.RespawnTimer.Update()
 			if player.RespawnTimer.IsReady() {
 				player.Respawning = false
-				archetypes.NewPlayerAirplane(w, *player)
+				archetype.NewPlayerAirplane(w, *player)
 			}
 		}
 	})
@@ -62,7 +62,7 @@ func (r *Respawn) Update(w donburi.World) {
 		game := component.MustFindGame(w)
 		if !game.GameOver {
 			game.GameOver = true
-			cam := archetypes.MustFindCamera(w)
+			cam := archetype.MustFindCamera(w)
 			component.GetVelocity(cam).Velocity.Y = 0
 		}
 	}

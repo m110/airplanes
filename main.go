@@ -8,7 +8,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 
 	"github.com/m110/airplanes/assets"
-	"github.com/m110/airplanes/scenes"
+	"github.com/m110/airplanes/scene"
 )
 
 var (
@@ -34,11 +34,11 @@ func NewGame() *Game {
 }
 
 func (g *Game) switchToTitle() {
-	g.scene = scenes.NewTitle(screenWidth, screenHeight, g.switchToGame)
+	g.scene = scene.NewTitle(screenWidth, screenHeight, g.switchToGame)
 }
 
 func (g *Game) switchToGame() {
-	g.scene = scenes.NewGame(screenWidth, screenHeight)
+	g.scene = scene.NewGame(screenWidth, screenHeight)
 }
 
 func (g *Game) Update() error {

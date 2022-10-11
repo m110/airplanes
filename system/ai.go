@@ -7,7 +7,7 @@ import (
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
-	"github.com/m110/airplanes/archetypes"
+	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
 	"github.com/m110/airplanes/engine"
 )
@@ -92,7 +92,7 @@ func (a *AI) Update(w donburi.World) {
 }
 
 func spawnEnemy(w donburi.World, entry *donburi.Entry) {
-	cameraPos := component.GetTransform(archetypes.MustFindCamera(w)).WorldPosition()
+	cameraPos := component.GetTransform(archetype.MustFindCamera(w)).WorldPosition()
 
 	ai := component.GetAI(entry)
 	transform := component.GetTransform(entry)

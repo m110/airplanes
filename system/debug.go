@@ -11,7 +11,7 @@ import (
 	"github.com/yohamta/donburi/query"
 	"golang.org/x/image/colornames"
 
-	"github.com/m110/airplanes/archetypes"
+	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
 	"github.com/m110/airplanes/engine"
 )
@@ -71,7 +71,7 @@ func (d *Debug) Update(w donburi.World) {
 			})
 		}
 		if inpututil.IsKeyJustPressed(ebiten.KeyP) {
-			velocity := component.GetVelocity(archetypes.MustFindCamera(w))
+			velocity := component.GetVelocity(archetype.MustFindCamera(w))
 			if d.pausedCameraVelocity.IsZero() {
 				d.pausedCameraVelocity = velocity.Velocity
 				velocity.Velocity = engine.Vector{}
@@ -159,7 +159,7 @@ func (d *Debug) Draw(w donburi.World, screen *ebiten.Image) {
 		}
 	})
 
-	camera := archetypes.MustFindCamera(w)
+	camera := archetype.MustFindCamera(w)
 	cameraPos := component.GetTransform(camera).LocalPosition
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(-cameraPos.X, -cameraPos.Y)
