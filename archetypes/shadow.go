@@ -17,7 +17,7 @@ func NewShadow(w donburi.World, parent *donburi.Entry) {
 	)
 
 	parentTransform := component.GetTransform(parent)
-	parentTransform.AppendChild(parent, shadow)
+	parentTransform.AppendChild(parent, shadow, false)
 
 	parentSprite := component.GetSprite(parent)
 	width, height := parentSprite.Image.Size()

@@ -11,7 +11,6 @@ import (
 	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/archetypes"
-	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/component"
 )
 
@@ -61,8 +60,13 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 
 	for _, layer := range layers {
 		for _, entry := range byLayer[layer] {
-			transform := component.GetTransform(entry)
 			sprite := component.GetSprite(entry)
+
+			if sprite.Hidden {
+				continue
+			}
+
+			transform := component.GetTransform(entry)
 
 			w, h := sprite.Image.Size()
 			halfW, halfH := float64(w)/2, float64(h)/2
@@ -84,26 +88,6 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 			}
 
 			op.GeoM.Translate(x, y)
-
-			// TODO Probably not the best place for this?
-			// Consider a child object that's hidden sometimes?
-			if entry.HasComponent(component.Health) {
-				if component.GetHealth(entry).JustDamaged {
-					op.ColorM.Translate(1.0, 1.0, 1.0, 0)
-				}
-			}
-
-			// TODO: Shouldn't be here, consider a child object instead
-			if entry.HasComponent(component.PlayerAirplane) {
-				airplane := component.GetPlayerAirplane(entry)
-				if airplane.Invulnerable {
-					op := &ebiten.DrawImageOptions{}
-					shieldW, shieldH := assets.AirplaneShield.Size()
-					op.GeoM.Translate(x-float64(shieldW)*0.25, y-float64(shieldH)*0.25)
-					r.offscreen.DrawImage(assets.AirplaneShield, op)
-				}
-			}
-
 			r.offscreen.DrawImage(sprite.Image, op)
 		}
 	}

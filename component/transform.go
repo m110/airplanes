@@ -16,17 +16,21 @@ type TransformData struct {
 	Children []*donburi.Entry
 }
 
-func (d *TransformData) AppendChild(parent, child *donburi.Entry) {
+func (d *TransformData) AppendChild(parent, child *donburi.Entry, keepWorldPosition bool) {
 	d.Children = append(d.Children, child)
-	GetTransform(child).SetParent(parent)
+	GetTransform(child).SetParent(parent, keepWorldPosition)
 }
 
-func (d *TransformData) SetParent(parent *donburi.Entry) {
-	absPos := GetTransform(parent).WorldPosition()
-
+func (d *TransformData) SetParent(parent *donburi.Entry, keepWorldPosition bool) {
 	d.Parent = parent
-	d.LocalPosition.X -= absPos.X
-	d.LocalPosition.Y -= absPos.Y
+	if keepWorldPosition {
+		parentTransform := GetTransform(parent)
+		parentPos := parentTransform.WorldPosition()
+
+		d.LocalPosition.X -= parentPos.X
+		d.LocalPosition.Y -= parentPos.Y
+		d.LocalRotation -= parentTransform.WorldRotation()
+	}
 }
 
 func (d *TransformData) SetWorldPosition(pos engine.Vector) {

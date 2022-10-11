@@ -24,7 +24,7 @@ func (s *Invulnerable) Update(w donburi.World) {
 		if player.Invulnerable {
 			player.InvulnerableTimer.Update()
 			if player.InvulnerableTimer.IsReady() {
-				player.Invulnerable = false
+				player.StopInvulnerability()
 			}
 		}
 	})

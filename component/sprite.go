@@ -13,6 +13,7 @@ const (
 	SpriteLayerShadows
 	SpriteLayerCollectibles
 	SpriteLayerAirUnits
+	SpriteLayerIndicators
 )
 
 type SpritePivot int
@@ -30,6 +31,8 @@ type SpriteData struct {
 	// The original rotation of the sprite
 	// "Facing right" is considered 0 degrees
 	OriginalRotation float64
+
+	Hidden bool
 }
 
 var Sprite = donburi.NewComponentType[SpriteData]()

@@ -113,11 +113,26 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData) {
 		),
 	)
 
-	donburi.SetValue(airplane, component.PlayerAirplane, component.PlayerAirplaneData{
-		PlayerNumber:      player.PlayerNumber,
-		InvulnerableTimer: engine.NewTimer(time.Second * 3),
-		Invulnerable:      true,
+	shield := w.Entry(
+		w.Create(
+			component.Transform,
+			component.Sprite,
+		),
+	)
+	donburi.SetValue(shield, component.Sprite, component.SpriteData{
+		Image:            assets.AirplaneShield,
+		Layer:            component.SpriteLayerIndicators,
+		Pivot:            component.SpritePivotCenter,
+		OriginalRotation: -90.0,
 	})
+
+	donburi.SetValue(airplane, component.PlayerAirplane, component.PlayerAirplaneData{
+		PlayerNumber:          player.PlayerNumber,
+		InvulnerableTimer:     engine.NewTimer(time.Second * 3),
+		InvulnerableIndicator: component.GetSprite(shield),
+	})
+
+	component.GetPlayerAirplane(airplane).StartInvulnerability()
 
 	originalRotation := -90.0
 
@@ -126,6 +141,8 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData) {
 		LocalPosition: pos,
 		LocalRotation: originalRotation,
 	})
+
+	component.GetTransform(airplane).AppendChild(airplane, shield, false)
 
 	image := settings.Image()
 

@@ -3,6 +3,7 @@ package archetypes
 import (
 	"time"
 
+	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
@@ -71,6 +72,7 @@ func NewEnemyAirplane(
 	donburi.SetValue(airplane, component.Health, component.HealthData{
 		Health:               3,
 		DamageIndicatorTimer: engine.NewTimer(time.Millisecond * 100),
+		DamageIndicator:      newDamageIndicator(w, airplane),
 	})
 
 	NewShadow(w, airplane)
@@ -133,6 +135,7 @@ func NewEnemyTank(
 	donburi.SetValue(tank, component.Health, component.HealthData{
 		Health:               5,
 		DamageIndicatorTimer: engine.NewTimer(time.Millisecond * 100),
+		DamageIndicator:      newDamageIndicator(w, tank),
 	})
 
 	gun := w.Entry(
@@ -168,5 +171,33 @@ func NewEnemyTank(
 		ShootTimer: engine.NewTimer(time.Millisecond * 2500),
 	})
 
-	component.GetTransform(tank).AppendChild(tank, gun)
+	component.GetTransform(tank).AppendChild(tank, gun, true)
+}
+
+func newDamageIndicator(w donburi.World, parent *donburi.Entry) *component.SpriteData {
+	indicator := w.Entry(
+		w.Create(
+			component.Transform,
+			component.Sprite,
+		),
+	)
+
+	parentSprite := component.GetSprite(parent)
+
+	image := ebiten.NewImage(parentSprite.Image.Size())
+	op := &ebiten.DrawImageOptions{}
+	op.ColorM.Translate(1, 1, 1, 0)
+	image.DrawImage(parentSprite.Image, op)
+
+	donburi.SetValue(indicator, component.Sprite, component.SpriteData{
+		Image:            image,
+		Layer:            component.SpriteLayerIndicators,
+		Pivot:            parentSprite.Pivot,
+		OriginalRotation: parentSprite.OriginalRotation,
+		Hidden:           true,
+	})
+
+	component.GetTransform(parent).AppendChild(parent, indicator, false)
+
+	return component.GetSprite(indicator)
 }

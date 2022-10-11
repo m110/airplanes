@@ -28,7 +28,7 @@ func (h *Health) Update(w donburi.World) {
 		if health.JustDamaged {
 			health.DamageIndicatorTimer.Update()
 			if health.DamageIndicatorTimer.IsReady() {
-				health.JustDamaged = false
+				health.HideDamageIndicator()
 			}
 		} else {
 			if health.Health <= 0 {

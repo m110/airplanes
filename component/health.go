@@ -10,6 +10,7 @@ type HealthData struct {
 	Health               int
 	JustDamaged          bool
 	DamageIndicatorTimer *engine.Timer
+	DamageIndicator      *SpriteData
 }
 
 func (d *HealthData) Damage() {
@@ -20,12 +21,12 @@ func (d *HealthData) Damage() {
 	d.Health--
 	d.JustDamaged = true
 	d.DamageIndicatorTimer.Reset()
+	d.DamageIndicator.Hidden = false
 }
 
-func (d *HealthData) Destroy() {
-	d.Health = 0
-	d.JustDamaged = true
-	d.DamageIndicatorTimer.Reset()
+func (d *HealthData) HideDamageIndicator() {
+	d.JustDamaged = false
+	d.DamageIndicator.Hidden = true
 }
 
 var Health = donburi.NewComponentType[HealthData]()
