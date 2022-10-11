@@ -19,6 +19,7 @@ require (
 	golang.org/x/mobile v0.0.0-20220104184238-4a8be17bd2e3 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
+	golang.org/x/text v0.3.6 // indirect
 )
 
 replace github.com/lafriks/go-tiled v0.9.0 => github.com/m110/go-tiled v0.0.0-20221011193459-94bd152f0a4b

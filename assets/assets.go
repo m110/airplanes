@@ -11,6 +11,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/lafriks/go-tiled"
 	"github.com/lafriks/go-tiled/render"
+	"golang.org/x/image/font"
+	"golang.org/x/image/font/opentype"
 
 	"github.com/m110/airplanes/engine"
 )
@@ -58,6 +60,11 @@ var (
 	//go:embed tiles/airplane_shield.png
 	airplaneShieldData []byte
 
+	//go:embed fonts/kenney-future.ttf
+	normalFontData []byte
+	//go:embed fonts/kenney-future-narrow.ttf
+	narrowFontData []byte
+
 	//go:embed *
 	assetsFS embed.FS
 
@@ -86,6 +93,9 @@ var (
 	AirplaneShield *ebiten.Image
 
 	Levels []Level
+
+	NormalFont font.Face
+	NarrowFont font.Face
 )
 
 const (
@@ -144,6 +154,27 @@ func MustLoadAssets() {
 	for _, path := range levelPaths {
 		Levels = append(Levels, mustLoadLevel(path))
 	}
+
+	NormalFont = mustLoadFont(normalFontData)
+	NarrowFont = mustLoadFont(narrowFontData)
+}
+
+func mustLoadFont(data []byte) font.Face {
+	f, err := opentype.Parse(data)
+	if err != nil {
+		panic(err)
+	}
+
+	face, err := opentype.NewFace(f, &opentype.FaceOptions{
+		Size:    24,
+		DPI:     72,
+		Hinting: font.HintingFull,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return face
 }
 
 func mustNewEbitenImage(data []byte) *ebiten.Image {
