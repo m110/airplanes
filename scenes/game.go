@@ -92,12 +92,6 @@ func (g *Game) createWorld(levelIndex int, players int) donburi.World {
 
 	world := donburi.NewWorld()
 
-	settings := world.Entry(world.Create(component.Settings))
-	donburi.SetValue(settings, component.Settings, component.SettingsData{
-		ScreenWidth:  g.screenWidth,
-		ScreenHeight: g.screenHeight,
-	})
-
 	level := world.Entry(world.Create(component.Level))
 	component.GetLevel(level).ProgressionTimer = engine.NewTimer(time.Second * 3)
 
@@ -138,12 +132,26 @@ func (g *Game) createWorld(levelIndex int, players int) donburi.World {
 	}
 
 	if g.world == nil {
+		game := world.Entry(world.Create(component.Game))
+		donburi.SetValue(game, component.Game, component.GameData{
+			Score: 0,
+			Settings: component.Settings{
+				ScreenWidth:  g.screenWidth,
+				ScreenHeight: g.screenHeight,
+			},
+		})
+
 		// Spawn new players
 		for i := 1; i <= players; i++ {
 			player := archetypes.NewPlayer(world, i)
 			archetypes.NewPlayerAirplane(world, *component.GetPlayer(player))
 		}
 	} else {
+		// Keep the same game data across levels
+		gameData := component.MustFindGame(g.world)
+		newGameData := world.Entry(world.Create(component.Game))
+		donburi.Set(newGameData, component.Game, gameData)
+
 		// Transfer existing players from the previous level
 		query.NewQuery(filter.Contains(component.Player)).EachEntity(g.world, func(entry *donburi.Entry) {
 			player := component.GetPlayer(entry)
@@ -155,6 +163,7 @@ func (g *Game) createWorld(levelIndex int, players int) donburi.World {
 				archetypes.NewPlayerAirplane(world, *player)
 			}
 		})
+
 	}
 
 	world.Create(component.Debug)

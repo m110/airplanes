@@ -24,7 +24,7 @@ func NewTitle(screenWidth int, screenHeight int, newGameCallback func()) *Title 
 }
 
 func (t *Title) Update() {
-	if ebiten.IsKeyPressed(ebiten.KeyEnter) {
+	if ebiten.IsKeyPressed(ebiten.KeyEnter) || ebiten.IsKeyPressed(ebiten.KeySpace) {
 		t.newGameCallback()
 		return
 	}

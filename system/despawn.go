@@ -10,8 +10,8 @@ import (
 )
 
 type Despawn struct {
-	query    *query.Query
-	settings *component.SettingsData
+	query *query.Query
+	game  *component.GameData
 }
 
 func NewDespawn() *Despawn {
@@ -21,9 +21,9 @@ func NewDespawn() *Despawn {
 }
 
 func (d *Despawn) Update(w donburi.World) {
-	if d.settings == nil {
-		d.settings = component.MustFindSettings(w)
-		if d.settings == nil {
+	if d.game == nil {
+		d.game = component.MustFindGame(w)
+		if d.game == nil {
 			return
 		}
 	}
@@ -38,8 +38,8 @@ func (d *Despawn) Update(w donburi.World) {
 		maxX := position.X + float64(sprite.Image.Bounds().Dx())
 		maxY := position.Y + float64(sprite.Image.Bounds().Dy())
 
-		cameraMaxY := cameraPos.Y + float64(d.settings.ScreenHeight)
-		cameraMaxX := cameraPos.X + float64(d.settings.ScreenWidth)
+		cameraMaxY := cameraPos.Y + float64(d.game.Settings.ScreenHeight)
+		cameraMaxX := cameraPos.X + float64(d.game.Settings.ScreenWidth)
 
 		if !despawnable.Spawned {
 			if position.Y > cameraPos.Y && maxY < cameraMaxY &&

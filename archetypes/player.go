@@ -51,19 +51,19 @@ var players = map[int]playerSettings{
 }
 
 func playerSpawn(w donburi.World, playerNumber int) engine.Vector {
-	settings := component.MustFindSettings(w)
+	game := component.MustFindGame(w)
 	cameraPos := component.GetTransform(MustFindCamera(w)).LocalPosition
 
 	switch playerNumber {
 	case 1:
 		return engine.Vector{
-			X: float64(settings.ScreenWidth) * 0.25,
-			Y: cameraPos.Y + float64(settings.ScreenHeight)*0.9,
+			X: float64(game.Settings.ScreenWidth) * 0.25,
+			Y: cameraPos.Y + float64(game.Settings.ScreenHeight)*0.9,
 		}
 	case 2:
 		return engine.Vector{
-			X: float64(settings.ScreenWidth) * 0.75,
-			Y: cameraPos.Y + float64(settings.ScreenHeight)*0.9,
+			X: float64(game.Settings.ScreenWidth) * 0.75,
+			Y: cameraPos.Y + float64(game.Settings.ScreenHeight)*0.9,
 		}
 	default:
 		panic(fmt.Sprintf("unknown player number: %v", playerNumber))

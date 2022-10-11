@@ -37,6 +37,8 @@ func (h *Health) Update(w donburi.World) {
 					archetypes.NewRandomCollectible(w, component.GetTransform(entry).LocalPosition)
 				}
 
+				// TODO: It seems like a good candidate to be triggered by an event.
+				component.MustFindGame(w).AddScore(1)
 				Destroy(w, entry)
 			}
 		}

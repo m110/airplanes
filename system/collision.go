@@ -55,7 +55,8 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 	},
 	component.CollisionLayerAirEnemies: {
 		component.CollisionLayerPlayers: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
-			component.GetHealth(entry).Destroy()
+			Destroy(w, entry)
+			component.MustFindGame(w).AddScore(1)
 			damagePlayer(w, other)
 		},
 	},

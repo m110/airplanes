@@ -1,18 +1,22 @@
 package system
 
 import (
+	"fmt"
+
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
+	"golang.org/x/image/colornames"
 
 	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/component"
 )
 
 type HUD struct {
-	query    *query.Query
-	settings *component.SettingsData
+	query *query.Query
+	game  *component.GameData
 }
 
 func NewHUD() *HUD {
@@ -22,12 +26,14 @@ func NewHUD() *HUD {
 }
 
 func (h *HUD) Draw(w donburi.World, screen *ebiten.Image) {
-	if h.settings == nil {
-		h.settings = component.MustFindSettings(w)
-		if h.settings == nil {
+	if h.game == nil {
+		h.game = component.MustFindGame(w)
+		if h.game == nil {
 			return
 		}
 	}
+
+	text.Draw(screen, fmt.Sprintf("Score: %06d", h.game.Score), assets.NormalFont, h.game.Settings.ScreenWidth/4, 30, colornames.White)
 
 	h.query.EachEntity(w, func(entry *donburi.Entry) {
 		player := component.GetPlayer(entry)
@@ -35,13 +41,13 @@ func (h *HUD) Draw(w donburi.World, screen *ebiten.Image) {
 		icon := assets.Health
 		iconWidth, iconHeight := icon.Size()
 
-		baseY := float64(h.settings.ScreenHeight) - float64(iconHeight) - 5
+		baseY := float64(h.game.Settings.ScreenHeight) - float64(iconHeight) - 5
 		var baseX float64
 		switch player.PlayerNumber {
 		case 1:
 			baseX = 5
 		case 2:
-			baseX = float64(h.settings.ScreenWidth) - 5 - float64(iconWidth)
+			baseX = float64(h.game.Settings.ScreenWidth) - 5 - float64(iconWidth)
 		}
 
 		op := &ebiten.DrawImageOptions{}

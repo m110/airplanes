@@ -11,8 +11,8 @@ import (
 )
 
 type Bounds struct {
-	query    *query.Query
-	settings *component.SettingsData
+	query *query.Query
+	game  *component.GameData
 }
 
 func NewBounds() *Bounds {
@@ -27,9 +27,9 @@ func NewBounds() *Bounds {
 }
 
 func (b *Bounds) Update(w donburi.World) {
-	if b.settings == nil {
-		b.settings = component.MustFindSettings(w)
-		if b.settings == nil {
+	if b.game == nil {
+		b.game = component.MustFindGame(w)
+		if b.game == nil {
 			return
 		}
 	}
@@ -54,16 +54,16 @@ func (b *Bounds) Update(w donburi.World) {
 		switch sprite.Pivot {
 		case component.SpritePivotTopLeft:
 			minX = cameraPos.X
-			maxX = cameraPos.X + float64(b.settings.ScreenWidth) - width
+			maxX = cameraPos.X + float64(b.game.Settings.ScreenWidth) - width
 
 			minY = cameraPos.Y
-			maxY = cameraPos.Y + float64(b.settings.ScreenHeight) - height
+			maxY = cameraPos.Y + float64(b.game.Settings.ScreenHeight) - height
 		case component.SpritePivotCenter:
 			minX = cameraPos.X + width/2
-			maxX = cameraPos.X + float64(b.settings.ScreenWidth) - width/2
+			maxX = cameraPos.X + float64(b.game.Settings.ScreenWidth) - width/2
 
 			minY = cameraPos.Y + height/2
-			maxY = cameraPos.Y + float64(b.settings.ScreenHeight) - height/2
+			maxY = cameraPos.Y + float64(b.game.Settings.ScreenHeight) - height/2
 		}
 
 		transform.LocalPosition.X = engine.Clamp(transform.LocalPosition.X, minX, maxX)
