@@ -16,7 +16,7 @@ import (
 
 type HUD struct {
 	query         *query.Query
-	game          *component.GameStatus
+	game          *component.GameData
 	shadowOverlay *ebiten.Image
 }
 

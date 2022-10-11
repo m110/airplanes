@@ -12,7 +12,7 @@ import (
 
 type Bounds struct {
 	query *query.Query
-	game  *component.GameStatus
+	game  *component.GameData
 }
 
 func NewBounds() *Bounds {

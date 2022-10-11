@@ -134,7 +134,7 @@ func (g *Game) createWorld(levelIndex int, players int) donburi.World {
 
 	if g.world == nil {
 		game := world.Entry(world.Create(component.Game))
-		donburi.SetValue(game, component.Game, component.GameStatus{
+		donburi.SetValue(game, component.Game, component.GameData{
 			Score: 0,
 			Settings: component.Settings{
 				ScreenWidth:  g.screenWidth,
@@ -172,8 +172,8 @@ func (g *Game) createWorld(levelIndex int, players int) donburi.World {
 }
 
 func (g *Game) restart() {
-	// TODO: Definitely a hack. Needed because GameStatus is cached in systems.
-	// Consider a different approach to GameStatus, perhaps not as a component?
+	// TODO: Definitely a hack. Needed because GameData is cached in systems.
+	// Consider a different approach to GameData, perhaps not as a component?
 	component.MustFindGame(g.world).Score = 0
 	component.MustFindGame(g.world).GameOver = false
 
