@@ -6,6 +6,7 @@
  <tile id="24" class="health"/>
  <tile id="25" class="weapon-upgrade"/>
  <tile id="26" class="shield"/>
+ <tile id="27" class="crosshair"/>
  <tile id="29" class="tank-base"/>
  <tile id="30" class="tank-gun"/>
 </tileset>

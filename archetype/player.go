@@ -14,7 +14,7 @@ import (
 	"github.com/m110/airplanes/engine"
 )
 
-type playerInputs struct {
+type PlayerInputs struct {
 	Up    ebiten.Key
 	Right ebiten.Key
 	Down  ebiten.Key
@@ -22,15 +22,28 @@ type playerInputs struct {
 	Shoot ebiten.Key
 }
 
-type playerSettings struct {
-	Image  func() *ebiten.Image
-	Inputs playerInputs
+type PlayerSettings struct {
+	Inputs PlayerInputs
 }
 
-var players = map[int]playerSettings{
+func airplaneImageByFaction(faction component.PlayerFaction) *ebiten.Image {
+	switch faction {
+	case component.PlayerFactionBlue:
+		return assets.AirplaneBlueSmall
+	case component.PlayerFactionRed:
+		return assets.AirplaneRedSmall
+	case component.PlayerFactionGreen:
+		return assets.AirplaneGreenSmall
+	case component.PlayerFactionYellow:
+		return assets.AirplaneYellowSmall
+	default:
+		panic(fmt.Sprintf("unknown player faction: %v", faction))
+	}
+}
+
+var Players = map[int]PlayerSettings{
 	1: {
-		Image: func() *ebiten.Image { return assets.AirplaneYellowSmall },
-		Inputs: playerInputs{
+		Inputs: PlayerInputs{
 			Up:    ebiten.KeyW,
 			Right: ebiten.KeyD,
 			Down:  ebiten.KeyS,
@@ -39,8 +52,7 @@ var players = map[int]playerSettings{
 		},
 	},
 	2: {
-		Image: func() *ebiten.Image { return assets.AirplaneGreenSmall },
-		Inputs: playerInputs{
+		Inputs: PlayerInputs{
 			Up:    ebiten.KeyUp,
 			Right: ebiten.KeyRight,
 			Down:  ebiten.KeyDown,
@@ -70,17 +82,18 @@ func playerSpawn(w donburi.World, playerNumber int) engine.Vector {
 	}
 }
 
-func NewPlayer(w donburi.World, playerNumber int) *donburi.Entry {
-	_, ok := players[playerNumber]
+func NewPlayer(w donburi.World, playerNumber int, faction component.PlayerFaction) *donburi.Entry {
+	_, ok := Players[playerNumber]
 	if !ok {
 		panic(fmt.Sprintf("unknown player number: %v", playerNumber))
 	}
 
 	player := component.PlayerData{
-		PlayerNumber: playerNumber,
-		Lives:        3,
-		RespawnTimer: engine.NewTimer(time.Second * 3),
-		WeaponLevel:  component.WeaponLevelSingle,
+		PlayerNumber:  playerNumber,
+		PlayerFaction: faction,
+		Lives:         3,
+		RespawnTimer:  engine.NewTimer(time.Second * 3),
+		WeaponLevel:   component.WeaponLevelSingle,
 	}
 
 	// TODO It looks like a constructor would fit here
@@ -95,8 +108,8 @@ func NewPlayerFromPlayerData(w donburi.World, playerData component.PlayerData) *
 	return player
 }
 
-func NewPlayerAirplane(w donburi.World, player component.PlayerData) {
-	settings, ok := players[player.PlayerNumber]
+func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction component.PlayerFaction) {
+	settings, ok := Players[player.PlayerNumber]
 	if !ok {
 		panic(fmt.Sprintf("unknown player number: %v", player.PlayerNumber))
 	}
@@ -119,6 +132,7 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData) {
 			component.Sprite,
 		),
 	)
+
 	donburi.SetValue(shield, component.Sprite, component.SpriteData{
 		Image:            assets.AirplaneShield,
 		Layer:            component.SpriteLayerIndicators,
@@ -144,7 +158,7 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData) {
 
 	component.GetTransform(airplane).AppendChild(airplane, shield, false)
 
-	image := settings.Image()
+	image := airplaneImageByFaction(faction)
 
 	donburi.SetValue(airplane, component.Sprite, component.SpriteData{
 		Image:            image,

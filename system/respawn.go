@@ -52,7 +52,7 @@ func (r *Respawn) Update(w donburi.World) {
 			player.RespawnTimer.Update()
 			if player.RespawnTimer.IsReady() {
 				player.Respawning = false
-				archetype.NewPlayerAirplane(w, *player)
+				archetype.NewPlayerAirplane(w, *player, player.PlayerFaction)
 			}
 		}
 	})

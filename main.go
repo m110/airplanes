@@ -9,6 +9,7 @@ import (
 
 	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/scene"
+	"github.com/m110/airplanes/system"
 )
 
 var (
@@ -34,11 +35,15 @@ func NewGame() *Game {
 }
 
 func (g *Game) switchToTitle() {
-	g.scene = scene.NewTitle(screenWidth, screenHeight, g.switchToGame)
+	g.scene = scene.NewTitle(screenWidth, screenHeight, g.switchToAirbase)
 }
 
-func (g *Game) switchToGame() {
-	g.scene = scene.NewGame(screenWidth, screenHeight)
+func (g *Game) switchToAirbase() {
+	g.scene = scene.NewAirbase(g.switchToGame)
+}
+
+func (g *Game) switchToGame(players []system.ChosenPlayer) {
+	g.scene = scene.NewGame(players, screenWidth, screenHeight)
 }
 
 func (g *Game) Update() error {

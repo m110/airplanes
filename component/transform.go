@@ -11,6 +11,7 @@ import (
 type TransformData struct {
 	LocalPosition engine.Vector
 	LocalRotation float64
+	LocalScale    engine.Vector
 
 	Parent   *donburi.Entry
 	Children []*donburi.Entry
@@ -27,9 +28,9 @@ func (d *TransformData) SetParent(parent *donburi.Entry, keepWorldPosition bool)
 		parentTransform := GetTransform(parent)
 		parentPos := parentTransform.WorldPosition()
 
-		d.LocalPosition.X -= parentPos.X
-		d.LocalPosition.Y -= parentPos.Y
+		d.LocalPosition = d.LocalPosition.Sub(parentPos)
 		d.LocalRotation -= parentTransform.WorldRotation()
+		d.LocalScale = d.LocalScale.Sub(parentTransform.WorldScale())
 	}
 }
 
@@ -70,6 +71,15 @@ func (d *TransformData) WorldRotation() float64 {
 
 	parent := GetTransform(d.Parent)
 	return parent.WorldRotation() + d.LocalRotation
+}
+
+func (d *TransformData) WorldScale() engine.Vector {
+	if d.Parent == nil {
+		return d.LocalScale
+	}
+
+	parent := GetTransform(d.Parent)
+	return parent.WorldScale().Add(d.LocalScale)
 }
 
 func (d *TransformData) Right() engine.Vector {

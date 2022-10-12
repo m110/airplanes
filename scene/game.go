@@ -25,6 +25,7 @@ type Drawable interface {
 }
 
 type Game struct {
+	players   []system.ChosenPlayer
 	level     int
 	world     donburi.World
 	systems   []System
@@ -34,8 +35,9 @@ type Game struct {
 	screenHeight int
 }
 
-func NewGame(screenWidth int, screenHeight int) *Game {
+func NewGame(players []system.ChosenPlayer, screenWidth int, screenHeight int) *Game {
 	g := &Game{
+		players:      players,
 		level:        0,
 		screenWidth:  screenWidth,
 		screenHeight: screenHeight,
@@ -84,11 +86,10 @@ func (g *Game) nextLevel() {
 }
 
 func (g *Game) loadLevel() {
-	// TODO Customizable number of players
-	g.world = g.createWorld(g.level, 2)
+	g.world = g.createWorld(g.level)
 }
 
-func (g *Game) createWorld(levelIndex int, players int) donburi.World {
+func (g *Game) createWorld(levelIndex int) donburi.World {
 	levelAsset := assets.Levels[levelIndex]
 
 	world := donburi.NewWorld()
@@ -101,8 +102,9 @@ func (g *Game) createWorld(levelIndex int, players int) donburi.World {
 		Y: float64(levelAsset.Background.Bounds().Dy() - g.screenHeight),
 	})
 
-	levelEntity := world.Create(component.Transform, component.Sprite)
-	levelEntry := world.Entry(levelEntity)
+	levelEntry := world.Entry(
+		world.Create(component.Transform, component.Sprite),
+	)
 	donburi.SetValue(levelEntry, component.Sprite, component.SpriteData{
 		Image: levelAsset.Background,
 		Layer: component.SpriteLayerBackground,
@@ -143,9 +145,9 @@ func (g *Game) createWorld(levelIndex int, players int) donburi.World {
 		})
 
 		// Spawn new players
-		for i := 1; i <= players; i++ {
-			player := archetype.NewPlayer(world, i)
-			archetype.NewPlayerAirplane(world, *component.GetPlayer(player))
+		for _, p := range g.players {
+			player := archetype.NewPlayer(world, p.PlayerNumber, p.Faction)
+			archetype.NewPlayerAirplane(world, *component.GetPlayer(player), p.Faction)
 		}
 	} else {
 		// Keep the same game data across levels
@@ -161,7 +163,7 @@ func (g *Game) createWorld(levelIndex int, players int) donburi.World {
 
 			archetype.NewPlayerFromPlayerData(world, *player)
 			if player.Lives > 0 {
-				archetype.NewPlayerAirplane(world, *player)
+				archetype.NewPlayerAirplane(world, *player, player.PlayerFaction)
 			}
 		})
 	}

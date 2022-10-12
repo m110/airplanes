@@ -9,6 +9,30 @@ import (
 	"github.com/m110/airplanes/engine"
 )
 
+type PlayerFaction int
+
+const (
+	PlayerFactionBlue PlayerFaction = iota
+	PlayerFactionRed
+	PlayerFactionGreen
+	PlayerFactionYellow
+)
+
+func MustPlayerFactionFromString(s string) PlayerFaction {
+	switch s {
+	case "blue":
+		return PlayerFactionBlue
+	case "red":
+		return PlayerFactionRed
+	case "green":
+		return PlayerFactionGreen
+	case "yellow":
+		return PlayerFactionYellow
+	default:
+		panic(fmt.Sprintf("unknown player faction: %v", s))
+	}
+}
+
 type WeaponLevel int
 
 const (
@@ -21,7 +45,8 @@ const (
 )
 
 type PlayerData struct {
-	PlayerNumber int
+	PlayerNumber  int
+	PlayerFaction PlayerFaction
 
 	Lives        int
 	Respawning   bool

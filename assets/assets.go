@@ -31,9 +31,12 @@ var (
 	//go:embed *
 	assetsFS embed.FS
 
-	AirplaneYellowSmall *ebiten.Image
+	AirplaneBlueSmall   *ebiten.Image
+	AirplaneRedSmall    *ebiten.Image
 	AirplaneGreenSmall  *ebiten.Image
-	AirplaneGraySmall   *ebiten.Image
+	AirplaneYellowSmall *ebiten.Image
+
+	AirplaneGraySmall *ebiten.Image
 
 	TankBase *ebiten.Image
 	TankGun  *ebiten.Image
@@ -46,9 +49,12 @@ var (
 	Shield        *ebiten.Image
 
 	AirplaneShield *ebiten.Image
+	Crosshair      *ebiten.Image
 
-	Levels []Level
+	AirBase AirBaseLevel
+	Levels  []Level
 
+	SmallFont  font.Face
 	NormalFont font.Face
 	NarrowFont font.Face
 )
@@ -60,6 +66,16 @@ const (
 	TilesetClassTiles     = "tiles"
 	TilesetClassAirplanes = "airplanes"
 )
+
+type Spawn struct {
+	Faction  string
+	Position engine.Vector
+}
+
+type AirBaseLevel struct {
+	Background *ebiten.Image
+	Spawns     []Spawn
+}
 
 type Level struct {
 	Background *ebiten.Image
@@ -81,13 +97,18 @@ type Path struct {
 
 func MustLoadAssets() {
 	loader := newLevelLoader()
+	AirBase = loader.MustLoadAirBaseLevel()
 	Levels = loader.MustLoadLevels()
 
-	NormalFont = mustLoadFont(normalFontData)
-	NarrowFont = mustLoadFont(narrowFontData)
+	SmallFont = mustLoadFont(normalFontData, 10)
+	NormalFont = mustLoadFont(normalFontData, 24)
+	NarrowFont = mustLoadFont(narrowFontData, 24)
 
-	AirplaneYellowSmall = loader.MustFindTile(TilesetClassAirplanes, "airplane-yellow-small")
+	AirplaneBlueSmall = loader.MustFindTile(TilesetClassAirplanes, "airplane-blue-small")
+	AirplaneRedSmall = loader.MustFindTile(TilesetClassAirplanes, "airplane-red-small")
 	AirplaneGreenSmall = loader.MustFindTile(TilesetClassAirplanes, "airplane-green-small")
+	AirplaneYellowSmall = loader.MustFindTile(TilesetClassAirplanes, "airplane-yellow-small")
+
 	AirplaneGraySmall = loader.MustFindTile(TilesetClassAirplanes, "airplane-gray-small-2")
 
 	TankBase = loader.MustFindTile(TilesetClassTiles, "tank-base")
@@ -101,16 +122,17 @@ func MustLoadAssets() {
 	Shield = loader.MustFindTile(TilesetClassTiles, "shield")
 
 	AirplaneShield = mustNewEbitenImage(airplaneShieldData)
+	Crosshair = loader.MustFindTile(TilesetClassTiles, "crosshair")
 }
 
-func mustLoadFont(data []byte) font.Face {
+func mustLoadFont(data []byte, size int) font.Face {
 	f, err := opentype.Parse(data)
 	if err != nil {
 		panic(err)
 	}
 
 	face, err := opentype.NewFace(f, &opentype.FaceOptions{
-		Size:    24,
+		Size:    float64(size),
 		DPI:     72,
 		Hinting: font.HintingFull,
 	})
@@ -141,20 +163,20 @@ func newLevelLoader() *levelLoader {
 }
 
 func (l *levelLoader) MustLoadLevels() []Level {
-	levelPaths, err := fs.Glob(assetsFS, "levels/*.tmx")
+	levelPaths, err := fs.Glob(assetsFS, "levels/level*.tmx")
 	if err != nil {
 		panic(err)
 	}
 
 	var levels []Level
 	for _, path := range levelPaths {
-		levels = append(levels, l.mustLoadLevel(path))
+		levels = append(levels, l.MustLoadLevel(path))
 	}
 
 	return levels
 }
 
-func (l *levelLoader) mustLoadLevel(levelPath string) Level {
+func (l *levelLoader) MustLoadLevel(levelPath string) Level {
 	levelMap, err := tiled.LoadFile(levelPath, tiled.WithFileSystem(assetsFS))
 	if err != nil {
 		panic(err)
@@ -257,6 +279,45 @@ func (l *levelLoader) mustLoadLevel(levelPath string) Level {
 			l.Tilesets[ts.Class] = ts
 		}
 	}
+
+	return level
+}
+
+func (l *levelLoader) MustLoadAirBaseLevel() AirBaseLevel {
+	levelMap, err := tiled.LoadFile("levels/airbase.tmx", tiled.WithFileSystem(assetsFS))
+	if err != nil {
+		panic(err)
+	}
+
+	level := AirBaseLevel{}
+
+	for _, og := range levelMap.ObjectGroups {
+		for _, o := range og.Objects {
+			if o.Class == "spawn" {
+				spawn := Spawn{
+					Faction: o.Name,
+					Position: engine.Vector{
+						X: o.X,
+						Y: o.Y,
+					},
+				}
+
+				level.Spawns = append(level.Spawns, spawn)
+			}
+		}
+	}
+
+	renderer, err := render.NewRendererWithFileSystem(levelMap, assetsFS)
+	if err != nil {
+		panic(err)
+	}
+
+	err = renderer.RenderLayer(0)
+	if err != nil {
+		panic(err)
+	}
+
+	level.Background = ebiten.NewImageFromImage(renderer.Result)
 
 	return level
 }

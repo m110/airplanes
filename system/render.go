@@ -87,6 +87,11 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 				y -= halfH
 			}
 
+			if transform.LocalScale.X != 0 || transform.LocalScale.Y != 0 {
+				op.GeoM.Translate(-halfW, -halfH)
+				op.GeoM.Scale(transform.LocalScale.X, transform.LocalScale.Y)
+				op.GeoM.Translate(halfW, halfH)
+			}
 			op.GeoM.Translate(x, y)
 			r.offscreen.DrawImage(sprite.Image, op)
 		}

@@ -8,7 +8,7 @@ import (
 	"github.com/m110/airplanes/engine"
 )
 
-func NewShadow(w donburi.World, parent *donburi.Entry) {
+func NewShadow(w donburi.World, parent *donburi.Entry) *donburi.Entry {
 	shadow := w.Entry(
 		w.Create(
 			component.Transform,
@@ -40,4 +40,6 @@ func NewShadow(w donburi.World, parent *donburi.Entry) {
 		Pivot:            parentSprite.Pivot,
 		OriginalRotation: parentSprite.OriginalRotation,
 	})
+
+	return shadow
 }

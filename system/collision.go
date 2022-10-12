@@ -128,6 +128,7 @@ func (c *Collision) Update(w donburi.World) {
 			otherPos := component.GetTransform(other).LocalPosition
 
 			// TODO The current approach doesn't take rotation into account
+			// TODO The current approach doesn't take scale into account
 			rect := engine.NewRect(pos.X, pos.Y, collider.Width, collider.Height)
 			otherRect := engine.NewRect(otherPos.X, otherPos.Y, otherCollider.Width, otherCollider.Height)
 
