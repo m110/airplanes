@@ -3,9 +3,11 @@ package assets
 import (
 	"bytes"
 	"embed"
+	"fmt"
 	"image"
 	_ "image/png"
 	"io/fs"
+	"path/filepath"
 	"strconv"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -18,45 +20,6 @@ import (
 )
 
 var (
-	//go:embed airplanes/0011.png
-	airplaneYellowSmallData []byte
-	//go:embed airplanes/0010.png
-	airplaneGreenSmallData []byte
-	//go:embed airplanes/0018.png
-	airplaneGraySmallData []byte
-
-	//go:embed tiles/tile_0029.png
-	tankBaseData []byte
-	//go:embed tiles/tile_0030.png
-	tankGunData []byte
-
-	//go:embed tiles/tile_0016.png
-	turretBaseData []byte
-	//go:embed tiles/tile_0018.png
-	turretGunSingleData []byte
-	//go:embed tiles/tile_0017.png
-	turretGunDoubleData []byte
-
-	//go:embed tiles/tile_0000.png
-	laserSingleData []byte
-	//go:embed tiles/tile_0001.png
-	laserDoubleData []byte
-	//go:embed tiles/tile_0012.png
-	rocketData []byte
-	//go:embed tiles/tile_0006.png
-	bombData []byte
-
-	//go:embed tiles/tile_0007.png
-	flashData []byte
-	//go:embed tiles/tile_0008.png
-	smokeData []byte
-
-	//go:embed tiles/tile_0024.png
-	healthData []byte
-	//go:embed tiles/tile_0025.png
-	weaponUpgradeData []byte
-	//go:embed tiles/tile_0026.png
-	shieldData []byte
 	//go:embed tiles/airplane_shield.png
 	airplaneShieldData []byte
 
@@ -75,21 +38,13 @@ var (
 	TankBase *ebiten.Image
 	TankGun  *ebiten.Image
 
-	TurretBase      *ebiten.Image
-	TurretGunSingle *ebiten.Image
-	TurretGunDouble *ebiten.Image
-
 	LaserSingle *ebiten.Image
-	LaserDouble *ebiten.Image
 	Rocket      *ebiten.Image
-	Bomb        *ebiten.Image
 
-	Smoke *ebiten.Image
-	Flash *ebiten.Image
+	Health        *ebiten.Image
+	WeaponUpgrade *ebiten.Image
+	Shield        *ebiten.Image
 
-	Health         *ebiten.Image
-	WeaponUpgrade  *ebiten.Image
-	Shield         *ebiten.Image
 	AirplaneShield *ebiten.Image
 
 	Levels []Level
@@ -101,6 +56,9 @@ var (
 const (
 	EnemyClassAirplane = "enemy-airplane"
 	EnemyClassTank     = "enemy-tank"
+
+	TilesetClassTiles     = "tiles"
+	TilesetClassAirplanes = "airplanes"
 )
 
 type Level struct {
@@ -122,41 +80,27 @@ type Path struct {
 }
 
 func MustLoadAssets() {
-	AirplaneYellowSmall = mustNewEbitenImage(airplaneYellowSmallData)
-	AirplaneGreenSmall = mustNewEbitenImage(airplaneGreenSmallData)
-	AirplaneGraySmall = mustNewEbitenImage(airplaneGraySmallData)
-
-	TankBase = mustNewEbitenImage(tankBaseData)
-	TankGun = mustNewEbitenImage(tankGunData)
-
-	TurretBase = mustNewEbitenImage(turretBaseData)
-	TurretGunSingle = mustNewEbitenImage(turretGunSingleData)
-	TurretGunDouble = mustNewEbitenImage(turretGunDoubleData)
-
-	LaserSingle = mustNewEbitenImage(laserSingleData)
-	LaserDouble = mustNewEbitenImage(laserDoubleData)
-	Rocket = mustNewEbitenImage(rocketData)
-	Bomb = mustNewEbitenImage(bombData)
-
-	Flash = mustNewEbitenImage(flashData)
-	Smoke = mustNewEbitenImage(smokeData)
-
-	Health = mustNewEbitenImage(healthData)
-	WeaponUpgrade = mustNewEbitenImage(weaponUpgradeData)
-	Shield = mustNewEbitenImage(shieldData)
-	AirplaneShield = mustNewEbitenImage(airplaneShieldData)
-
-	levelPaths, err := fs.Glob(assetsFS, "levels/*.tmx")
-	if err != nil {
-		panic(err)
-	}
-
-	for _, path := range levelPaths {
-		Levels = append(Levels, mustLoadLevel(path))
-	}
+	loader := newLevelLoader()
+	Levels = loader.MustLoadLevels()
 
 	NormalFont = mustLoadFont(normalFontData)
 	NarrowFont = mustLoadFont(narrowFontData)
+
+	AirplaneYellowSmall = loader.MustFindTile(TilesetClassAirplanes, "airplane-yellow-small")
+	AirplaneGreenSmall = loader.MustFindTile(TilesetClassAirplanes, "airplane-green-small")
+	AirplaneGraySmall = loader.MustFindTile(TilesetClassAirplanes, "airplane-gray-small-2")
+
+	TankBase = loader.MustFindTile(TilesetClassTiles, "tank-base")
+	TankGun = loader.MustFindTile(TilesetClassTiles, "tank-gun")
+
+	LaserSingle = loader.MustFindTile(TilesetClassTiles, "laser-single")
+	Rocket = loader.MustFindTile(TilesetClassTiles, "rocket")
+
+	Health = loader.MustFindTile(TilesetClassTiles, "health")
+	WeaponUpgrade = loader.MustFindTile(TilesetClassTiles, "weapon-upgrade")
+	Shield = loader.MustFindTile(TilesetClassTiles, "shield")
+
+	AirplaneShield = mustNewEbitenImage(airplaneShieldData)
 }
 
 func mustLoadFont(data []byte) font.Face {
@@ -186,7 +130,31 @@ func mustNewEbitenImage(data []byte) *ebiten.Image {
 	return ebiten.NewImageFromImage(img)
 }
 
-func mustLoadLevel(levelPath string) Level {
+type levelLoader struct {
+	Tilesets map[string]*tiled.Tileset
+}
+
+func newLevelLoader() *levelLoader {
+	return &levelLoader{
+		Tilesets: make(map[string]*tiled.Tileset),
+	}
+}
+
+func (l *levelLoader) MustLoadLevels() []Level {
+	levelPaths, err := fs.Glob(assetsFS, "levels/*.tmx")
+	if err != nil {
+		panic(err)
+	}
+
+	var levels []Level
+	for _, path := range levelPaths {
+		levels = append(levels, l.mustLoadLevel(path))
+	}
+
+	return levels
+}
+
+func (l *levelLoader) mustLoadLevel(levelPath string) Level {
 	levelMap, err := tiled.LoadFile(levelPath, tiled.WithFileSystem(assetsFS))
 	if err != nil {
 		panic(err)
@@ -284,5 +252,51 @@ func mustLoadLevel(levelPath string) Level {
 
 	level.Background = ebiten.NewImageFromImage(renderer.Result)
 
+	for _, ts := range levelMap.Tilesets {
+		if _, ok := l.Tilesets[ts.Class]; !ok {
+			l.Tilesets[ts.Class] = ts
+		}
+	}
+
 	return level
+}
+
+func (l *levelLoader) MustFindTile(tilesetClass string, tileClass string) *ebiten.Image {
+	ts, ok := l.Tilesets[tilesetClass]
+	if !ok {
+		panic(fmt.Sprintf("tileset not found: %s", tilesetClass))
+	}
+
+	for _, t := range ts.Tiles {
+		f, err := fs.ReadFile(assetsFS, filepath.Join("levels", ts.Image.Source))
+		if err != nil {
+			panic(err)
+		}
+
+		tilesetImage := mustNewEbitenImage(f)
+		if t.Class == tileClass {
+			width := ts.TileWidth
+			height := ts.TileHeight
+
+			col := int(t.ID) % ts.Columns
+			row := int(t.ID) / ts.Columns
+
+			// Plus one because of 1px margin
+			if col > 0 {
+				width += 1
+			}
+			if row > 0 {
+				height += 1
+			}
+
+			sx := col * width
+			sy := row * height
+
+			return tilesetImage.SubImage(
+				image.Rect(sx, sy, sx+ts.TileWidth, sy+ts.TileHeight),
+			).(*ebiten.Image)
+		}
+	}
+
+	panic(fmt.Sprintf("tile not found: %s", tileClass))
 }
