@@ -98,16 +98,20 @@ func (s *PlayerSelect) Update(w donburi.World) {
 			if entry, ok := selected[number]; ok {
 				playerSelect := component.GetPlayerSelect(entry)
 				if !playerSelect.Ready {
-					playerSelect.Selected = false
-					playerSelect.PlayerNumber = 0
+					// TODO refactor
+					if playerSelect.Index > 0 {
+						for i := playerSelect.Index - 1; i >= 0; i-- {
+							entry := playerSelects[i]
+							ps := component.GetPlayerSelect(entry)
+							if !ps.Selected {
+								// TODO To methods
+								playerSelect.Selected = false
+								playerSelect.PlayerNumber = 0
 
-					// TODO Implement
-					for _, entry := range playerSelects {
-						ps := component.GetPlayerSelect(entry)
-						if !ps.Selected {
-							playerSelect.Selected = true
-							playerSelect.PlayerNumber = number
-							break
+								ps.Selected = true
+								ps.PlayerNumber = number
+								break
+							}
 						}
 					}
 				}
@@ -119,13 +123,26 @@ func (s *PlayerSelect) Update(w donburi.World) {
 			if entry, ok := selected[number]; ok {
 				playerSelect := component.GetPlayerSelect(entry)
 				if !playerSelect.Ready {
-					playerSelect.Selected = false
-					playerSelect.PlayerNumber = 0
+					if playerSelect.Index < len(playerSelects)-1 {
+						for _, entry := range playerSelects[playerSelect.Index+1:] {
+							ps := component.GetPlayerSelect(entry)
+							if !ps.Selected {
+								// TODO To methods
+								playerSelect.Selected = false
+								playerSelect.PlayerNumber = 0
+
+								ps.Selected = true
+								ps.PlayerNumber = number
+								break
+							}
+						}
+					}
 				}
 			}
 		}
 	}
 
+	// TODO Fix cancelling ready
 	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
 		for i := len(playerSelects) - 1; i >= 0; i-- {
 			entry := playerSelects[i]
