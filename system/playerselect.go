@@ -2,6 +2,7 @@ package system
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -11,6 +12,7 @@ import (
 
 	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
+	"github.com/m110/airplanes/engine"
 )
 
 type ChosenPlayer struct {
@@ -21,19 +23,23 @@ type ChosenPlayer struct {
 type StartGameCallback func(players []ChosenPlayer)
 
 type PlayerSelect struct {
-	query         *query.Query
-	startCallback StartGameCallback
+	query              *query.Query
+	startCallback      StartGameCallback
+	backToMenuCallback func()
 
 	started       bool
+	shadowTimer   *engine.Timer
 	chosenPlayers []ChosenPlayer
 }
 
-func NewPlayerSelect(startCallback StartGameCallback) *PlayerSelect {
+func NewPlayerSelect(startCallback StartGameCallback, backToMenuCallback func()) *PlayerSelect {
 	return &PlayerSelect{
 		query: query.NewQuery(
 			filter.Contains(component.Transform, component.PlayerSelect, component.Velocity),
 		),
-		startCallback: startCallback,
+		startCallback:      startCallback,
+		backToMenuCallback: backToMenuCallback,
+		shadowTimer:        engine.NewTimer(time.Second),
 	}
 }
 
@@ -49,16 +55,21 @@ func (s *PlayerSelect) Update(w donburi.World) {
 			velocity := component.GetVelocity(entry)
 			velocity.Velocity.Y -= 0.01
 
-			// TODO: Have something like "find component in children"?
-			// Or find by tag
-			shadow := transform.Children[1]
-
 			// TODO Better animation
-			shadowTransform := component.GetTransform(shadow)
-			shadowTransform.LocalPosition.X -= 0.05
-			shadowTransform.LocalPosition.Y += 0.05
+			s.shadowTimer.Update()
+			if s.shadowTimer.IsReady() {
+				// TODO: Have something like "find component in children"?
+				// Or find by tag
+				shadow := transform.Children[1]
 
-			// TODO dynamic sprite size
+				shadowTransform := component.GetTransform(shadow)
+				shadowTransform.LocalPosition.X -= 0.05
+				shadowTransform.LocalPosition.Y += 0.05
+			}
+
+			// TODO Scale the sprite slightly
+
+			// TODO dynamic sprite size not hardcoded
 			if transform.WorldPosition().Y <= -32 {
 				s.startCallback(s.chosenPlayers)
 			}
@@ -137,14 +148,21 @@ func (s *PlayerSelect) Update(w donburi.World) {
 
 	// TODO Cancel just the last action
 	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
+		cancelled := false
 		for _, entry := range playerSelects {
 			playerSelect := component.GetPlayerSelect(entry)
 			if playerSelect.Ready {
 				playerSelect.Release()
+				cancelled = true
 			}
 			if playerSelect.Selected {
 				playerSelect.Unselect()
+				cancelled = true
 			}
+		}
+
+		if !cancelled {
+			s.backToMenuCallback()
 		}
 	}
 

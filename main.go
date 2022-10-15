@@ -39,7 +39,7 @@ func (g *Game) switchToTitle() {
 }
 
 func (g *Game) switchToAirbase() {
-	g.scene = scene.NewAirbase(g.switchToGame)
+	g.scene = scene.NewAirbase(g.switchToGame, g.switchToTitle)
 }
 
 func (g *Game) switchToGame(players []system.ChosenPlayer) {

@@ -12,26 +12,22 @@ import (
 )
 
 type Airbase struct {
-	startCallback system.StartGameCallback
-
 	world     donburi.World
 	systems   []System
 	drawables []Drawable
 }
 
-func NewAirbase(startCallback system.StartGameCallback) *Airbase {
+func NewAirbase(startCallback system.StartGameCallback, backToMenuCallback func()) *Airbase {
 	render := system.NewRenderer()
 
-	a := &Airbase{
-		startCallback: startCallback,
-	}
+	a := &Airbase{}
 
 	debug := system.NewDebug(a.createWorld)
 
 	a.systems = []System{
 		system.NewVelocity(),
 		system.NewScript(),
-		system.NewPlayerSelect(startCallback),
+		system.NewPlayerSelect(startCallback, backToMenuCallback),
 		debug,
 		render,
 	}
