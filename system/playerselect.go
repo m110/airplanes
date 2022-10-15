@@ -81,13 +81,12 @@ func (s *PlayerSelect) Update(w donburi.World) {
 	for number, settings := range archetype.Players {
 		if inpututil.IsKeyJustPressed(settings.Inputs.Shoot) {
 			if entry, ok := selected[number]; ok {
-				component.GetPlayerSelect(entry).Ready = true
+				component.GetPlayerSelect(entry).LockIn()
 			} else {
 				for _, entry := range playerSelects {
 					playerSelect := component.GetPlayerSelect(entry)
 					if !playerSelect.Selected {
-						playerSelect.Selected = true
-						playerSelect.PlayerNumber = number
+						playerSelect.Select(number)
 						break
 					}
 				}
@@ -104,12 +103,9 @@ func (s *PlayerSelect) Update(w donburi.World) {
 							entry := playerSelects[i]
 							ps := component.GetPlayerSelect(entry)
 							if !ps.Selected {
-								// TODO To methods
-								playerSelect.Selected = false
-								playerSelect.PlayerNumber = 0
+								playerSelect.Unselect()
 
-								ps.Selected = true
-								ps.PlayerNumber = number
+								ps.Select(number)
 								break
 							}
 						}
@@ -127,12 +123,9 @@ func (s *PlayerSelect) Update(w donburi.World) {
 						for _, entry := range playerSelects[playerSelect.Index+1:] {
 							ps := component.GetPlayerSelect(entry)
 							if !ps.Selected {
-								// TODO To methods
-								playerSelect.Selected = false
-								playerSelect.PlayerNumber = 0
+								playerSelect.Unselect()
 
-								ps.Selected = true
-								ps.PlayerNumber = number
+								ps.Select(number)
 								break
 							}
 						}
@@ -142,19 +135,15 @@ func (s *PlayerSelect) Update(w donburi.World) {
 		}
 	}
 
-	// TODO Fix cancelling ready
+	// TODO Cancel just the last action
 	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
-		for i := len(playerSelects) - 1; i >= 0; i-- {
-			entry := playerSelects[i]
+		for _, entry := range playerSelects {
 			playerSelect := component.GetPlayerSelect(entry)
 			if playerSelect.Ready {
-				playerSelect.Ready = false
-				break
+				playerSelect.Release()
 			}
 			if playerSelect.Selected {
-				playerSelect.Selected = false
-				playerSelect.PlayerNumber = 0
-				break
+				playerSelect.Unselect()
 			}
 		}
 	}
