@@ -8,11 +8,14 @@ import (
 	"github.com/m110/airplanes/engine"
 )
 
+var ShadowTag = donburi.NewTag()
+
 func NewShadow(w donburi.World, parent *donburi.Entry) *donburi.Entry {
 	shadow := w.Entry(
 		w.Create(
 			component.Transform,
 			component.Sprite,
+			ShadowTag,
 		),
 	)
 
@@ -28,17 +31,18 @@ func NewShadow(w donburi.World, parent *donburi.Entry) *donburi.Entry {
 		Y: float64(height) * 0.35,
 	}
 
-	shadowImage := ebiten.NewImage(parentSprite.Image.Size())
-	op := &ebiten.DrawImageOptions{}
-	op.ColorM.Scale(0, 0, 0, 0.4)
-	op.ColorM.Translate(0.5, 0.5, 0.5, 0)
-	shadowImage.DrawImage(parentSprite.Image, op)
-
 	donburi.SetValue(shadow, component.Sprite, component.SpriteData{
-		Image:            shadowImage,
+		Image:            ebiten.NewImageFromImage(parentSprite.Image),
 		Layer:            component.SpriteLayerShadows,
 		Pivot:            parentSprite.Pivot,
 		OriginalRotation: parentSprite.OriginalRotation,
+		// TODO useful for dynamic shadows but for static ones the color transformation could be done just once
+		ColorOverride: &component.ColorOverride{
+			R: 0.5,
+			G: 0.5,
+			B: 0.5,
+			A: 0.4,
+		},
 	})
 
 	return shadow

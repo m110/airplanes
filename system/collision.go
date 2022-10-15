@@ -44,6 +44,8 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 			switch component.GetCollectible(other).Type {
 			case component.CollectibleTypeWeaponUpgrade:
 				player.UpgradeWeapon()
+				// TODO Not on every upgrade
+				component.GetEvolution(entry).Evolve()
 			case component.CollectibleTypeShield:
 				airplane.StartInvulnerability()
 			case component.CollectibleTypeHealth:

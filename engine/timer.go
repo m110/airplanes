@@ -17,7 +17,9 @@ func NewTimer(d time.Duration) *Timer {
 }
 
 func (t *Timer) Update() {
-	t.currentFrames++
+	if t.currentFrames < t.targetFrames {
+		t.currentFrames++
+	}
 }
 
 func (t *Timer) IsReady() bool {
@@ -26,4 +28,8 @@ func (t *Timer) IsReady() bool {
 
 func (t *Timer) Reset() {
 	t.currentFrames = 0
+}
+
+func (t *Timer) PercentDone() float64 {
+	return float64(t.currentFrames) / float64(t.targetFrames)
 }

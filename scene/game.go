@@ -61,6 +61,7 @@ func NewGame(players []system.ChosenPlayer, screenWidth int, screenHeight int) *
 		system.NewCamera(),
 		system.NewObserver(),
 		system.NewShooter(),
+		system.NewEvolution(),
 		render,
 		debug,
 	}

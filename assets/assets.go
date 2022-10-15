@@ -31,10 +31,10 @@ var (
 	//go:embed *
 	assetsFS embed.FS
 
-	AirplaneBlueSmall   *ebiten.Image
-	AirplaneRedSmall    *ebiten.Image
-	AirplaneGreenSmall  *ebiten.Image
-	AirplaneYellowSmall *ebiten.Image
+	AirplanesBlue   []*ebiten.Image
+	AirplanesRed    []*ebiten.Image
+	AirplanesGreen  []*ebiten.Image
+	AirplanesYellow []*ebiten.Image
 
 	AirplaneGraySmall *ebiten.Image
 
@@ -104,10 +104,26 @@ func MustLoadAssets() {
 	NormalFont = mustLoadFont(normalFontData, 24)
 	NarrowFont = mustLoadFont(narrowFontData, 24)
 
-	AirplaneBlueSmall = loader.MustFindTile(TilesetClassAirplanes, "airplane-blue-small")
-	AirplaneRedSmall = loader.MustFindTile(TilesetClassAirplanes, "airplane-red-small")
-	AirplaneGreenSmall = loader.MustFindTile(TilesetClassAirplanes, "airplane-green-small")
-	AirplaneYellowSmall = loader.MustFindTile(TilesetClassAirplanes, "airplane-yellow-small")
+	AirplanesBlue = []*ebiten.Image{
+		loader.MustFindTile(TilesetClassAirplanes, "airplane-blue-small"),
+		loader.MustFindTile(TilesetClassAirplanes, "airplane-blue-medium"),
+		loader.MustFindTile(TilesetClassAirplanes, "airplane-blue-big"),
+	}
+	AirplanesRed = []*ebiten.Image{
+		loader.MustFindTile(TilesetClassAirplanes, "airplane-red-small"),
+		loader.MustFindTile(TilesetClassAirplanes, "airplane-red-medium"),
+		loader.MustFindTile(TilesetClassAirplanes, "airplane-red-big"),
+	}
+	AirplanesGreen = []*ebiten.Image{
+		loader.MustFindTile(TilesetClassAirplanes, "airplane-green-small"),
+		loader.MustFindTile(TilesetClassAirplanes, "airplane-green-medium"),
+		loader.MustFindTile(TilesetClassAirplanes, "airplane-green-big"),
+	}
+	AirplanesYellow = []*ebiten.Image{
+		loader.MustFindTile(TilesetClassAirplanes, "airplane-yellow-small"),
+		loader.MustFindTile(TilesetClassAirplanes, "airplane-yellow-medium"),
+		loader.MustFindTile(TilesetClassAirplanes, "airplane-yellow-big"),
+	}
 
 	AirplaneGraySmall = loader.MustFindTile(TilesetClassAirplanes, "airplane-gray-small-2")
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="140" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="69">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="140" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="77">
  <tileset firstgid="1" source="tiles.tsx"/>
  <tileset firstgid="121" source="airplanes.tsx"/>
  <layer id="1" name="Background" width="30" height="140">
@@ -152,7 +152,7 @@
     <property name="path" type="object" value="60"/>
    </properties>
   </object>
-  <object id="58" class="enemy-tank" gid="30" x="336" y="1552" width="16" height="16">
+  <object id="58" class="enemy-tank" gid="30" x="124" y="1240" width="16" height="16">
    <properties>
     <property name="speed" type="float" value="0"/>
    </properties>
@@ -243,5 +243,13 @@
   </object>
   <object id="64" class="enemy-airplane" gid="142" x="316" y="1272" width="32" height="32" rotation="180"/>
   <object id="66" class="enemy-airplane" gid="142" x="352" y="1320" width="32" height="32" rotation="180"/>
+  <object id="69" class="enemy-airplane" gid="142" x="72" y="912" width="32" height="32" rotation="180"/>
+  <object id="70" class="enemy-airplane" gid="142" x="108" y="960" width="32" height="32" rotation="180"/>
+  <object id="71" class="enemy-airplane" gid="142" x="248" y="808" width="32" height="32" rotation="180"/>
+  <object id="72" class="enemy-airplane" gid="142" x="284" y="856" width="32" height="32" rotation="180"/>
+  <object id="73" class="enemy-airplane" gid="142" x="172" y="552" width="32" height="32" rotation="180"/>
+  <object id="74" class="enemy-airplane" gid="142" x="208" y="600" width="32" height="32" rotation="180"/>
+  <object id="75" class="enemy-airplane" gid="142" x="300" y="652" width="32" height="32" rotation="180"/>
+  <object id="76" class="enemy-airplane" gid="142" x="336" y="700" width="32" height="32" rotation="180"/>
  </objectgroup>
 </map>

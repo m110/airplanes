@@ -34,6 +34,16 @@ func (d *TransformData) SetParent(parent *donburi.Entry, keepWorldPosition bool)
 	}
 }
 
+func (d *TransformData) FindChildWithComponent(componentType *donburi.ComponentType) *donburi.Entry {
+	for _, child := range d.Children {
+		if child.HasComponent(componentType) {
+			return child
+		}
+	}
+
+	return nil
+}
+
 func (d *TransformData) SetWorldPosition(pos engine.Vector) {
 	if d.Parent == nil {
 		d.LocalPosition = pos

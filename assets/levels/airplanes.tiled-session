@@ -11,6 +11,14 @@
         ":/automap-tiles.tsx": {
             "scaleInDock": 1
         },
+        "airbase.tmx": {
+            "scale": 0.74,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 337.1621621621622,
+                "y": 518.2432432432432
+            }
+        },
         "airplanes.tsx": {
             "scaleInDock": 1
         },

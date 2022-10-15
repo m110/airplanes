@@ -25,7 +25,7 @@ func NewAirbaseAirplane(w donburi.World, position engine.Vector, faction compone
 		LocalRotation: originalRotation,
 	})
 	donburi.SetValue(airplane, component.Sprite, component.SpriteData{
-		Image:            airplaneImageByFaction(faction),
+		Image:            AirplaneImageByFaction(faction, 0),
 		Layer:            component.SpriteLayerAirUnits,
 		Pivot:            component.SpritePivotCenter,
 		OriginalRotation: originalRotation,

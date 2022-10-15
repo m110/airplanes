@@ -18,9 +18,6 @@
   </objectgroup>
  </tile>
  <tile id="12" class="airplane-gray-big-1"/>
- <tile id="13" class="airplane-gray-big-2"/>
- <tile id="14" class="airplane-gray-big-3"/>
- <tile id="15" class="airplane-gray-big-4"/>
  <tile id="16" class="airplane-gray-medium-1"/>
  <tile id="17" class="airplane-gray-medium-2"/>
  <tile id="18" class="airplane-gray-medium-3"/>

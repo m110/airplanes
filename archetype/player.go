@@ -26,16 +26,16 @@ type PlayerSettings struct {
 	Inputs PlayerInputs
 }
 
-func airplaneImageByFaction(faction component.PlayerFaction) *ebiten.Image {
+func AirplaneImageByFaction(faction component.PlayerFaction, level int) *ebiten.Image {
 	switch faction {
 	case component.PlayerFactionBlue:
-		return assets.AirplaneBlueSmall
+		return assets.AirplanesBlue[level]
 	case component.PlayerFactionRed:
-		return assets.AirplaneRedSmall
+		return assets.AirplanesRed[level]
 	case component.PlayerFactionGreen:
-		return assets.AirplaneGreenSmall
+		return assets.AirplanesGreen[level]
 	case component.PlayerFactionYellow:
-		return assets.AirplaneYellowSmall
+		return assets.AirplanesYellow[level]
 	default:
 		panic(fmt.Sprintf("unknown player faction: %v", faction))
 	}
@@ -108,6 +108,7 @@ func NewPlayerFromPlayerData(w donburi.World, playerData component.PlayerData) *
 	return player
 }
 
+// TODO Evolution level
 func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction component.PlayerFaction) {
 	settings, ok := Players[player.PlayerNumber]
 	if !ok {
@@ -123,6 +124,7 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 			component.Input,
 			component.Bounds,
 			component.Collider,
+			component.Evolution,
 		),
 	)
 
@@ -142,6 +144,7 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 
 	donburi.SetValue(airplane, component.PlayerAirplane, component.PlayerAirplaneData{
 		PlayerNumber:          player.PlayerNumber,
+		Faction:               faction,
 		InvulnerableTimer:     engine.NewTimer(time.Second * 3),
 		InvulnerableIndicator: component.GetSprite(shield),
 	})
@@ -158,7 +161,7 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 
 	component.GetTransform(airplane).AppendChild(airplane, shield, false)
 
-	image := airplaneImageByFaction(faction)
+	image := AirplaneImageByFaction(faction, 0)
 
 	donburi.SetValue(airplane, component.Sprite, component.SpriteData{
 		Image:            image,
@@ -184,8 +187,32 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 		ShootKey:     inputs.Shoot,
 	})
 
+	donburi.SetValue(airplane, component.Evolution, component.EvolutionData{
+		Level:       0,
+		GrowTimer:   engine.NewTimer(time.Second * 1),
+		ShrinkTimer: engine.NewTimer(time.Second * 1),
+	})
+
 	NewShadow(w, airplane)
+
+	evolution := w.Entry(
+		w.Create(
+			component.Transform,
+			component.Sprite,
+			EvolutionTag,
+		),
+	)
+	component.GetTransform(airplane).AppendChild(airplane, evolution, false)
+	donburi.SetValue(evolution, component.Sprite, component.SpriteData{
+		Image:            AirplaneImageByFaction(faction, 1),
+		Layer:            component.SpriteLayerAirUnits,
+		Pivot:            component.SpritePivotCenter,
+		OriginalRotation: originalRotation,
+		Hidden:           true,
+	})
 }
+
+var EvolutionTag = donburi.NewTag()
 
 func MustFindPlayerByNumber(w donburi.World, playerNumber int) *component.PlayerData {
 	var foundPlayer *component.PlayerData

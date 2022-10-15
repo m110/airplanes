@@ -33,6 +33,20 @@ type SpriteData struct {
 	OriginalRotation float64
 
 	Hidden bool
+
+	ColorOverride *ColorOverride
+}
+
+type ColorOverride struct {
+	R, G, B, A float64
+}
+
+func (s *SpriteData) Show() {
+	s.Hidden = false
+}
+
+func (s *SpriteData) Hide() {
+	s.Hidden = true
 }
 
 var Sprite = donburi.NewComponentType[SpriteData]()

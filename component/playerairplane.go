@@ -8,6 +8,8 @@ import (
 
 type PlayerAirplaneData struct {
 	PlayerNumber int
+	// TODO Duplicated across PlayerAirplane and Player?
+	Faction PlayerFaction
 
 	Invulnerable          bool
 	InvulnerableTimer     *engine.Timer

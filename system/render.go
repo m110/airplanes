@@ -87,12 +87,20 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 				y -= halfH
 			}
 
+			// TODO World scale and allow 0,0?
 			if transform.LocalScale.X != 0 || transform.LocalScale.Y != 0 {
 				op.GeoM.Translate(-halfW, -halfH)
 				op.GeoM.Scale(transform.LocalScale.X, transform.LocalScale.Y)
 				op.GeoM.Translate(halfW, halfH)
 			}
+
+			if sprite.ColorOverride != nil {
+				op.ColorM.Scale(0, 0, 0, sprite.ColorOverride.A)
+				op.ColorM.Translate(sprite.ColorOverride.R, sprite.ColorOverride.G, sprite.ColorOverride.B, 0)
+			}
+
 			op.GeoM.Translate(x, y)
+
 			r.offscreen.DrawImage(sprite.Image, op)
 		}
 	}
