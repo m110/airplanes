@@ -7,6 +7,8 @@ A 2D shoot 'em up game made with:
 * [donburi](https://github.com/yohamta/donburi)
 * [Tiled](https://www.mapeditor.org/) and [go-tiled](https://github.com/lafriks/go-tiled)
 
+Assets by [Kenney](https://kenney.nl).
+
 ## Playing
 
 Play online: https://m110.github.io/airplanes/
