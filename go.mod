@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/hajimehoshi/ebiten/v2 v2.2.3
-	github.com/lafriks/go-tiled v0.9.0
+	github.com/lafriks/go-tiled v0.10.0
 	github.com/samber/lo v1.30.0
 	github.com/yohamta/donburi v1.1.2
 	golang.org/x/image v0.0.0-20211028202545-6944b10bf410
@@ -21,5 +21,3 @@ require (
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
 	golang.org/x/text v0.3.6 // indirect
 )
-
-replace github.com/lafriks/go-tiled v0.9.0 => github.com/m110/go-tiled v0.0.0-20221011193459-94bd152f0a4b
