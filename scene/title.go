@@ -32,4 +32,5 @@ func (t *Title) Update() {
 
 func (t *Title) Draw(screen *ebiten.Image) {
 	text.Draw(screen, "m110's Airplanes", assets.NarrowFont, t.screenWidth/4, 100, color.White)
+	text.Draw(screen, "Press space to start", assets.NarrowFont, t.screenWidth/5, 500, color.White)
 }

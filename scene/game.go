@@ -43,6 +43,21 @@ func NewGame(players []system.ChosenPlayer, screenWidth int, screenHeight int) *
 		screenHeight: screenHeight,
 	}
 
+	g.loadLevel()
+
+	return g
+}
+
+func (g *Game) nextLevel() {
+	if g.level == len(assets.Levels)-1 {
+		// TODO all levels done
+		return
+	}
+	g.level++
+	g.loadLevel()
+}
+
+func (g *Game) loadLevel() {
 	render := system.NewRenderer()
 	debug := system.NewDebug(g.loadLevel)
 
@@ -72,21 +87,6 @@ func NewGame(players []system.ChosenPlayer, screenWidth int, screenHeight int) *
 		system.NewHUD(),
 	}
 
-	g.loadLevel()
-
-	return g
-}
-
-func (g *Game) nextLevel() {
-	if g.level == len(assets.Levels)-1 {
-		// TODO all levels done
-		return
-	}
-	g.level++
-	g.loadLevel()
-}
-
-func (g *Game) loadLevel() {
 	g.world = g.createWorld(g.level)
 }
 

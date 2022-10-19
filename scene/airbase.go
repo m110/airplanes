@@ -15,19 +15,30 @@ type Airbase struct {
 	world     donburi.World
 	systems   []System
 	drawables []Drawable
+
+	startCallback      system.StartGameCallback
+	backToMenuCallback func()
 }
 
 func NewAirbase(startCallback system.StartGameCallback, backToMenuCallback func()) *Airbase {
+	a := &Airbase{
+		startCallback:      startCallback,
+		backToMenuCallback: backToMenuCallback,
+	}
+
+	a.createWorld()
+
+	return a
+}
+
+func (a *Airbase) createWorld() {
 	render := system.NewRenderer()
-
-	a := &Airbase{}
-
 	debug := system.NewDebug(a.createWorld)
 
 	a.systems = []System{
 		system.NewVelocity(),
 		system.NewScript(),
-		system.NewPlayerSelect(startCallback, backToMenuCallback),
+		system.NewPlayerSelect(a.startCallback, a.backToMenuCallback),
 		debug,
 		render,
 	}
@@ -38,12 +49,6 @@ func NewAirbase(startCallback system.StartGameCallback, backToMenuCallback func(
 		debug,
 	}
 
-	a.createWorld()
-
-	return a
-}
-
-func (a *Airbase) createWorld() {
 	levelAsset := assets.AirBase
 	a.world = donburi.NewWorld()
 
