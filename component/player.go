@@ -100,6 +100,25 @@ func (d *PlayerData) WeaponCooldown() time.Duration {
 	}
 }
 
+func (d *PlayerData) EvolutionLevel() int {
+	switch d.WeaponLevel {
+	case WeaponLevelSingle:
+		fallthrough
+	case WeaponLevelSingleFast:
+		return 0
+	case WeaponLevelDouble:
+		fallthrough
+	case WeaponLevelDoubleFast:
+		return 1
+	case WeaponLevelDiagonal:
+		fallthrough
+	case WeaponLevelDoubleDiagonal:
+		return 2
+	default:
+		panic(fmt.Sprintf("unknown weapon level: %v", d.WeaponLevel))
+	}
+}
+
 var Player = donburi.NewComponentType[PlayerData]()
 
 func GetPlayer(entry *donburi.Entry) *PlayerData {

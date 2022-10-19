@@ -148,7 +148,7 @@ func (g *Game) createWorld(levelIndex int) donburi.World {
 		// Spawn new players
 		for _, p := range g.players {
 			player := archetype.NewPlayer(world, p.PlayerNumber, p.Faction)
-			archetype.NewPlayerAirplane(world, *component.GetPlayer(player), p.Faction)
+			archetype.NewPlayerAirplane(world, *component.GetPlayer(player), p.Faction, 0)
 		}
 	} else {
 		// Keep the same game data across levels
@@ -164,7 +164,7 @@ func (g *Game) createWorld(levelIndex int) donburi.World {
 
 			archetype.NewPlayerFromPlayerData(world, *player)
 			if player.Lives > 0 {
-				archetype.NewPlayerAirplane(world, *player, player.PlayerFaction)
+				archetype.NewPlayerAirplane(world, *player, player.PlayerFaction, player.EvolutionLevel())
 			}
 		})
 	}

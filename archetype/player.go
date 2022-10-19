@@ -108,8 +108,7 @@ func NewPlayerFromPlayerData(w donburi.World, playerData component.PlayerData) *
 	return player
 }
 
-// TODO Evolution level
-func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction component.PlayerFaction) {
+func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction component.PlayerFaction, evolutionLevel int) {
 	settings, ok := Players[player.PlayerNumber]
 	if !ok {
 		panic(fmt.Sprintf("unknown player number: %v", player.PlayerNumber))
@@ -161,7 +160,7 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 
 	component.GetTransform(airplane).AppendChild(airplane, shield, false)
 
-	image := AirplaneImageByFaction(faction, 0)
+	image := AirplaneImageByFaction(faction, evolutionLevel)
 
 	donburi.SetValue(airplane, component.Sprite, component.SpriteData{
 		Image:            image,
@@ -188,7 +187,7 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 	})
 
 	donburi.SetValue(airplane, component.Evolution, component.EvolutionData{
-		Level:       0,
+		Level:       evolutionLevel,
 		GrowTimer:   engine.NewTimer(time.Second * 1),
 		ShrinkTimer: engine.NewTimer(time.Second * 1),
 	})
@@ -204,7 +203,6 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 	)
 	component.GetTransform(airplane).AppendChild(airplane, evolution, false)
 	donburi.SetValue(evolution, component.Sprite, component.SpriteData{
-		Image:            AirplaneImageByFaction(faction, 1),
 		Layer:            component.SpriteLayerAirUnits,
 		Pivot:            component.SpritePivotCenter,
 		OriginalRotation: originalRotation,
