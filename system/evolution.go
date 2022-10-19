@@ -31,8 +31,7 @@ func (s *Evolution) Update(w donburi.World) {
 		}
 
 		transform := component.GetTransform(entry)
-		// TODO Base on level
-		evolutionChild := transform.FindChildWithComponent(archetype.EvolutionTag)
+		evolutionChild := transform.FindChildWithComponent(component.EvolutionTag)
 		if evolutionChild == nil {
 			panic("no evolution found")
 		}
@@ -60,7 +59,7 @@ func (s *Evolution) Update(w donburi.World) {
 			A: 1,
 		}
 
-		shadow := component.GetTransform(entry).FindChildWithComponent(archetype.ShadowTag)
+		shadow := component.GetTransform(entry).FindChildWithComponent(component.ShadowTag)
 		shadowSprite := component.GetSprite(shadow)
 
 		shadowSprite.Image.Clear()

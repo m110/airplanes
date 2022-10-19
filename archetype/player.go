@@ -192,25 +192,24 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 		ShrinkTimer: engine.NewTimer(time.Second * 1),
 	})
 
-	NewShadow(w, airplane)
+	NewDynamicShadow(w, airplane)
 
 	evolution := w.Entry(
 		w.Create(
 			component.Transform,
 			component.Sprite,
-			EvolutionTag,
+			component.EvolutionTag,
 		),
 	)
 	component.GetTransform(airplane).AppendChild(airplane, evolution, false)
 	donburi.SetValue(evolution, component.Sprite, component.SpriteData{
+		Image:            ebiten.NewImageFromImage(image),
 		Layer:            component.SpriteLayerAirUnits,
 		Pivot:            component.SpritePivotCenter,
 		OriginalRotation: originalRotation,
 		Hidden:           true,
 	})
 }
-
-var EvolutionTag = donburi.NewTag()
 
 func MustFindPlayerByNumber(w donburi.World, playerNumber int) *component.PlayerData {
 	var foundPlayer *component.PlayerData

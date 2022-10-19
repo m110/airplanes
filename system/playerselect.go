@@ -55,12 +55,9 @@ func (s *PlayerSelect) Update(w donburi.World) {
 			velocity := component.GetVelocity(entry)
 			velocity.Velocity.Y -= 0.01
 
-			// TODO Better animation
 			s.shadowTimer.Update()
 			if s.shadowTimer.IsReady() {
-				// TODO: Have something like "find component in children"?
-				// Or find by tag
-				shadow := transform.Children[1]
+				shadow := transform.FindChildWithComponent(component.ShadowTag)
 
 				shadowTransform := component.GetTransform(shadow)
 				shadowTransform.LocalPosition.X -= 0.05
@@ -125,7 +122,6 @@ func (s *PlayerSelect) Update(w donburi.World) {
 			}
 		}
 
-		// TODO Implement
 		if inpututil.IsKeyJustPressed(settings.Inputs.Right) {
 			if entry, ok := selected[number]; ok {
 				playerSelect := component.GetPlayerSelect(entry)

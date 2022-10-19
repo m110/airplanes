@@ -175,11 +175,6 @@ func (g *Game) createWorld(levelIndex int) donburi.World {
 }
 
 func (g *Game) restart() {
-	// TODO: Definitely a hack. Needed because GameData is cached in systems.
-	// Consider a different approach to GameData, perhaps not as a component?
-	component.MustFindGame(g.world).Score = 0
-	component.MustFindGame(g.world).GameOver = false
-
 	g.world = nil
 	g.level = 0
 	g.loadLevel()

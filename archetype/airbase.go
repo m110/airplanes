@@ -38,7 +38,7 @@ func NewAirbaseAirplane(w donburi.World, position engine.Vector, faction compone
 
 	NewCrosshair(w, airplane)
 
-	shadow := NewShadow(w, airplane)
+	shadow := NewStaticShadow(w, airplane)
 	component.GetTransform(shadow).LocalPosition = engine.Vector{}
 }
 

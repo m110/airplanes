@@ -8,14 +8,25 @@ import (
 	"github.com/m110/airplanes/engine"
 )
 
-var ShadowTag = donburi.NewTag()
+const (
+	shadowColorScale = 0.5
+	shadowColorAlpha = 0.4
+)
 
-func NewShadow(w donburi.World, parent *donburi.Entry) *donburi.Entry {
+func NewDynamicShadow(w donburi.World, parent *donburi.Entry) *donburi.Entry {
+	return newShadow(w, parent, true)
+}
+
+func NewStaticShadow(w donburi.World, parent *donburi.Entry) *donburi.Entry {
+	return newShadow(w, parent, false)
+}
+
+func newShadow(w donburi.World, parent *donburi.Entry, dynamic bool) *donburi.Entry {
 	shadow := w.Entry(
 		w.Create(
 			component.Transform,
 			component.Sprite,
-			ShadowTag,
+			component.ShadowTag,
 		),
 	)
 
@@ -31,19 +42,34 @@ func NewShadow(w donburi.World, parent *donburi.Entry) *donburi.Entry {
 		Y: float64(height) * 0.35,
 	}
 
-	donburi.SetValue(shadow, component.Sprite, component.SpriteData{
-		Image:            ebiten.NewImageFromImage(parentSprite.Image),
+	var img *ebiten.Image
+	if dynamic {
+		img = ebiten.NewImageFromImage(parentSprite.Image)
+	} else {
+		img = ebiten.NewImage(parentSprite.Image.Size())
+		op := &ebiten.DrawImageOptions{}
+		op.ColorM.Scale(0, 0, 0, shadowColorAlpha)
+		op.ColorM.Translate(shadowColorScale, shadowColorScale, shadowColorScale, 0)
+		img.DrawImage(parentSprite.Image, op)
+	}
+
+	spriteData := component.SpriteData{
+		Image:            img,
 		Layer:            component.SpriteLayerShadows,
 		Pivot:            parentSprite.Pivot,
 		OriginalRotation: parentSprite.OriginalRotation,
-		// TODO useful for dynamic shadows but for static ones the color transformation could be done just once
-		ColorOverride: &component.ColorOverride{
-			R: 0.5,
-			G: 0.5,
-			B: 0.5,
-			A: 0.4,
-		},
-	})
+	}
+
+	if dynamic {
+		spriteData.ColorOverride = &component.ColorOverride{
+			R: shadowColorScale,
+			G: shadowColorScale,
+			B: shadowColorScale,
+			A: shadowColorAlpha,
+		}
+	}
+
+	donburi.SetValue(shadow, component.Sprite, spriteData)
 
 	return shadow
 }
