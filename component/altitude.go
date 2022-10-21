@@ -11,6 +11,9 @@ type AltitudeData struct {
 	// 0.0 is ground level, 1.0 is the highest point.
 	Altitude float64
 	Velocity float64
+
+	// TODO: Not sure if this fits this component
+	Falling bool
 }
 
 func (a *AltitudeData) Update() {

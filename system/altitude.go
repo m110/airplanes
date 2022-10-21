@@ -39,5 +39,16 @@ func (a *Altitude) Update(w donburi.World) {
 			shadowTransform.LocalPosition.X = -archetype.MaxShadowPosition * altitude.Altitude
 			shadowTransform.LocalPosition.Y = archetype.MaxShadowPosition * altitude.Altitude
 		}
+
+		// Grounded units don't move
+		if altitude.Falling && altitude.Altitude == 0 {
+			if entry.HasComponent(component.Velocity) {
+				velocity := component.GetVelocity(entry)
+				velocity.Velocity.X = 0
+				velocity.Velocity.Y = 0
+			}
+			sprite := component.GetSprite(entry)
+			sprite.Layer = component.SpriteLayerGroundUnits
+		}
 	})
 }

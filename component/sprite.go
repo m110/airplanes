@@ -12,6 +12,7 @@ const (
 	SpriteLayerGroundUnits
 	SpriteLayerShadows
 	SpriteLayerCollectibles
+	SpriteLayerFallingWrecks
 	SpriteLayerAirUnits
 	SpriteLayerIndicators
 )

@@ -29,6 +29,7 @@ func NewEnemyAirplane(
 			component.Despawnable,
 			component.Collider,
 			component.Health,
+			component.Wreckable,
 		),
 	)
 
@@ -76,6 +77,115 @@ func NewEnemyAirplane(
 	})
 
 	NewStaticShadow(w, airplane)
+}
+
+type spritePiece struct {
+	Rect   engine.Rect
+	Offset engine.Vector
+}
+
+func NewEnemyAirplaneWreck(w donburi.World, position engine.Vector, rotation float64, sprite *component.SpriteData) {
+	width, height := sprite.Image.Size()
+	cutpointX := float64(width) * engine.RandomRange(0.2, 0.8)
+	cutpointY := float64(height) * engine.RandomRange(0.2, 0.8)
+
+	offsetX := cutpointX / 2
+	offsetY := cutpointY / 2
+
+	pieces := []spritePiece{
+		{
+			Rect: engine.Rect{
+				X:      0,
+				Y:      0,
+				Width:  cutpointX,
+				Height: cutpointY,
+			},
+			Offset: engine.Vector{
+				X: -offsetX,
+				Y: -offsetY,
+			},
+		},
+		{
+			Rect: engine.Rect{
+				X:      cutpointX,
+				Y:      0,
+				Width:  float64(width) - cutpointX,
+				Height: cutpointY,
+			},
+			Offset: engine.Vector{
+				X: offsetX,
+				Y: -offsetY,
+			},
+		},
+		{
+			Rect: engine.Rect{
+				X:      0,
+				Y:      cutpointY,
+				Width:  cutpointX,
+				Height: float64(height) - cutpointY,
+			},
+			Offset: engine.Vector{
+				X: -offsetX,
+				Y: offsetY,
+			},
+		},
+		{
+			Rect: engine.Rect{
+				X:      cutpointX,
+				Y:      cutpointY,
+				Width:  float64(width) - cutpointX,
+				Height: float64(height) - cutpointY,
+			},
+			Offset: engine.Vector{
+				X: offsetX,
+				Y: offsetY,
+			},
+		},
+	}
+
+	// TODO need to rotate here?
+	baseImage := ebiten.NewImageFromImage(sprite.Image)
+
+	for _, p := range pieces {
+		img := baseImage.SubImage(p.Rect.ToImageRectangle()).(*ebiten.Image)
+
+		wreck := w.Entry(
+			w.Create(
+				component.Transform,
+				component.Velocity,
+				component.Altitude,
+				component.Sprite,
+			),
+		)
+
+		// TODO This isn't accurate
+		pos := position
+		pos.X += p.Offset.X
+		pos.Y += p.Offset.Y
+
+		transform := component.GetTransform(wreck)
+		transform.SetWorldPosition(pos)
+		transform.SetWorldRotation(rotation)
+
+		donburi.SetValue(wreck, component.Sprite, component.SpriteData{
+			Image:            img,
+			Layer:            component.SpriteLayerFallingWrecks,
+			Pivot:            sprite.Pivot,
+			OriginalRotation: sprite.OriginalRotation,
+		})
+
+		donburi.SetValue(wreck, component.Velocity, component.VelocityData{
+			Velocity: component.GetTransform(wreck).Right().MulScalar(0.75),
+		})
+
+		donburi.SetValue(wreck, component.Altitude, component.AltitudeData{
+			Altitude: 1.0,
+			Velocity: -0.01,
+			Falling:  true,
+		})
+
+		NewStaticShadow(w, wreck)
+	}
 }
 
 func NewEnemyTank(

@@ -1,5 +1,7 @@
 package engine
 
+import "image"
+
 type Rect struct {
 	X      float64
 	Y      float64
@@ -29,4 +31,13 @@ func (r Rect) Intersects(other Rect) bool {
 		other.X <= r.MaxX() &&
 		r.Y <= other.MaxY() &&
 		other.Y <= r.MaxY()
+}
+
+func (r Rect) ToImageRectangle() image.Rectangle {
+	return image.Rect(
+		int(r.X),
+		int(r.Y),
+		int(r.MaxX()),
+		int(r.MaxY()),
+	)
 }
