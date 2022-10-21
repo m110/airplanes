@@ -77,6 +77,7 @@ func (g *Game) loadLevel() {
 		system.NewObserver(),
 		system.NewShooter(),
 		system.NewEvolution(),
+		system.NewAltitude(),
 		render,
 		debug,
 	}

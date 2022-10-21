@@ -11,6 +11,9 @@ import (
 const (
 	shadowColorScale = 0.5
 	shadowColorAlpha = 0.4
+
+	// TODO Should this be based on the sprite's width?
+	MaxShadowPosition = 12
 )
 
 func NewDynamicShadow(w donburi.World, parent *donburi.Entry) *donburi.Entry {
@@ -33,14 +36,13 @@ func newShadow(w donburi.World, parent *donburi.Entry, dynamic bool) *donburi.En
 	parentTransform := component.GetTransform(parent)
 	parentTransform.AppendChild(parent, shadow, false)
 
-	parentSprite := component.GetSprite(parent)
-	width, height := parentSprite.Image.Size()
-
 	transform := component.GetTransform(shadow)
 	transform.LocalPosition = engine.Vector{
-		X: -float64(width) * 0.35,
-		Y: float64(height) * 0.35,
+		X: -MaxShadowPosition,
+		Y: MaxShadowPosition,
 	}
+
+	parentSprite := component.GetSprite(parent)
 
 	var img *ebiten.Image
 	if dynamic {

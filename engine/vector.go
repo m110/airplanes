@@ -25,6 +25,13 @@ func (v Vector) Sub(other Vector) Vector {
 	}
 }
 
+func (v Vector) Mul(other Vector) Vector {
+	return Vector{
+		X: v.X * other.X,
+		Y: v.Y * other.Y,
+	}
+}
+
 func (v Vector) AddScalar(value float64) Vector {
 	return Vector{
 		X: v.X + value,

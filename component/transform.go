@@ -34,14 +34,14 @@ func (d *TransformData) SetParent(parent *donburi.Entry, keepWorldPosition bool)
 	}
 }
 
-func (d *TransformData) FindChildWithComponent(componentType *donburi.ComponentType) *donburi.Entry {
+func (d *TransformData) FindChildWithComponent(componentType *donburi.ComponentType) (*donburi.Entry, bool) {
 	for _, child := range d.Children {
 		if child.HasComponent(componentType) {
-			return child
+			return child, true
 		}
 	}
 
-	return nil
+	return nil, false
 }
 
 func (d *TransformData) SetWorldPosition(pos engine.Vector) {
@@ -89,7 +89,7 @@ func (d *TransformData) WorldScale() engine.Vector {
 	}
 
 	parent := GetTransform(d.Parent)
-	return parent.WorldScale().Add(d.LocalScale)
+	return parent.WorldScale().Mul(d.LocalScale)
 }
 
 func (d *TransformData) Right() engine.Vector {

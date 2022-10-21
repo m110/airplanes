@@ -28,18 +28,23 @@ type PlayerSelect struct {
 	backToMenuCallback func()
 
 	started       bool
-	shadowTimer   *engine.Timer
+	altitudeTimer *engine.Timer
 	chosenPlayers []ChosenPlayer
 }
 
 func NewPlayerSelect(startCallback StartGameCallback, backToMenuCallback func()) *PlayerSelect {
 	return &PlayerSelect{
 		query: query.NewQuery(
-			filter.Contains(component.Transform, component.PlayerSelect, component.Velocity),
+			filter.Contains(
+				component.Transform,
+				component.PlayerSelect,
+				component.Velocity,
+				component.Altitude,
+			),
 		),
 		startCallback:      startCallback,
 		backToMenuCallback: backToMenuCallback,
-		shadowTimer:        engine.NewTimer(time.Second),
+		altitudeTimer:      engine.NewTimer(time.Second),
 	}
 }
 
@@ -55,13 +60,9 @@ func (s *PlayerSelect) Update(w donburi.World) {
 			velocity := component.GetVelocity(entry)
 			velocity.Velocity.Y -= 0.01
 
-			s.shadowTimer.Update()
-			if s.shadowTimer.IsReady() {
-				shadow := transform.FindChildWithComponent(component.ShadowTag)
-
-				shadowTransform := component.GetTransform(shadow)
-				shadowTransform.LocalPosition.X -= 0.05
-				shadowTransform.LocalPosition.Y += 0.05
+			s.altitudeTimer.Update()
+			if s.altitudeTimer.IsReady() {
+				component.GetAltitude(entry).Velocity = 0.005
 			}
 
 			// TODO Scale the sprite slightly

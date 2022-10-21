@@ -39,6 +39,7 @@ func (a *Airbase) createWorld() {
 		system.NewVelocity(),
 		system.NewScript(),
 		system.NewPlayerSelect(a.startCallback, a.backToMenuCallback),
+		system.NewAltitude(),
 		debug,
 		render,
 	}

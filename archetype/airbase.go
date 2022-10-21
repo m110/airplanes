@@ -15,6 +15,7 @@ func NewAirbaseAirplane(w donburi.World, position engine.Vector, faction compone
 			component.Sprite,
 			component.Velocity,
 			component.PlayerSelect,
+			component.Altitude,
 		),
 	)
 
