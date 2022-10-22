@@ -1,6 +1,7 @@
 package archetype
 
 import (
+	"math"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -79,75 +80,58 @@ func NewEnemyAirplane(
 	NewStaticShadow(w, airplane)
 }
 
-type spritePiece struct {
-	Rect   engine.Rect
-	Offset engine.Vector
-}
+func NewEnemyAirplaneWreck(w donburi.World, parent *component.TransformData, sprite *component.SpriteData) {
+	widthInt, heightInt := sprite.Image.Size()
+	width, height := float64(widthInt), float64(heightInt)
+	cutpointX := float64(int(width * engine.RandomRange(0.3, 0.7)))
+	cutpointY := float64(int(height * engine.RandomRange(0.3, 0.7)))
 
-func NewEnemyAirplaneWreck(w donburi.World, position engine.Vector, rotation float64, sprite *component.SpriteData) {
-	width, height := sprite.Image.Size()
-	cutpointX := float64(width) * engine.RandomRange(0.2, 0.8)
-	cutpointY := float64(height) * engine.RandomRange(0.2, 0.8)
-
-	offsetX := cutpointX / 2
-	offsetY := cutpointY / 2
-
-	pieces := []spritePiece{
+	pieces := []engine.Rect{
 		{
-			Rect: engine.Rect{
-				X:      0,
-				Y:      0,
-				Width:  cutpointX,
-				Height: cutpointY,
-			},
-			Offset: engine.Vector{
-				X: -offsetX,
-				Y: -offsetY,
-			},
+			X:      0,
+			Y:      0,
+			Width:  cutpointX,
+			Height: cutpointY,
 		},
 		{
-			Rect: engine.Rect{
-				X:      cutpointX,
-				Y:      0,
-				Width:  float64(width) - cutpointX,
-				Height: cutpointY,
-			},
-			Offset: engine.Vector{
-				X: offsetX,
-				Y: -offsetY,
-			},
+			X:      cutpointX,
+			Y:      0,
+			Width:  width - cutpointX,
+			Height: cutpointY,
 		},
 		{
-			Rect: engine.Rect{
-				X:      0,
-				Y:      cutpointY,
-				Width:  cutpointX,
-				Height: float64(height) - cutpointY,
-			},
-			Offset: engine.Vector{
-				X: -offsetX,
-				Y: offsetY,
-			},
+			X:      0,
+			Y:      cutpointY,
+			Width:  cutpointX,
+			Height: height - cutpointY,
 		},
 		{
-			Rect: engine.Rect{
-				X:      cutpointX,
-				Y:      cutpointY,
-				Width:  float64(width) - cutpointX,
-				Height: float64(height) - cutpointY,
-			},
-			Offset: engine.Vector{
-				X: offsetX,
-				Y: offsetY,
-			},
+			X:      cutpointX,
+			Y:      cutpointY,
+			Width:  width - cutpointX,
+			Height: height - cutpointY,
 		},
 	}
 
-	// TODO need to rotate here?
-	baseImage := ebiten.NewImageFromImage(sprite.Image)
+	halfW := width / 2
+	halfH := height / 2
+
+	// Rotate the base image
+	baseImage := ebiten.NewImage(sprite.Image.Size())
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(-halfW, -halfH)
+	op.GeoM.Rotate(float64(int(parent.WorldRotation()-sprite.OriginalRotation)%360) * 2 * math.Pi / 360)
+	op.GeoM.Translate(halfW, halfH)
+	baseImage.DrawImage(sprite.Image, op)
+
+	basePos := parent.WorldPosition()
+	if sprite.Pivot == component.SpritePivotCenter {
+		basePos.X -= halfW
+		basePos.Y -= halfH
+	}
 
 	for _, p := range pieces {
-		img := baseImage.SubImage(p.Rect.ToImageRectangle()).(*ebiten.Image)
+		img := baseImage.SubImage(p.ToImageRectangle()).(*ebiten.Image)
 
 		wreck := w.Entry(
 			w.Create(
@@ -158,24 +142,25 @@ func NewEnemyAirplaneWreck(w donburi.World, position engine.Vector, rotation flo
 			),
 		)
 
-		// TODO This isn't accurate
-		pos := position
-		pos.X += p.Offset.X
-		pos.Y += p.Offset.Y
+		pos := basePos
+		pos.X += p.X + p.Width/2
+		pos.Y += p.Y + p.Height/2
 
 		transform := component.GetTransform(wreck)
-		transform.SetWorldPosition(pos)
-		transform.SetWorldRotation(rotation)
+		transform.LocalPosition = pos
 
 		donburi.SetValue(wreck, component.Sprite, component.SpriteData{
-			Image:            img,
-			Layer:            component.SpriteLayerFallingWrecks,
-			Pivot:            sprite.Pivot,
-			OriginalRotation: sprite.OriginalRotation,
+			Image: img,
+			Layer: component.SpriteLayerFallingWrecks,
+			Pivot: sprite.Pivot,
 		})
 
+		velocity := parent.Right()
+		velocity.X *= engine.RandomRange(0.5, 0.8)
+		velocity.Y *= engine.RandomRange(0.5, 0.8)
+
 		donburi.SetValue(wreck, component.Velocity, component.VelocityData{
-			Velocity: component.GetTransform(wreck).Right().MulScalar(0.75),
+			Velocity: velocity,
 		})
 
 		donburi.SetValue(wreck, component.Altitude, component.AltitudeData{

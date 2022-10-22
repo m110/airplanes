@@ -43,10 +43,8 @@ func (h *Health) Update(w donburi.World) {
 				// TODO: It seems like a good candidate to be triggered by an event.
 				component.MustFindGame(w).AddScore(1)
 
-				transform := component.GetTransform(entry)
-
 				if entry.HasComponent(component.Wreckable) {
-					archetype.NewEnemyAirplaneWreck(w, transform.WorldPosition(), transform.WorldRotation(), component.GetSprite(entry))
+					archetype.NewEnemyAirplaneWreck(w, component.GetTransform(entry), component.GetSprite(entry))
 				}
 
 				Destroy(w, entry)

@@ -2,6 +2,7 @@ package scene
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/yohamta/donburi"
 
 	"github.com/m110/airplanes/archetype"
@@ -73,6 +74,15 @@ func (a *Airbase) createWorld() {
 }
 
 func (a *Airbase) Update() {
+	if inpututil.IsKeyJustPressed(ebiten.Key1) {
+		a.startCallback([]system.ChosenPlayer{
+			{
+				PlayerNumber: 1,
+				Faction:      component.PlayerFactionBlue,
+			},
+		})
+	}
+
 	for _, s := range a.systems {
 		s.Update(a.world)
 	}

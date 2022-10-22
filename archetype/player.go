@@ -124,6 +124,7 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 			component.Bounds,
 			component.Collider,
 			component.Evolution,
+			component.Wreckable,
 		),
 	)
 

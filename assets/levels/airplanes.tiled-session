@@ -12,6 +12,9 @@
             "scaleInDock": 1
         },
         "airbase.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
             "scale": 0.74,
             "selectedLayer": 1,
             "viewCenter": {
@@ -20,18 +23,41 @@
             }
         },
         "airplanes.tsx": {
-            "scaleInDock": 1
+            "scaleInDock": 1,
+            "scaleInEditor": 2.14
+        },
+        "level01.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 0.7135,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 227.0497547302032,
+                "y": 767.3440784863349
+            }
+        },
+        "level02.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 0.9914,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 227.96045995561826,
+                "y": 797.3572725438773
+            }
         },
         "level1.tmx": {
             "expandedObjectLayers": [
                 3,
                 2
             ],
-            "scale": 1.09,
+            "scale": 0.5,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 293.11926605504584,
-                "y": 821.559633027523
+                "x": 248,
+                "y": 1528
             }
         },
         "level2.tmx": {
@@ -41,8 +67,8 @@
             "scale": 1.36,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 234.1911764705882,
-                "y": 1404.7794117647059
+                "x": 228.67647058823528,
+                "y": 1398.5294117647059
             }
         },
         "ships.tsx": {
@@ -50,7 +76,7 @@
             "scaleInEditor": 2.14
         },
         "tiles.tsx": {
-            "scaleInDock": 2.7679,
+            "scaleInDock": 2.4,
             "scaleInEditor": 2.14
         }
     },
