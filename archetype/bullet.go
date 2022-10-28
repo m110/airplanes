@@ -2,10 +2,11 @@ package archetype
 
 import (
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/math"
+	"github.com/yohamta/donburi/features/transform"
 
 	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/component"
-	"github.com/m110/airplanes/engine"
 )
 
 const (
@@ -13,12 +14,12 @@ const (
 	enemyBulletSpeed  = 4
 )
 
-func NewPlayerBullet(w donburi.World, player *component.PlayerData, position engine.Vector) {
+func NewPlayerBullet(w donburi.World, player *component.PlayerData, position math.Vec2) {
 	width := float64(assets.LaserSingle.Bounds().Dy())
 
 	if player.WeaponLevel == component.WeaponLevelSingle ||
 		player.WeaponLevel == component.WeaponLevelSingleFast {
-		newPlayerBullet(w, engine.Vector{
+		newPlayerBullet(w, math.Vec2{
 			X: position.X,
 			Y: position.Y - width,
 		}, 0)
@@ -28,11 +29,11 @@ func NewPlayerBullet(w donburi.World, player *component.PlayerData, position eng
 		player.WeaponLevel == component.WeaponLevelDoubleFast ||
 		player.WeaponLevel == component.WeaponLevelDiagonal ||
 		player.WeaponLevel == component.WeaponLevelDoubleDiagonal {
-		newPlayerBullet(w, engine.Vector{
+		newPlayerBullet(w, math.Vec2{
 			X: position.X - width/2,
 			Y: position.Y - width/2,
 		}, 0)
-		newPlayerBullet(w, engine.Vector{
+		newPlayerBullet(w, math.Vec2{
 			X: position.X + width/2,
 			Y: position.Y - width/2,
 		}, 0)
@@ -40,33 +41,33 @@ func NewPlayerBullet(w donburi.World, player *component.PlayerData, position eng
 
 	if player.WeaponLevel == component.WeaponLevelDiagonal ||
 		player.WeaponLevel == component.WeaponLevelDoubleDiagonal {
-		newPlayerBullet(w, engine.Vector{
+		newPlayerBullet(w, math.Vec2{
 			X: position.X - width,
 			Y: position.Y - width,
 		}, -30)
-		newPlayerBullet(w, engine.Vector{
+		newPlayerBullet(w, math.Vec2{
 			X: position.X + width,
 			Y: position.Y - width,
 		}, 30)
 	}
 
 	if player.WeaponLevel == component.WeaponLevelDoubleDiagonal {
-		newPlayerBullet(w, engine.Vector{
+		newPlayerBullet(w, math.Vec2{
 			X: position.X - width*1.1,
 			Y: position.Y,
 		}, -30)
-		newPlayerBullet(w, engine.Vector{
+		newPlayerBullet(w, math.Vec2{
 			X: position.X + width*1.1,
 			Y: position.Y,
 		}, 30)
 	}
 }
 
-func newPlayerBullet(w donburi.World, position engine.Vector, localRotation float64) {
+func newPlayerBullet(w donburi.World, position math.Vec2, localRotation float64) {
 	bullet := w.Entry(
 		w.Create(
 			component.Velocity,
-			component.Transform,
+			transform.Transform,
 			component.Sprite,
 			component.Despawnable,
 			component.Collider,
@@ -77,13 +78,16 @@ func newPlayerBullet(w donburi.World, position engine.Vector, localRotation floa
 
 	originalRotation := -90.0
 
-	donburi.SetValue(bullet, component.Transform, component.TransformData{
+	donburi.SetValue(bullet, transform.Transform, transform.TransformData{
 		LocalPosition: position,
 		LocalRotation: originalRotation + localRotation,
 	})
 
+	vel := transform.Right(bullet)
+	vel.MulScalar(playerBulletSpeed)
+
 	donburi.SetValue(bullet, component.Velocity, component.VelocityData{
-		Velocity: component.GetTransform(bullet).Right().MulScalar(playerBulletSpeed),
+		Velocity: vel,
 	})
 
 	donburi.SetValue(bullet, component.Sprite, component.SpriteData{
@@ -102,11 +106,11 @@ func newPlayerBullet(w donburi.World, position engine.Vector, localRotation floa
 	})
 }
 
-func NewEnemyBullet(w donburi.World, position engine.Vector, rotation float64) {
+func NewEnemyBullet(w donburi.World, position math.Vec2, rotation float64) {
 	bullet := w.Entry(
 		w.Create(
 			component.Velocity,
-			component.Transform,
+			transform.Transform,
 			component.Sprite,
 			component.Despawnable,
 			component.Collider,
@@ -115,13 +119,16 @@ func NewEnemyBullet(w donburi.World, position engine.Vector, rotation float64) {
 
 	image := assets.Rocket
 
-	donburi.SetValue(bullet, component.Transform, component.TransformData{
+	donburi.SetValue(bullet, transform.Transform, transform.TransformData{
 		LocalPosition: position,
 		LocalRotation: rotation,
 	})
 
+	vel := transform.Right(bullet)
+	vel.MulScalar(enemyBulletSpeed)
+
 	donburi.SetValue(bullet, component.Velocity, component.VelocityData{
-		Velocity: component.GetTransform(bullet).Right().MulScalar(enemyBulletSpeed),
+		Velocity: vel,
 	})
 
 	donburi.SetValue(bullet, component.Sprite, component.SpriteData{

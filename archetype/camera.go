@@ -4,6 +4,8 @@ import (
 	"time"
 
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/math"
+	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
@@ -11,10 +13,10 @@ import (
 	"github.com/m110/airplanes/engine"
 )
 
-func NewCamera(w donburi.World, startPosition engine.Vector) *donburi.Entry {
+func NewCamera(w donburi.World, startPosition math.Vec2) *donburi.Entry {
 	camera := w.Entry(
 		w.Create(
-			component.Transform,
+			transform.Transform,
 			component.Velocity,
 			component.Camera,
 		),
@@ -22,7 +24,7 @@ func NewCamera(w donburi.World, startPosition engine.Vector) *donburi.Entry {
 
 	cameraCamera := component.GetCamera(camera)
 	cameraCamera.MoveTimer = engine.NewTimer(time.Second * 3)
-	donburi.SetValue(camera, component.Transform, component.TransformData{
+	donburi.SetValue(camera, transform.Transform, transform.TransformData{
 		LocalPosition: startPosition,
 	})
 

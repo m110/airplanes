@@ -7,21 +7,24 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/math"
+	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 	"golang.org/x/image/colornames"
 
 	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
-	"github.com/m110/airplanes/engine"
 )
+
+var vec2Zero = math.NewVec2(0, 0)
 
 type Debug struct {
 	query     *query.Query
 	debug     *component.DebugData
 	offscreen *ebiten.Image
 
-	pausedCameraVelocity engine.Vector
+	pausedCameraVelocity math.Vec2
 
 	restartLevelCallback func()
 }
@@ -29,7 +32,7 @@ type Debug struct {
 func NewDebug(restartLevelCallback func()) *Debug {
 	return &Debug{
 		query: query.NewQuery(
-			filter.Contains(component.Transform, component.Sprite),
+			filter.Contains(transform.Transform, component.Sprite),
 		),
 		// TODO figure out the proper size
 		offscreen:            ebiten.NewImage(3000, 3000),
@@ -60,24 +63,24 @@ func (d *Debug) Update(w donburi.World) {
 		}
 		if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
 			query.NewQuery(filter.Contains(component.PlayerAirplane)).EachEntity(w, func(entry *donburi.Entry) {
-				transform := component.GetTransform(entry)
-				transform.LocalRotation -= 10
+				t := transform.GetTransform(entry)
+				t.LocalRotation -= 10
 			})
 		}
 		if inpututil.IsKeyJustPressed(ebiten.KeyE) {
 			query.NewQuery(filter.Contains(component.PlayerAirplane)).EachEntity(w, func(entry *donburi.Entry) {
-				transform := component.GetTransform(entry)
-				transform.LocalRotation += 10
+				t := transform.GetTransform(entry)
+				t.LocalRotation += 10
 			})
 		}
 		if inpututil.IsKeyJustPressed(ebiten.KeyP) {
 			velocity := component.GetVelocity(archetype.MustFindCamera(w))
-			if d.pausedCameraVelocity.IsZero() {
+			if d.pausedCameraVelocity.Equal(vec2Zero) {
 				d.pausedCameraVelocity = velocity.Velocity
-				velocity.Velocity = engine.Vector{}
+				velocity.Velocity = math.Vec2{}
 			} else {
 				velocity.Velocity = d.pausedCameraVelocity
-				d.pausedCameraVelocity = engine.Vector{}
+				d.pausedCameraVelocity = math.Vec2{}
 			}
 		}
 		if inpututil.IsKeyJustPressed(ebiten.KeyR) {
@@ -103,14 +106,14 @@ func (d *Debug) Draw(w donburi.World, screen *ebiten.Image) {
 	})
 
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("Entities: %v Despawnable: %v Spawned: %v", allCount, despawnableCount, spawnedCount), 0, 0)
-	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("TPS: %v", ebiten.CurrentTPS()), 0, 20)
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("TPS: %v", ebiten.ActualTPS()), 0, 20)
 
 	d.offscreen.Clear()
 	d.query.EachEntity(w, func(entry *donburi.Entry) {
-		transform := component.GetTransform(entry)
+		t := transform.GetTransform(entry)
 		sprite := component.GetSprite(entry)
 
-		position := transform.WorldPosition()
+		position := transform.WorldPosition(entry)
 
 		w, h := sprite.Image.Size()
 		halfW, halfH := float64(w)/2, float64(h)/2
@@ -124,14 +127,19 @@ func (d *Debug) Draw(w donburi.World, screen *ebiten.Image) {
 			y -= halfH
 		}
 
-		ebitenutil.DrawRect(d.offscreen, transform.LocalPosition.X-2, transform.LocalPosition.Y-2, 4, 4, colornames.Lime)
+		ebitenutil.DrawRect(d.offscreen, t.LocalPosition.X-2, t.LocalPosition.Y-2, 4, 4, colornames.Lime)
 		ebitenutil.DebugPrintAt(d.offscreen, fmt.Sprintf("%v", entry.Entity().Id()), int(x), int(y))
 		ebitenutil.DebugPrintAt(d.offscreen, fmt.Sprintf("pos: %.0f, %.0f", position.X, position.Y), int(x), int(y)+40)
-		ebitenutil.DebugPrintAt(d.offscreen, fmt.Sprintf("rot: %.0f", transform.WorldRotation()), int(x), int(y)+60)
+		ebitenutil.DebugPrintAt(d.offscreen, fmt.Sprintf("rot: %.0f", transform.WorldRotation(entry)), int(x), int(y)+60)
 
 		length := 50.0
-		right := transform.WorldPosition().Add(transform.Right().MulScalar(length))
-		up := transform.WorldPosition().Add(transform.Up().MulScalar(length))
+		r := transform.Right(entry)
+		r.MulScalar(length)
+		right := position.Add(&r)
+
+		u := transform.Up(entry)
+		u.MulScalar(length)
+		up := position.Add(&u)
 
 		ebitenutil.DrawLine(d.offscreen, position.X, position.Y, right.X, right.Y, colornames.Blue)
 		ebitenutil.DrawLine(d.offscreen, position.X, position.Y, up.X, up.Y, colornames.Lime)
@@ -160,7 +168,7 @@ func (d *Debug) Draw(w donburi.World, screen *ebiten.Image) {
 	})
 
 	camera := archetype.MustFindCamera(w)
-	cameraPos := component.GetTransform(camera).LocalPosition
+	cameraPos := transform.GetTransform(camera).LocalPosition
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(-cameraPos.X, -cameraPos.Y)
 	screen.DrawImage(d.offscreen, op)

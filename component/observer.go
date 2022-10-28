@@ -7,7 +7,7 @@ import (
 
 type ObserverData struct {
 	LookFor *query.Query
-	Target  *TransformData
+	Target  *donburi.Entry
 }
 
 var Observer = donburi.NewComponentType[ObserverData]()

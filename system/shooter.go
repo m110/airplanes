@@ -2,6 +2,7 @@ package system
 
 import (
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
@@ -15,7 +16,7 @@ type Shooter struct {
 
 func NewShooter() *Shooter {
 	return &Shooter{
-		query: query.NewQuery(filter.Contains(component.Transform, component.Shooter)),
+		query: query.NewQuery(filter.Contains(transform.Transform, component.Shooter)),
 	}
 }
 
@@ -39,9 +40,7 @@ func (s *Shooter) Update(w donburi.World) {
 		if shooter.ShootTimer.IsReady() {
 			shooter.ShootTimer.Reset()
 
-			transform := component.GetTransform(entry)
-
-			archetype.NewEnemyBullet(w, transform.WorldPosition(), transform.WorldRotation())
+			archetype.NewEnemyBullet(w, transform.WorldPosition(entry), transform.WorldRotation(entry))
 		}
 	})
 }

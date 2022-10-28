@@ -2,12 +2,11 @@ package component
 
 import (
 	"github.com/yohamta/donburi"
-
-	"github.com/m110/airplanes/engine"
+	"github.com/yohamta/donburi/features/math"
 )
 
 type VelocityData struct {
-	Velocity engine.Vector
+	Velocity math.Vec2
 }
 
 var Velocity = donburi.NewComponentType[VelocityData]()

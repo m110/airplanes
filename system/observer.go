@@ -2,6 +2,7 @@ package system
 
 import (
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
@@ -14,7 +15,7 @@ type Observer struct {
 
 func NewObserver() *Observer {
 	return &Observer{
-		query: query.NewQuery(filter.Contains(component.Transform, component.Observer)),
+		query: query.NewQuery(filter.Contains(transform.Transform, component.Observer)),
 	}
 }
 
@@ -25,16 +26,16 @@ func (s *Observer) Update(w donburi.World) {
 			return
 		}
 
-		transform := component.GetTransform(entry)
+		pos := transform.WorldPosition(entry)
 
 		var closestDistance float64
-		var closestTarget *component.TransformData
-		observer.LookFor.EachEntity(w, func(entry *donburi.Entry) {
-			targetTransform := component.GetTransform(entry)
-			distance := transform.WorldPosition().Distance(targetTransform.WorldPosition())
+		var closestTarget *donburi.Entry
+		observer.LookFor.EachEntity(w, func(target *donburi.Entry) {
+			targetPos := transform.WorldPosition(target)
+			distance := pos.Distance(&targetPos)
 
 			if closestTarget == nil || distance < closestDistance {
-				closestTarget = targetTransform
+				closestTarget = target
 				closestDistance = distance
 			}
 		})
@@ -45,6 +46,7 @@ func (s *Observer) Update(w donburi.World) {
 		}
 
 		// TODO: Should rather rotate towards the target instead of looking at it straight away.
-		transform.LookAt(closestTarget.WorldPosition())
+		targetPos := transform.WorldPosition(closestTarget)
+		transform.LookAt(entry, targetPos)
 	})
 }

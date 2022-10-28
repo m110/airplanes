@@ -6,6 +6,8 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/math"
+	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
@@ -62,18 +64,18 @@ var Players = map[int]PlayerSettings{
 	},
 }
 
-func playerSpawn(w donburi.World, playerNumber int) engine.Vector {
+func playerSpawn(w donburi.World, playerNumber int) math.Vec2 {
 	game := component.MustFindGame(w)
-	cameraPos := component.GetTransform(MustFindCamera(w)).LocalPosition
+	cameraPos := transform.GetTransform(MustFindCamera(w)).LocalPosition
 
 	switch playerNumber {
 	case 1:
-		return engine.Vector{
+		return math.Vec2{
 			X: float64(game.Settings.ScreenWidth) * 0.25,
 			Y: cameraPos.Y + float64(game.Settings.ScreenHeight)*0.9,
 		}
 	case 2:
-		return engine.Vector{
+		return math.Vec2{
 			X: float64(game.Settings.ScreenWidth) * 0.75,
 			Y: cameraPos.Y + float64(game.Settings.ScreenHeight)*0.9,
 		}
@@ -117,7 +119,7 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 	airplane := w.Entry(
 		w.Create(
 			component.PlayerAirplane,
-			component.Transform,
+			transform.Transform,
 			component.Velocity,
 			component.Sprite,
 			component.Input,
@@ -130,7 +132,7 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 
 	shield := w.Entry(
 		w.Create(
-			component.Transform,
+			transform.Transform,
 			component.Sprite,
 		),
 	)
@@ -154,12 +156,12 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 	originalRotation := -90.0
 
 	pos := playerSpawn(w, player.PlayerNumber)
-	donburi.SetValue(airplane, component.Transform, component.TransformData{
+	donburi.SetValue(airplane, transform.Transform, transform.TransformData{
 		LocalPosition: pos,
 		LocalRotation: originalRotation,
 	})
 
-	component.GetTransform(airplane).AppendChild(airplane, shield, false)
+	transform.AppendChild(airplane, shield, false)
 
 	image := AirplaneImageByFaction(faction, evolutionLevel)
 
@@ -197,12 +199,12 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 
 	evolution := w.Entry(
 		w.Create(
-			component.Transform,
+			transform.Transform,
 			component.Sprite,
 			component.EvolutionTag,
 		),
 	)
-	component.GetTransform(airplane).AppendChild(airplane, evolution, false)
+	transform.AppendChild(airplane, evolution, false)
 	donburi.SetValue(evolution, component.Sprite, component.SpriteData{
 		Image:            ebiten.NewImageFromImage(image),
 		Layer:            component.SpriteLayerAirUnits,

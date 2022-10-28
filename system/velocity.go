@@ -2,6 +2,7 @@ package system
 
 import (
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
@@ -15,16 +16,16 @@ type Velocity struct {
 func NewVelocity() *Velocity {
 	return &Velocity{
 		query: query.NewQuery(
-			filter.Contains(component.Transform, component.Velocity),
+			filter.Contains(transform.Transform, component.Velocity),
 		),
 	}
 }
 
 func (v *Velocity) Update(w donburi.World) {
 	v.query.EachEntity(w, func(entry *donburi.Entry) {
-		transform := component.GetTransform(entry)
+		t := transform.GetTransform(entry)
 		velocity := component.GetVelocity(entry)
 
-		transform.LocalPosition = transform.LocalPosition.Add(velocity.Velocity)
+		t.LocalPosition = t.LocalPosition.Add(&velocity.Velocity)
 	})
 }

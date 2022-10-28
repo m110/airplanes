@@ -3,9 +3,10 @@ package archetype
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/math"
+	"github.com/yohamta/donburi/features/transform"
 
 	"github.com/m110/airplanes/component"
-	"github.com/m110/airplanes/engine"
 )
 
 const (
@@ -27,17 +28,16 @@ func NewStaticShadow(w donburi.World, parent *donburi.Entry) *donburi.Entry {
 func newShadow(w donburi.World, parent *donburi.Entry, dynamic bool) *donburi.Entry {
 	shadow := w.Entry(
 		w.Create(
-			component.Transform,
+			transform.Transform,
 			component.Sprite,
 			component.ShadowTag,
 		),
 	)
 
-	parentTransform := component.GetTransform(parent)
-	parentTransform.AppendChild(parent, shadow, false)
+	transform.AppendChild(parent, shadow, false)
 
-	transform := component.GetTransform(shadow)
-	transform.LocalPosition = engine.Vector{
+	transform := transform.GetTransform(shadow)
+	transform.LocalPosition = math.Vec2{
 		X: -MaxShadowPosition,
 		Y: MaxShadowPosition,
 	}

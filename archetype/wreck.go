@@ -5,12 +5,13 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/transform"
 
 	"github.com/m110/airplanes/component"
 	"github.com/m110/airplanes/engine"
 )
 
-func NewAirplaneWreck(w donburi.World, parent *component.TransformData, sprite *component.SpriteData) {
+func NewAirplaneWreck(w donburi.World, parent *donburi.Entry, sprite *component.SpriteData) {
 	widthInt, heightInt := sprite.Image.Size()
 	width, height := float64(widthInt), float64(heightInt)
 	cutpointX := float64(int(width * engine.RandomRange(0.3, 0.7)))
@@ -50,11 +51,11 @@ func NewAirplaneWreck(w donburi.World, parent *component.TransformData, sprite *
 	baseImage := ebiten.NewImage(sprite.Image.Size())
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(-halfW, -halfH)
-	op.GeoM.Rotate(float64(int(parent.WorldRotation()-sprite.OriginalRotation)%360) * 2 * math.Pi / 360)
+	op.GeoM.Rotate(float64(int(transform.WorldRotation(parent)-sprite.OriginalRotation)%360) * 2 * math.Pi / 360)
 	op.GeoM.Translate(halfW, halfH)
 	baseImage.DrawImage(sprite.Image, op)
 
-	basePos := parent.WorldPosition()
+	basePos := transform.WorldPosition(parent)
 	if sprite.Pivot == component.SpritePivotCenter {
 		basePos.X -= halfW
 		basePos.Y -= halfH
@@ -65,7 +66,7 @@ func NewAirplaneWreck(w donburi.World, parent *component.TransformData, sprite *
 
 		wreck := w.Entry(
 			w.Create(
-				component.Transform,
+				transform.Transform,
 				component.Velocity,
 				component.Altitude,
 				component.Sprite,
@@ -76,8 +77,7 @@ func NewAirplaneWreck(w donburi.World, parent *component.TransformData, sprite *
 		pos.X += p.X + p.Width/2
 		pos.Y += p.Y + p.Height/2
 
-		transform := component.GetTransform(wreck)
-		transform.LocalPosition = pos
+		transform.GetTransform(wreck).LocalPosition = pos
 
 		donburi.SetValue(wreck, component.Sprite, component.SpriteData{
 			Image: img,
@@ -85,7 +85,7 @@ func NewAirplaneWreck(w donburi.World, parent *component.TransformData, sprite *
 			Pivot: sprite.Pivot,
 		})
 
-		velocity := parent.Right()
+		velocity := transform.Right(parent)
 		velocity.X *= engine.RandomRange(0.5, 0.8)
 		velocity.Y *= engine.RandomRange(0.5, 0.8)
 

@@ -2,6 +2,7 @@ package system
 
 import (
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
@@ -16,20 +17,20 @@ func NewCameraBounds() *CameraBounds {
 	return &CameraBounds{
 		query: query.NewQuery(filter.Contains(
 			component.Camera,
-			component.Transform,
+			transform.Transform,
 		)),
 	}
 }
 
 func (b *CameraBounds) Update(w donburi.World) {
 	b.query.EachEntity(w, func(entry *donburi.Entry) {
-		transform := component.GetTransform(entry)
-		if transform.LocalPosition.X < 0 {
-			transform.LocalPosition.X = 0
+		t := transform.GetTransform(entry)
+		if t.LocalPosition.X < 0 {
+			t.LocalPosition.X = 0
 		}
 
-		if transform.LocalPosition.Y < 0 {
-			transform.LocalPosition.Y = 0
+		if t.LocalPosition.Y < 0 {
+			t.LocalPosition.Y = 0
 		}
 	})
 }

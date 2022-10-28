@@ -5,15 +5,16 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/math"
+	"github.com/yohamta/donburi/features/transform"
 
 	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/component"
-	"github.com/m110/airplanes/engine"
 )
 
-func NewRandomCollectible(w donburi.World, position engine.Vector) {
+func NewRandomCollectible(w donburi.World, position math.Vec2) {
 	collectible := w.Entry(w.Create(
-		component.Transform,
+		transform.Transform,
 		component.Sprite,
 		component.Collider,
 		component.Collectible,
@@ -34,7 +35,7 @@ func NewRandomCollectible(w donburi.World, position engine.Vector) {
 		collectibleType = component.CollectibleTypeHealth
 	}
 
-	donburi.SetValue(collectible, component.Transform, component.TransformData{
+	donburi.SetValue(collectible, transform.Transform, transform.TransformData{
 		LocalPosition: position,
 	})
 

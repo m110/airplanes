@@ -3,12 +3,13 @@ package system
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/math"
+	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
-	"github.com/m110/airplanes/engine"
 )
 
 type Controls struct {
@@ -19,7 +20,7 @@ func NewControls() *Controls {
 	return &Controls{
 		query: query.NewQuery(
 			filter.Contains(
-				component.Transform,
+				transform.Transform,
 				component.Input,
 				component.Velocity,
 				component.Sprite,
@@ -39,7 +40,7 @@ func (i *Controls) Update(w donburi.World) {
 
 		velocity := component.GetVelocity(entry)
 
-		velocity.Velocity = engine.Vector{
+		velocity.Velocity = math.Vec2{
 			X: 0,
 			// TODO should match camera scroll speed, get this from settings?
 			Y: -0.5,
@@ -63,7 +64,7 @@ func (i *Controls) Update(w donburi.World) {
 		player := archetype.MustFindPlayerByNumber(w, airplane.PlayerNumber)
 		player.ShootTimer.Update()
 		if ebiten.IsKeyPressed(input.ShootKey) && player.ShootTimer.IsReady() {
-			position := component.GetTransform(entry).LocalPosition
+			position := transform.GetTransform(entry).LocalPosition
 
 			archetype.NewPlayerBullet(w, player, position)
 			player.ShootTimer.Reset()

@@ -2,6 +2,8 @@ package system
 
 import (
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/hierarchy"
+	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
@@ -28,10 +30,10 @@ func (d *Despawn) Update(w donburi.World) {
 		}
 	}
 
-	cameraPos := component.GetTransform(archetype.MustFindCamera(w)).LocalPosition
+	cameraPos := transform.GetTransform(archetype.MustFindCamera(w)).LocalPosition
 
 	d.query.EachEntity(w, func(entry *donburi.Entry) {
-		position := component.GetTransform(entry).LocalPosition
+		position := transform.GetTransform(entry).LocalPosition
 		sprite := component.GetSprite(entry)
 		despawnable := component.GetDespawnable(entry)
 
@@ -52,7 +54,7 @@ func (d *Despawn) Update(w donburi.World) {
 
 		if maxY < cameraPos.Y || position.Y > cameraMaxY ||
 			maxX < cameraPos.X || position.X > cameraMaxX {
-			Destroy(w, entry)
+			hierarchy.RemoveRecursive(entry)
 		}
 	})
 }

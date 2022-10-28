@@ -2,12 +2,13 @@ package system
 
 import (
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/math"
+	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
-	"github.com/m110/airplanes/engine"
 )
 
 type Progression struct {
@@ -34,10 +35,10 @@ func (p *Progression) Update(w donburi.World) {
 	level := component.GetLevel(levelEntry)
 
 	if level.Progressed {
-		cameraPos := component.GetTransform(archetype.MustFindCamera(w)).LocalPosition
+		cameraPos := transform.GetTransform(archetype.MustFindCamera(w)).LocalPosition
 		playersVisible := false
 		p.query.EachEntity(w, func(entry *donburi.Entry) {
-			playerPos := component.GetTransform(entry).LocalPosition
+			playerPos := transform.GetTransform(entry).LocalPosition
 			playerSprite := component.GetSprite(entry)
 			if playerPos.Y+float64(playerSprite.Image.Bounds().Dy()) > cameraPos.Y {
 				playersVisible = true
@@ -57,7 +58,7 @@ func (p *Progression) Update(w donburi.World) {
 				input.Disabled = true
 
 				velocity := component.GetVelocity(entry)
-				velocity.Velocity = engine.Vector{
+				velocity.Velocity = math.Vec2{
 					X: 0,
 					Y: -3,
 				}
@@ -71,7 +72,7 @@ func (p *Progression) Update(w donburi.World) {
 	} else {
 		camera := archetype.MustFindCamera(w)
 
-		cameraPos := component.GetTransform(camera).LocalPosition
+		cameraPos := transform.GetTransform(camera).LocalPosition
 		if cameraPos.Y == 0 {
 			level.ReachedEnd = true
 			level.ProgressionTimer.Reset()

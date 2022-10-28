@@ -7,6 +7,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/samber/lo"
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
@@ -23,7 +24,7 @@ type Render struct {
 func NewRenderer() *Render {
 	return &Render{
 		query: query.NewQuery(
-			filter.Contains(component.Transform, component.Sprite),
+			filter.Contains(transform.Transform, component.Sprite),
 		),
 		// TODO figure out the proper size
 		offscreen: ebiten.NewImage(3000, 3000),
@@ -43,7 +44,7 @@ func (r *Render) Update(w donburi.World) {
 
 func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 	camera := archetype.MustFindCamera(w)
-	cameraPos := component.GetTransform(camera).LocalPosition
+	cameraPos := transform.GetTransform(camera).LocalPosition
 
 	r.offscreen.Clear()
 
@@ -66,17 +67,15 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 				continue
 			}
 
-			transform := component.GetTransform(entry)
-
 			w, h := sprite.Image.Size()
 			halfW, halfH := float64(w)/2, float64(h)/2
 
 			op := &ebiten.DrawImageOptions{}
 			op.GeoM.Translate(-halfW, -halfH)
-			op.GeoM.Rotate(float64(int(transform.WorldRotation()-sprite.OriginalRotation)%360) * 2 * math.Pi / 360)
+			op.GeoM.Rotate(float64(int(transform.WorldRotation(entry)-sprite.OriginalRotation)%360) * 2 * math.Pi / 360)
 			op.GeoM.Translate(halfW, halfH)
 
-			position := transform.WorldPosition()
+			position := transform.WorldPosition(entry)
 
 			x := position.X
 			y := position.Y
@@ -89,9 +88,10 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 
 			// TODO World scale and allow 0,0?
 			// Actually, Scale should just default to (1, 1)
-			if transform.LocalScale.X != 0 || transform.LocalScale.Y != 0 {
+			t := transform.GetTransform(entry)
+			if !t.LocalScale.Equal(vec2Zero) {
 				op.GeoM.Translate(-halfW, -halfH)
-				op.GeoM.Scale(transform.LocalScale.X, transform.LocalScale.Y)
+				op.GeoM.Scale(t.LocalScale.X, t.LocalScale.Y)
 				op.GeoM.Translate(halfW, halfH)
 			}
 

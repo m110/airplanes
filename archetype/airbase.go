@@ -2,16 +2,17 @@ package archetype
 
 import (
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/math"
+	"github.com/yohamta/donburi/features/transform"
 
 	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/component"
-	"github.com/m110/airplanes/engine"
 )
 
-func NewAirbaseAirplane(w donburi.World, position engine.Vector, faction component.PlayerFaction, index int) {
+func NewAirbaseAirplane(w donburi.World, position math.Vec2, faction component.PlayerFaction, index int) {
 	airplane := w.Entry(
 		w.Create(
-			component.Transform,
+			transform.Transform,
 			component.Sprite,
 			component.Velocity,
 			component.PlayerSelect,
@@ -21,7 +22,7 @@ func NewAirbaseAirplane(w donburi.World, position engine.Vector, faction compone
 
 	originalRotation := -90.0
 
-	donburi.SetValue(airplane, component.Transform, component.TransformData{
+	donburi.SetValue(airplane, transform.Transform, transform.TransformData{
 		LocalPosition: position,
 		LocalRotation: originalRotation,
 	})
@@ -40,22 +41,22 @@ func NewAirbaseAirplane(w donburi.World, position engine.Vector, faction compone
 	NewCrosshair(w, airplane)
 
 	shadow := NewStaticShadow(w, airplane)
-	component.GetTransform(shadow).LocalPosition = engine.Vector{}
+	transform.GetTransform(shadow).LocalPosition = math.Vec2{}
 }
 
 func NewCrosshair(w donburi.World, parent *donburi.Entry) {
 	crosshair := w.Entry(
 		w.Create(
-			component.Transform,
+			transform.Transform,
 			component.Sprite,
 		),
 	)
 
-	donburi.SetValue(crosshair, component.Transform, component.TransformData{
-		LocalScale: engine.Vector{X: 2.5, Y: 2.5},
+	donburi.SetValue(crosshair, transform.Transform, transform.TransformData{
+		LocalScale: math.Vec2{X: 2.5, Y: 2.5},
 	})
 
-	component.GetTransform(parent).AppendChild(parent, crosshair, false)
+	transform.AppendChild(parent, crosshair, false)
 
 	donburi.SetValue(crosshair, component.Sprite, component.SpriteData{
 		Image:  assets.Crosshair,
@@ -66,7 +67,7 @@ func NewCrosshair(w donburi.World, parent *donburi.Entry) {
 
 	label := w.Entry(
 		w.Create(
-			component.Transform,
+			transform.Transform,
 			component.Label,
 		),
 	)
@@ -76,6 +77,6 @@ func NewCrosshair(w donburi.World, parent *donburi.Entry) {
 		Hidden: true,
 	})
 
-	component.GetTransform(crosshair).AppendChild(crosshair, label, false)
-	component.GetTransform(label).LocalPosition = engine.Vector{X: -25, Y: 30}
+	transform.AppendChild(crosshair, label, false)
+	transform.GetTransform(label).LocalPosition = math.Vec2{X: -25, Y: 30}
 }

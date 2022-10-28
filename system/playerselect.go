@@ -7,6 +7,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/hierarchy"
+	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
@@ -36,7 +38,7 @@ func NewPlayerSelect(startCallback StartGameCallback, backToMenuCallback func())
 	return &PlayerSelect{
 		query: query.NewQuery(
 			filter.Contains(
-				component.Transform,
+				transform.Transform,
 				component.PlayerSelect,
 				component.Velocity,
 				component.Altitude,
@@ -56,7 +58,6 @@ func (s *PlayerSelect) Update(w donburi.World) {
 				return
 			}
 
-			transform := component.GetTransform(entry)
 			velocity := component.GetVelocity(entry)
 			velocity.Velocity.Y -= 0.01
 
@@ -68,7 +69,7 @@ func (s *PlayerSelect) Update(w donburi.World) {
 			// TODO Scale the sprite slightly
 
 			// TODO dynamic sprite size not hardcoded
-			if transform.WorldPosition().Y <= -32 {
+			if transform.WorldPosition(entry).Y <= -32 {
 				s.startCallback(s.chosenPlayers)
 			}
 		})
@@ -165,8 +166,8 @@ func (s *PlayerSelect) Update(w donburi.World) {
 
 	for _, entry := range playerSelects {
 		playerSelect := component.GetPlayerSelect(entry)
-		crosshair := component.GetTransform(entry).Children[0]
-		label := component.GetTransform(crosshair).Children[0]
+		crosshair := w.Entry(hierarchy.MustGetChildren(entry)[0])
+		label := w.Entry(hierarchy.MustGetChildren(crosshair)[0])
 
 		if playerSelect.Selected {
 			if playerSelect.Ready {

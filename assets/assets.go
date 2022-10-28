@@ -13,10 +13,9 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/lafriks/go-tiled"
 	"github.com/lafriks/go-tiled/render"
+	"github.com/yohamta/donburi/features/math"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
-
-	"github.com/m110/airplanes/engine"
 )
 
 var (
@@ -69,7 +68,7 @@ const (
 
 type Spawn struct {
 	Faction  string
-	Position engine.Vector
+	Position math.Vec2
 }
 
 type AirBaseLevel struct {
@@ -84,14 +83,14 @@ type Level struct {
 
 type Enemy struct {
 	Class    string
-	Position engine.Vector
+	Position math.Vec2
 	Rotation float64
 	Speed    float64
 	Path     Path
 }
 
 type Path struct {
-	Points []engine.Vector
+	Points []math.Vec2
 	Loops  bool
 }
 
@@ -204,10 +203,10 @@ func (l *levelLoader) MustLoadLevel(levelPath string) Level {
 	for _, og := range levelMap.ObjectGroups {
 		for _, o := range og.Objects {
 			if len(o.PolyLines) > 0 {
-				var points []engine.Vector
+				var points []math.Vec2
 				for _, p := range o.PolyLines {
 					for _, pp := range *p.Points {
-						points = append(points, engine.Vector{
+						points = append(points, math.Vec2{
 							X: o.X + pp.X,
 							Y: o.Y + pp.Y,
 						})
@@ -219,10 +218,10 @@ func (l *levelLoader) MustLoadLevel(levelPath string) Level {
 				}
 			}
 			if len(o.Polygons) > 0 {
-				var points []engine.Vector
+				var points []math.Vec2
 				for _, p := range o.Polygons {
 					for _, pp := range *p.Points {
-						points = append(points, engine.Vector{
+						points = append(points, math.Vec2{
 							X: o.X + pp.X,
 							Y: o.Y + pp.Y,
 						})
@@ -241,7 +240,7 @@ func (l *levelLoader) MustLoadLevel(levelPath string) Level {
 			if o.Class == EnemyClassAirplane || o.Class == EnemyClassTank {
 				enemy := Enemy{
 					Class: o.Class,
-					Position: engine.Vector{
+					Position: math.Vec2{
 						X: o.X,
 						Y: o.Y,
 					},
@@ -312,7 +311,7 @@ func (l *levelLoader) MustLoadAirBaseLevel() AirBaseLevel {
 			if o.Class == "spawn" {
 				spawn := Spawn{
 					Faction: o.Name,
-					Position: engine.Vector{
+					Position: math.Vec2{
 						X: o.X,
 						Y: o.Y,
 					},

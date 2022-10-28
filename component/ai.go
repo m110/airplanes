@@ -2,8 +2,7 @@ package component
 
 import (
 	"github.com/yohamta/donburi"
-
-	"github.com/m110/airplanes/engine"
+	"github.com/yohamta/donburi/features/math"
 )
 
 const (
@@ -19,7 +18,7 @@ type AIData struct {
 
 	Speed float64
 
-	Path       []engine.Vector
+	Path       []math.Vec2
 	PathLoops  bool
 	NextTarget int
 }

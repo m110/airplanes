@@ -4,6 +4,8 @@ import (
 	"math/rand"
 
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/hierarchy"
+	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
@@ -18,7 +20,7 @@ type Health struct {
 func NewHealth() *Health {
 	return &Health{
 		query: query.NewQuery(filter.Contains(
-			component.Transform,
+			transform.Transform,
 			component.Health,
 		)),
 	}
@@ -37,17 +39,17 @@ func (h *Health) Update(w donburi.World) {
 			if health.Health <= 0 {
 				r := rand.Intn(10)
 				if r < 7 {
-					archetype.NewRandomCollectible(w, component.GetTransform(entry).LocalPosition)
+					archetype.NewRandomCollectible(w, transform.GetTransform(entry).LocalPosition)
 				}
 
 				// TODO: It seems like a good candidate to be triggered by an event.
 				component.MustFindGame(w).AddScore(1)
 
 				if entry.HasComponent(component.Wreckable) {
-					archetype.NewAirplaneWreck(w, component.GetTransform(entry), component.GetSprite(entry))
+					archetype.NewAirplaneWreck(w, entry, component.GetSprite(entry))
 				}
 
-				Destroy(w, entry)
+				hierarchy.RemoveRecursive(entry)
 			}
 		}
 	})

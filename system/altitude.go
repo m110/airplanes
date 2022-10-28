@@ -2,6 +2,7 @@ package system
 
 import (
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
@@ -16,7 +17,7 @@ type Altitude struct {
 func NewAltitude() *Altitude {
 	return &Altitude{
 		query: query.NewQuery(filter.Contains(
-			component.Transform,
+			transform.Transform,
 			component.Altitude,
 		)),
 	}
@@ -27,15 +28,14 @@ func (a *Altitude) Update(w donburi.World) {
 		altitude := component.GetAltitude(entry)
 		altitude.Update()
 
-		transform := component.GetTransform(entry)
 		// TODO Add scaling once render takes WorldScale into account
 		// scale := 0.5 + 0.2*altitude.Altitude
 		// transform.LocalScale.X = scale
 		// transform.LocalScale.Y = scale
 
-		shadow, ok := transform.FindChildWithComponent(component.ShadowTag)
+		shadow, ok := transform.FindChildWithComponent(entry, component.ShadowTag)
 		if ok {
-			shadowTransform := component.GetTransform(shadow)
+			shadowTransform := transform.GetTransform(shadow)
 			shadowTransform.LocalPosition.X = -archetype.MaxShadowPosition * altitude.Altitude
 			shadowTransform.LocalPosition.Y = archetype.MaxShadowPosition * altitude.Altitude
 		}

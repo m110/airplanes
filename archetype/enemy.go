@@ -5,6 +5,8 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/math"
+	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
@@ -15,14 +17,14 @@ import (
 
 func NewEnemyAirplane(
 	w donburi.World,
-	position engine.Vector,
+	position math.Vec2,
 	rotation float64,
 	speed float64,
 	path assets.Path,
 ) {
 	airplane := w.Entry(
 		w.Create(
-			component.Transform,
+			transform.Transform,
 			component.Velocity,
 			component.Sprite,
 			component.AI,
@@ -35,7 +37,7 @@ func NewEnemyAirplane(
 
 	originalRotation := -90.0
 
-	donburi.SetValue(airplane, component.Transform, component.TransformData{
+	donburi.SetValue(airplane, transform.Transform, transform.TransformData{
 		LocalPosition: position,
 		LocalRotation: originalRotation + rotation,
 	})
@@ -81,14 +83,14 @@ func NewEnemyAirplane(
 
 func NewEnemyTank(
 	w donburi.World,
-	position engine.Vector,
+	position math.Vec2,
 	rotation float64,
 	speed float64,
 	path assets.Path,
 ) {
 	tank := w.Entry(
 		w.Create(
-			component.Transform,
+			transform.Transform,
 			component.Velocity,
 			component.Sprite,
 			component.AI,
@@ -98,7 +100,7 @@ func NewEnemyTank(
 		),
 	)
 
-	donburi.SetValue(tank, component.Transform, component.TransformData{
+	donburi.SetValue(tank, transform.Transform, transform.TransformData{
 		LocalPosition: position,
 		LocalRotation: rotation,
 	})
@@ -141,7 +143,7 @@ func NewEnemyTank(
 
 	gun := w.Entry(
 		w.Create(
-			component.Transform,
+			transform.Transform,
 			component.Sprite,
 			component.Despawnable,
 			component.Observer,
@@ -150,11 +152,6 @@ func NewEnemyTank(
 	)
 
 	originalRotation := 90.0
-
-	donburi.SetValue(gun, component.Transform, component.TransformData{
-		LocalPosition: position,
-		LocalRotation: originalRotation + rotation,
-	})
 
 	donburi.SetValue(gun, component.Sprite, component.SpriteData{
 		Image:            assets.TankGun,
@@ -172,13 +169,17 @@ func NewEnemyTank(
 		ShootTimer: engine.NewTimer(time.Millisecond * 2500),
 	})
 
-	component.GetTransform(tank).AppendChild(tank, gun, true)
+	// TODO keepWorldPosition seems to have no effect
+	transform.AppendChild(tank, gun, false)
+
+	transform.SetWorldPosition(gun, position)
+	transform.SetWorldRotation(gun, originalRotation+rotation)
 }
 
 func newDamageIndicator(w donburi.World, parent *donburi.Entry) *component.SpriteData {
 	indicator := w.Entry(
 		w.Create(
-			component.Transform,
+			transform.Transform,
 			component.Sprite,
 		),
 	)
@@ -198,7 +199,7 @@ func newDamageIndicator(w donburi.World, parent *donburi.Entry) *component.Sprit
 		Hidden:           true,
 	})
 
-	component.GetTransform(parent).AppendChild(parent, indicator, false)
+	transform.AppendChild(parent, indicator, false)
 
 	return component.GetSprite(indicator)
 }

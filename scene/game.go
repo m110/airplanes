@@ -6,6 +6,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/math"
+	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
@@ -99,13 +101,13 @@ func (g *Game) createWorld(levelIndex int) donburi.World {
 	level := world.Entry(world.Create(component.Level))
 	component.GetLevel(level).ProgressionTimer = engine.NewTimer(time.Second * 3)
 
-	archetype.NewCamera(world, engine.Vector{
+	archetype.NewCamera(world, math.Vec2{
 		X: 0,
 		Y: float64(levelAsset.Background.Bounds().Dy() - g.screenHeight),
 	})
 
 	levelEntry := world.Entry(
-		world.Create(component.Transform, component.Sprite),
+		world.Create(transform.Transform, component.Sprite),
 	)
 	donburi.SetValue(levelEntry, component.Sprite, component.SpriteData{
 		Image: levelAsset.Background,

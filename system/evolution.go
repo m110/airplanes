@@ -5,12 +5,12 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
-	"github.com/m110/airplanes/engine"
 )
 
 type Evolution struct {
@@ -30,17 +30,17 @@ func (s *Evolution) Update(w donburi.World) {
 			return
 		}
 
-		transform := component.GetTransform(entry)
-		evolutionChild, ok := transform.FindChildWithComponent(component.EvolutionTag)
+		t := transform.GetTransform(entry)
+		evolutionChild, ok := transform.FindChildWithComponent(entry, component.EvolutionTag)
 		if !ok {
 			panic("no evolution found")
 		}
 
-		evolutionChildTransform := component.GetTransform(evolutionChild)
-		evolutionChildTransform.LocalScale = engine.Vector{
-			X: evolution.GrowTimer.PercentDone(),
-			Y: evolution.GrowTimer.PercentDone(),
-		}
+		evolutionChildTransform := transform.GetTransform(evolutionChild)
+		evolutionChildTransform.LocalScale.Set(
+			evolution.GrowTimer.PercentDone(),
+			evolution.GrowTimer.PercentDone(),
+		)
 
 		// TODO Change just once
 		newSprite := component.GetSprite(evolutionChild)
@@ -59,7 +59,7 @@ func (s *Evolution) Update(w donburi.World) {
 			A: 1,
 		}
 
-		shadow, _ := component.GetTransform(entry).FindChildWithComponent(component.ShadowTag)
+		shadow, _ := transform.FindChildWithComponent(entry, component.ShadowTag)
 		shadowSprite := component.GetSprite(shadow)
 
 		shadowSprite.Image.Clear()
@@ -68,7 +68,7 @@ func (s *Evolution) Update(w donburi.World) {
 		w, h := newSprite.Image.Size()
 		halfW, halfH := float64(w)/2, float64(h)/2
 		op.GeoM.Translate(-halfW, -halfH)
-		op.GeoM.Rotate(float64(int(evolutionChildTransform.WorldRotation()-newSprite.OriginalRotation)%360) * 2 * math.Pi / 360)
+		op.GeoM.Rotate(float64(int(transform.WorldRotation(evolutionChild)-newSprite.OriginalRotation)%360) * 2 * math.Pi / 360)
 		op.GeoM.Translate(halfW, halfH)
 		op.GeoM.Translate(-halfW, -halfH)
 		op.GeoM.Scale(evolutionChildTransform.LocalScale.X, evolutionChildTransform.LocalScale.Y)
@@ -79,10 +79,10 @@ func (s *Evolution) Update(w donburi.World) {
 		if evolution.GrowTimer.IsReady() {
 			evolution.ShrinkTimer.Update()
 
-			component.GetTransform(entry).LocalScale = engine.Vector{
-				X: 1.0 - evolution.ShrinkTimer.PercentDone(),
-				Y: 1.0 - evolution.ShrinkTimer.PercentDone(),
-			}
+			transform.GetTransform(entry).LocalScale.Set(
+				1.0-evolution.ShrinkTimer.PercentDone(),
+				1.0-evolution.ShrinkTimer.PercentDone(),
+			)
 		}
 
 		// TODO To function
@@ -91,11 +91,11 @@ func (s *Evolution) Update(w donburi.World) {
 		w, h = currentSprite.Image.Size()
 		halfW, halfH = float64(w)/2, float64(h)/2
 		op.GeoM.Translate(-halfW, -halfH)
-		op.GeoM.Rotate(float64(int(transform.WorldRotation()-currentSprite.OriginalRotation)%360) * 2 * math.Pi / 360)
+		op.GeoM.Rotate(float64(int(transform.WorldRotation(entry)-currentSprite.OriginalRotation)%360) * 2 * math.Pi / 360)
 		op.GeoM.Translate(halfW, halfH)
-		if transform.LocalScale.X > 0 || transform.LocalScale.Y > 0 {
+		if t.LocalScale.X > 0 || t.LocalScale.Y > 0 {
 			op.GeoM.Translate(-halfW, -halfH)
-			op.GeoM.Scale(transform.LocalScale.X, transform.LocalScale.Y)
+			op.GeoM.Scale(t.LocalScale.X, t.LocalScale.Y)
 			op.GeoM.Translate(halfW, halfH)
 		}
 		shadowSprite.Image.DrawImage(currentSprite.Image, op)

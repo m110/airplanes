@@ -2,6 +2,7 @@ package system
 
 import (
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
 
@@ -19,7 +20,7 @@ func NewBounds() *Bounds {
 	return &Bounds{
 		query: query.NewQuery(filter.Contains(
 			component.PlayerAirplane,
-			component.Transform,
+			transform.Transform,
 			component.Sprite,
 			component.Bounds,
 		)),
@@ -35,7 +36,7 @@ func (b *Bounds) Update(w donburi.World) {
 	}
 
 	camera := archetype.MustFindCamera(w)
-	cameraPos := component.GetTransform(camera).LocalPosition
+	cameraPos := transform.GetTransform(camera).LocalPosition
 
 	b.query.EachEntity(w, func(entry *donburi.Entry) {
 		bounds := component.GetBounds(entry)
@@ -43,7 +44,7 @@ func (b *Bounds) Update(w donburi.World) {
 			return
 		}
 
-		transform := component.GetTransform(entry)
+		t := transform.GetTransform(entry)
 		sprite := component.GetSprite(entry)
 
 		w, h := sprite.Image.Size()
@@ -66,7 +67,7 @@ func (b *Bounds) Update(w donburi.World) {
 			maxY = cameraPos.Y + float64(b.game.Settings.ScreenHeight) - height/2
 		}
 
-		transform.LocalPosition.X = engine.Clamp(transform.LocalPosition.X, minX, maxX)
-		transform.LocalPosition.Y = engine.Clamp(transform.LocalPosition.Y, minY, maxY)
+		t.LocalPosition.X = engine.Clamp(t.LocalPosition.X, minX, maxX)
+		t.LocalPosition.Y = engine.Clamp(t.LocalPosition.Y, minY, maxY)
 	})
 }

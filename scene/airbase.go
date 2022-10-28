@@ -4,11 +4,12 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/math"
+	"github.com/yohamta/donburi/features/transform"
 
 	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/component"
-	"github.com/m110/airplanes/engine"
 	"github.com/m110/airplanes/system"
 )
 
@@ -55,7 +56,7 @@ func (a *Airbase) createWorld() {
 	a.world = donburi.NewWorld()
 
 	levelEntry := a.world.Entry(
-		a.world.Create(component.Transform, component.Sprite),
+		a.world.Create(transform.Transform, component.Sprite),
 	)
 
 	donburi.SetValue(levelEntry, component.Sprite, component.SpriteData{
@@ -64,7 +65,7 @@ func (a *Airbase) createWorld() {
 		Pivot: component.SpritePivotTopLeft,
 	})
 
-	archetype.NewCamera(a.world, engine.Vector{})
+	archetype.NewCamera(a.world, math.Vec2{})
 
 	for i, spawn := range levelAsset.Spawns {
 		archetype.NewAirbaseAirplane(a.world, spawn.Position, component.MustPlayerFactionFromString(spawn.Faction), i)
