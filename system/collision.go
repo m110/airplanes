@@ -64,7 +64,7 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 			component.MustFindGame(w).AddScore(1)
 
 			if entry.HasComponent(component.Wreckable) {
-				archetype.NewEnemyAirplaneWreck(w, component.GetTransform(entry), component.GetSprite(entry))
+				archetype.NewAirplaneWreck(w, component.GetTransform(entry), component.GetSprite(entry))
 			}
 
 			Destroy(w, entry)
@@ -88,7 +88,7 @@ func damagePlayer(w donburi.World, entry *donburi.Entry) {
 	playerNumber := component.GetPlayerAirplane(entry).PlayerNumber
 
 	if entry.HasComponent(component.Wreckable) {
-		archetype.NewEnemyAirplaneWreck(w, component.GetTransform(entry), component.GetSprite(entry))
+		archetype.NewAirplaneWreck(w, component.GetTransform(entry), component.GetSprite(entry))
 	}
 	Destroy(w, entry)
 

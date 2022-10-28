@@ -44,7 +44,7 @@ func (h *Health) Update(w donburi.World) {
 				component.MustFindGame(w).AddScore(1)
 
 				if entry.HasComponent(component.Wreckable) {
-					archetype.NewEnemyAirplaneWreck(w, component.GetTransform(entry), component.GetSprite(entry))
+					archetype.NewAirplaneWreck(w, component.GetTransform(entry), component.GetSprite(entry))
 				}
 
 				Destroy(w, entry)
