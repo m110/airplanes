@@ -100,10 +100,10 @@ func NewEnemyTank(
 		),
 	)
 
-	donburi.SetValue(tank, transform.Transform, transform.TransformData{
-		LocalPosition: position,
-		LocalRotation: rotation,
-	})
+	transform.Reset(tank)
+	t := transform.GetTransform(tank)
+	t.LocalPosition = position
+	t.LocalRotation = rotation
 
 	image := assets.TankBase
 	donburi.SetValue(tank, component.Sprite, component.SpriteData{
@@ -152,10 +152,14 @@ func NewEnemyTank(
 	)
 
 	originalRotation := 90.0
+	transform.Reset(gun)
+	gunT := transform.GetTransform(gun)
+	gunT.LocalPosition = position
+	gunT.LocalRotation = originalRotation + rotation
 
 	donburi.SetValue(gun, component.Sprite, component.SpriteData{
 		Image:            assets.TankGun,
-		Layer:            component.SpriteLayerGroundUnits,
+		Layer:            component.SpriteLayerGroundGuns,
 		Pivot:            component.SpritePivotCenter,
 		OriginalRotation: originalRotation,
 	})
@@ -169,11 +173,7 @@ func NewEnemyTank(
 		ShootTimer: engine.NewTimer(time.Millisecond * 2500),
 	})
 
-	// TODO keepWorldPosition seems to have no effect
-	transform.AppendChild(tank, gun, false)
-
-	transform.SetWorldPosition(gun, position)
-	transform.SetWorldRotation(gun, originalRotation+rotation)
+	transform.AppendChild(tank, gun, true)
 }
 
 func newDamageIndicator(w donburi.World, parent *donburi.Entry) *component.SpriteData {

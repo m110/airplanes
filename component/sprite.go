@@ -10,6 +10,7 @@ type SpriteLayer int
 const (
 	SpriteLayerBackground SpriteLayer = iota
 	SpriteLayerGroundUnits
+	SpriteLayerGroundGuns
 	SpriteLayerShadows
 	SpriteLayerCollectibles
 	SpriteLayerFallingWrecks
