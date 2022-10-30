@@ -166,8 +166,8 @@ func (s *PlayerSelect) Update(w donburi.World) {
 
 	for _, entry := range playerSelects {
 		playerSelect := component.GetPlayerSelect(entry)
-		crosshair := w.Entry(hierarchy.MustGetChildren(entry)[0])
-		label := w.Entry(hierarchy.MustGetChildren(crosshair)[0])
+		crosshair := hierarchy.MustGetChildren(entry)[0]
+		label := hierarchy.MustGetChildren(crosshair)[0]
 
 		if playerSelect.Selected {
 			if playerSelect.Ready {
