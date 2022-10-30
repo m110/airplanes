@@ -3,9 +3,8 @@ package system
 import (
 	"fmt"
 
-	"github.com/yohamta/donburi/features/hierarchy"
-
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/hierarchy"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
@@ -63,14 +62,9 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 	},
 	component.CollisionLayerAirEnemies: {
 		component.CollisionLayerPlayers: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
-			// TODO deduplicate
-			component.MustFindGame(w).AddScore(1)
-
-			if entry.HasComponent(component.Wreckable) {
-				archetype.NewAirplaneWreck(w, entry, component.GetSprite(entry))
-			}
-
-			hierarchy.RemoveRecursive(entry)
+			component.MustFindEventBus(w).Publish(EnemyKilled{
+				Enemy: entry,
+			})
 
 			damagePlayer(w, other)
 		},

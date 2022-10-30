@@ -82,6 +82,7 @@ func (g *Game) loadLevel() {
 		system.NewAltitude(),
 		render,
 		debug,
+		system.NewEvents(),
 	}
 
 	g.drawables = []Drawable{
