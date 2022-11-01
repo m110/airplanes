@@ -13,10 +13,11 @@ const (
 type AIType int
 
 type AIData struct {
-	Spawned bool
-	Type    AIType
+	Type AIType
 
 	Speed float64
+
+	StartedMoving bool
 
 	Path       []math.Vec2
 	PathLoops  bool

@@ -15,6 +15,18 @@ import (
 	"github.com/m110/airplanes/engine"
 )
 
+func NewEnemySpawn(w donburi.World, position math.Vec2, spawnFunc component.SpawnFunc) {
+	spawn := w.Entry(
+		w.Create(
+			transform.Transform,
+			component.Spawnable,
+		),
+	)
+
+	transform.GetTransform(spawn).LocalPosition = position
+	component.GetSpawnable(spawn).SpawnFunc = spawnFunc
+}
+
 func NewEnemyAirplane(
 	w donburi.World,
 	position math.Vec2,

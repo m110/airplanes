@@ -68,6 +68,7 @@ func (g *Game) loadLevel() {
 		system.NewVelocity(),
 		system.NewBounds(),
 		system.NewCameraBounds(),
+		system.NewSpawn(),
 		system.NewAI(),
 		system.NewDespawn(),
 		system.NewCollision(),
@@ -116,24 +117,33 @@ func (g *Game) createWorld(levelIndex int) donburi.World {
 		Pivot: component.SpritePivotTopLeft,
 	})
 
-	for _, enemy := range levelAsset.Enemies {
+	for i := range levelAsset.Enemies {
+		enemy := levelAsset.Enemies[i]
+		pos := enemy.Position
+		// TODO Sprite offset could be based on the sprite
+		pos.Y += 32
+
 		switch enemy.Class {
 		case assets.EnemyClassAirplane:
-			archetype.NewEnemyAirplane(
-				world,
-				enemy.Position,
-				enemy.Rotation,
-				enemy.Speed,
-				enemy.Path,
-			)
+			archetype.NewEnemySpawn(world, pos, func(w donburi.World) {
+				archetype.NewEnemyAirplane(
+					w,
+					enemy.Position,
+					enemy.Rotation,
+					enemy.Speed,
+					enemy.Path,
+				)
+			})
 		case assets.EnemyClassTank:
-			archetype.NewEnemyTank(
-				world,
-				enemy.Position,
-				enemy.Rotation,
-				enemy.Speed,
-				enemy.Path,
-			)
+			archetype.NewEnemySpawn(world, pos, func(w donburi.World) {
+				archetype.NewEnemyTank(
+					w,
+					enemy.Position,
+					enemy.Rotation,
+					enemy.Speed,
+					enemy.Path,
+				)
+			})
 		default:
 			panic("unknown enemy class: " + enemy.Class)
 		}
