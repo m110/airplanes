@@ -106,9 +106,7 @@ func spawnEnemy(w donburi.World, entry *donburi.Entry) {
 		velocity := component.GetVelocity(entry)
 
 		if ai.Type == component.AITypeConstantVelocity {
-			vel := transform.Right(entry)
-			vel.MulScalar(ai.Speed)
-			velocity.Velocity = vel
+			velocity.Velocity = transform.Right(entry).MulScalar(ai.Speed)
 		}
 	}
 }

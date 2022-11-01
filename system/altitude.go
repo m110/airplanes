@@ -48,7 +48,7 @@ func (a *Altitude) Update(w donburi.World) {
 				velocity.Velocity.Y = 0
 			}
 			sprite := component.GetSprite(entry)
-			sprite.Layer = component.SpriteLayerGroundUnits
+			sprite.Layer = component.SpriteLayerDebris
 		}
 	})
 }

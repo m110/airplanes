@@ -32,7 +32,7 @@ func (s *Observer) Update(w donburi.World) {
 		var closestTarget *donburi.Entry
 		observer.LookFor.EachEntity(w, func(target *donburi.Entry) {
 			targetPos := transform.WorldPosition(target)
-			distance := pos.Distance(&targetPos)
+			distance := pos.Distance(targetPos)
 
 			if closestTarget == nil || distance < closestDistance {
 				closestTarget = target

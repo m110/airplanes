@@ -83,11 +83,8 @@ func newPlayerBullet(w donburi.World, position math.Vec2, localRotation float64)
 		LocalRotation: originalRotation + localRotation,
 	})
 
-	vel := transform.Right(bullet)
-	vel.MulScalar(playerBulletSpeed)
-
 	donburi.SetValue(bullet, component.Velocity, component.VelocityData{
-		Velocity: vel,
+		Velocity: transform.Right(bullet).MulScalar(playerBulletSpeed),
 	})
 
 	donburi.SetValue(bullet, component.Sprite, component.SpriteData{
@@ -124,11 +121,8 @@ func NewEnemyBullet(w donburi.World, position math.Vec2, rotation float64) {
 		LocalRotation: rotation,
 	})
 
-	vel := transform.Right(bullet)
-	vel.MulScalar(enemyBulletSpeed)
-
 	donburi.SetValue(bullet, component.Velocity, component.VelocityData{
-		Velocity: vel,
+		Velocity: transform.Right(bullet).MulScalar(enemyBulletSpeed),
 	})
 
 	donburi.SetValue(bullet, component.Sprite, component.SpriteData{

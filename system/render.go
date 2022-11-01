@@ -89,7 +89,7 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 			// TODO World scale and allow 0,0?
 			// Actually, Scale should just default to (1, 1)
 			t := transform.GetTransform(entry)
-			if !t.LocalScale.Equal(vec2Zero) {
+			if !t.LocalScale.IsZero() {
 				op.GeoM.Translate(-halfW, -halfH)
 				op.GeoM.Scale(t.LocalScale.X, t.LocalScale.Y)
 				op.GeoM.Translate(halfW, halfH)

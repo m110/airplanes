@@ -5,6 +5,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/donburi"
+	dmath "github.com/yohamta/donburi/features/math"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
@@ -37,7 +38,7 @@ func (s *Evolution) Update(w donburi.World) {
 		}
 
 		evolutionChildTransform := transform.GetTransform(evolutionChild)
-		evolutionChildTransform.LocalScale.Set(
+		evolutionChildTransform.LocalScale = dmath.NewVec2(
 			evolution.GrowTimer.PercentDone(),
 			evolution.GrowTimer.PercentDone(),
 		)
@@ -79,7 +80,7 @@ func (s *Evolution) Update(w donburi.World) {
 		if evolution.GrowTimer.IsReady() {
 			evolution.ShrinkTimer.Update()
 
-			transform.GetTransform(entry).LocalScale.Set(
+			transform.GetTransform(entry).LocalScale = dmath.NewVec2(
 				1.0-evolution.ShrinkTimer.PercentDone(),
 				1.0-evolution.ShrinkTimer.PercentDone(),
 			)

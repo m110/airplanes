@@ -17,8 +17,6 @@ import (
 	"github.com/m110/airplanes/component"
 )
 
-var vec2Zero = math.NewVec2(0, 0)
-
 type Debug struct {
 	query     *query.Query
 	debug     *component.DebugData
@@ -75,7 +73,7 @@ func (d *Debug) Update(w donburi.World) {
 		}
 		if inpututil.IsKeyJustPressed(ebiten.KeyP) {
 			velocity := component.GetVelocity(archetype.MustFindCamera(w))
-			if d.pausedCameraVelocity.Equal(vec2Zero) {
+			if d.pausedCameraVelocity.IsZero() {
 				d.pausedCameraVelocity = velocity.Velocity
 				velocity.Velocity = math.Vec2{}
 			} else {
@@ -133,13 +131,8 @@ func (d *Debug) Draw(w donburi.World, screen *ebiten.Image) {
 		ebitenutil.DebugPrintAt(d.offscreen, fmt.Sprintf("rot: %.0f", transform.WorldRotation(entry)), int(x), int(y)+60)
 
 		length := 50.0
-		r := transform.Right(entry)
-		r.MulScalar(length)
-		right := position.Add(&r)
-
-		u := transform.Up(entry)
-		u.MulScalar(length)
-		up := position.Add(&u)
+		right := position.Add(transform.Right(entry).MulScalar(length))
+		up := position.Add(transform.Up(entry).MulScalar(length))
 
 		ebitenutil.DrawLine(d.offscreen, position.X, position.Y, right.X, right.Y, colornames.Blue)
 		ebitenutil.DrawLine(d.offscreen, position.X, position.Y, up.X, up.Y, colornames.Lime)
