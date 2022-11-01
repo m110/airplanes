@@ -86,9 +86,9 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 				y -= halfH
 			}
 
-			t := transform.GetTransform(entry)
+			scale := transform.WorldScale(entry)
 			op.GeoM.Translate(-halfW, -halfH)
-			op.GeoM.Scale(t.LocalScale.X, t.LocalScale.Y)
+			op.GeoM.Scale(scale.X, scale.Y)
 			op.GeoM.Translate(halfW, halfH)
 
 			if sprite.ColorOverride != nil {

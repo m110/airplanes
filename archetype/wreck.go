@@ -99,6 +99,6 @@ func NewAirplaneWreck(w donburi.World, parent *donburi.Entry, sprite *component.
 			Falling:  true,
 		})
 
-		NewStaticShadow(w, wreck)
+		NewShadow(w, wreck)
 	}
 }

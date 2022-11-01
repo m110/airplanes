@@ -17,15 +17,7 @@ const (
 	MaxShadowPosition = 12
 )
 
-func NewDynamicShadow(w donburi.World, parent *donburi.Entry) *donburi.Entry {
-	return newShadow(w, parent, true)
-}
-
-func NewStaticShadow(w donburi.World, parent *donburi.Entry) *donburi.Entry {
-	return newShadow(w, parent, false)
-}
-
-func newShadow(w donburi.World, parent *donburi.Entry, dynamic bool) *donburi.Entry {
+func NewShadow(w donburi.World, parent *donburi.Entry) *donburi.Entry {
 	shadow := w.Entry(
 		w.Create(
 			transform.Transform,
@@ -44,34 +36,27 @@ func newShadow(w donburi.World, parent *donburi.Entry, dynamic bool) *donburi.En
 
 	parentSprite := component.GetSprite(parent)
 
-	var img *ebiten.Image
-	if dynamic {
-		img = ebiten.NewImageFromImage(parentSprite.Image)
-	} else {
-		img = ebiten.NewImage(parentSprite.Image.Size())
-		op := &ebiten.DrawImageOptions{}
-		op.ColorM.Scale(0, 0, 0, shadowColorAlpha)
-		op.ColorM.Translate(shadowColorScale, shadowColorScale, shadowColorScale, 0)
-		img.DrawImage(parentSprite.Image, op)
-	}
-
 	spriteData := component.SpriteData{
-		Image:            img,
+		Image:            ShadowImage(parentSprite.Image),
 		Layer:            component.SpriteLayerShadows,
 		Pivot:            parentSprite.Pivot,
 		OriginalRotation: parentSprite.OriginalRotation,
 	}
 
-	if dynamic {
-		spriteData.ColorOverride = &component.ColorOverride{
-			R: shadowColorScale,
-			G: shadowColorScale,
-			B: shadowColorScale,
-			A: shadowColorAlpha,
-		}
-	}
-
 	donburi.SetValue(shadow, component.Sprite, spriteData)
 
 	return shadow
+}
+
+func ShadowImage(source *ebiten.Image) *ebiten.Image {
+	shadow := ebiten.NewImage(source.Size())
+	op := &ebiten.DrawImageOptions{}
+	ShadowDrawOptions(op)
+	shadow.DrawImage(source, op)
+	return shadow
+}
+
+func ShadowDrawOptions(op *ebiten.DrawImageOptions) {
+	op.ColorM.Scale(0, 0, 0, shadowColorAlpha)
+	op.ColorM.Translate(shadowColorScale, shadowColorScale, shadowColorScale, 0)
 }

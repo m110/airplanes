@@ -9,10 +9,11 @@ import (
 const maxLevel = 2
 
 type EvolutionData struct {
-	Level       int
-	Evolving    bool
-	GrowTimer   *engine.Timer
-	ShrinkTimer *engine.Timer
+	Level           int
+	Evolving        bool
+	StartedEvolving bool
+	GrowTimer       *engine.Timer
+	ShrinkTimer     *engine.Timer
 }
 
 func (e *EvolutionData) Evolve() {
@@ -24,6 +25,7 @@ func (e *EvolutionData) Evolve() {
 	e.GrowTimer.Reset()
 	e.ShrinkTimer.Reset()
 	e.Evolving = true
+	e.StartedEvolving = false
 }
 
 func (e *EvolutionData) StopEvolving() {

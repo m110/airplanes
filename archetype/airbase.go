@@ -40,7 +40,7 @@ func NewAirbaseAirplane(w donburi.World, position math.Vec2, faction component.P
 
 	NewCrosshair(w, airplane)
 
-	shadow := NewStaticShadow(w, airplane)
+	shadow := NewShadow(w, airplane)
 	transform.GetTransform(shadow).LocalPosition = math.Vec2{}
 }
 

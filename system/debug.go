@@ -71,6 +71,11 @@ func (d *Debug) Update(w donburi.World) {
 				t.LocalRotation += 10
 			})
 		}
+		if inpututil.IsKeyJustPressed(ebiten.KeyV) {
+			query.NewQuery(filter.Contains(component.PlayerAirplane)).EachEntity(w, func(entry *donburi.Entry) {
+				component.GetEvolution(entry).Evolve()
+			})
+		}
 		if inpututil.IsKeyJustPressed(ebiten.KeyP) {
 			velocity := component.GetVelocity(archetype.MustFindCamera(w))
 			if d.pausedCameraVelocity.IsZero() {

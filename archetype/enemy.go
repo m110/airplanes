@@ -89,7 +89,7 @@ func NewEnemyAirplane(
 		DamageIndicator:      newDamageIndicator(w, airplane),
 	})
 
-	NewStaticShadow(w, airplane)
+	NewShadow(w, airplane)
 }
 
 func NewEnemyTank(
