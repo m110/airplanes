@@ -49,10 +49,9 @@ func NewEnemyAirplane(
 
 	originalRotation := -90.0
 
-	donburi.SetValue(airplane, transform.Transform, transform.TransformData{
-		LocalPosition: position,
-		LocalRotation: originalRotation + rotation,
-	})
+	t := transform.GetTransform(airplane)
+	t.LocalPosition = position
+	t.LocalRotation = originalRotation + rotation
 
 	image := assets.AirplaneGraySmall
 	donburi.SetValue(airplane, component.Sprite, component.SpriteData{

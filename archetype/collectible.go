@@ -35,9 +35,7 @@ func NewRandomCollectible(w donburi.World, position math.Vec2) {
 		collectibleType = component.CollectibleTypeHealth
 	}
 
-	donburi.SetValue(collectible, transform.Transform, transform.TransformData{
-		LocalPosition: position,
-	})
+	transform.GetTransform(collectible).LocalPosition = position
 
 	donburi.SetValue(collectible, component.Sprite, component.SpriteData{
 		Image: image,

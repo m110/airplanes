@@ -156,10 +156,9 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 	originalRotation := -90.0
 
 	pos := playerSpawn(w, player.PlayerNumber)
-	donburi.SetValue(airplane, transform.Transform, transform.TransformData{
-		LocalPosition: pos,
-		LocalRotation: originalRotation,
-	})
+	t := transform.GetTransform(airplane)
+	t.LocalPosition = pos
+	t.LocalRotation = originalRotation
 
 	transform.AppendChild(airplane, shield, false)
 

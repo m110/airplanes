@@ -22,10 +22,10 @@ func NewAirbaseAirplane(w donburi.World, position math.Vec2, faction component.P
 
 	originalRotation := -90.0
 
-	donburi.SetValue(airplane, transform.Transform, transform.TransformData{
-		LocalPosition: position,
-		LocalRotation: originalRotation,
-	})
+	t := transform.GetTransform(airplane)
+	t.LocalPosition = position
+	t.LocalRotation = originalRotation
+
 	donburi.SetValue(airplane, component.Sprite, component.SpriteData{
 		Image:            AirplaneImageByFaction(faction, 0),
 		Layer:            component.SpriteLayerAirUnits,
@@ -52,9 +52,7 @@ func NewCrosshair(w donburi.World, parent *donburi.Entry) {
 		),
 	)
 
-	donburi.SetValue(crosshair, transform.Transform, transform.TransformData{
-		LocalScale: math.Vec2{X: 2.5, Y: 2.5},
-	})
+	transform.GetTransform(crosshair).LocalScale = math.Vec2{X: 2.5, Y: 2.5}
 
 	transform.AppendChild(parent, crosshair, false)
 

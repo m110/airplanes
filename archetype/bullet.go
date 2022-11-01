@@ -78,10 +78,9 @@ func newPlayerBullet(w donburi.World, position math.Vec2, localRotation float64)
 
 	originalRotation := -90.0
 
-	donburi.SetValue(bullet, transform.Transform, transform.TransformData{
-		LocalPosition: position,
-		LocalRotation: originalRotation + localRotation,
-	})
+	t := transform.GetTransform(bullet)
+	t.LocalPosition = position
+	t.LocalRotation = originalRotation + localRotation
 
 	donburi.SetValue(bullet, component.Velocity, component.VelocityData{
 		Velocity: transform.Right(bullet).MulScalar(playerBulletSpeed),
@@ -116,10 +115,9 @@ func NewEnemyBullet(w donburi.World, position math.Vec2, rotation float64) {
 
 	image := assets.Rocket
 
-	donburi.SetValue(bullet, transform.Transform, transform.TransformData{
-		LocalPosition: position,
-		LocalRotation: rotation,
-	})
+	t := transform.GetTransform(bullet)
+	t.LocalPosition = position
+	t.LocalRotation = rotation
 
 	donburi.SetValue(bullet, component.Velocity, component.VelocityData{
 		Velocity: transform.Right(bullet).MulScalar(enemyBulletSpeed),
