@@ -66,8 +66,6 @@ func (s *PlayerSelect) Update(w donburi.World) {
 				component.GetAltitude(entry).Velocity = 0.005
 			}
 
-			// TODO Scale the sprite slightly
-
 			// TODO dynamic sprite size not hardcoded
 			if transform.WorldPosition(entry).Y <= -32 {
 				s.startCallback(s.chosenPlayers)

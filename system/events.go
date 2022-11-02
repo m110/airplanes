@@ -16,10 +16,10 @@ type EnemyKilled struct {
 	Enemy *donburi.Entry
 }
 
+// TODO Should this be split into multiple handlers, each in a system?
 func OnEnemyKilled(w donburi.World, event engine.Event) {
 	e := event.(EnemyKilled)
 
-	// TODO deduplicate
 	component.MustFindGame(w).AddScore(1)
 
 	if e.Enemy.HasComponent(component.Wreckable) {
