@@ -2,6 +2,7 @@ package system
 
 import (
 	"github.com/yohamta/donburi"
+	"github.com/yohamta/donburi/features/math"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 	"github.com/yohamta/donburi/query"
@@ -28,10 +29,10 @@ func (a *Altitude) Update(w donburi.World) {
 		altitude := component.GetAltitude(entry)
 		altitude.Update()
 
-		// TODO Add scaling once render takes WorldScale into account
-		// scale := 0.5 + 0.2*altitude.Altitude
-		// transform.LocalScale.X = scale
-		// transform.LocalScale.Y = scale
+		scale := 0.8 + 0.2*altitude.Altitude
+		t := transform.GetTransform(entry)
+		t.LocalScale.X = scale
+		t.LocalScale.Y = scale
 
 		shadow, ok := transform.FindChildWithComponent(entry, component.ShadowTag)
 		if ok {
@@ -44,8 +45,8 @@ func (a *Altitude) Update(w donburi.World) {
 		if altitude.Falling && altitude.Altitude == 0 {
 			if entry.HasComponent(component.Velocity) {
 				velocity := component.GetVelocity(entry)
-				velocity.Velocity.X = 0
-				velocity.Velocity.Y = 0
+				velocity.Velocity = math.Vec2{}
+				velocity.RotationVelocity = 0
 			}
 			sprite := component.GetSprite(entry)
 			sprite.Layer = component.SpriteLayerDebris

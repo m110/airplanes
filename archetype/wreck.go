@@ -90,7 +90,8 @@ func NewAirplaneWreck(w donburi.World, parent *donburi.Entry, sprite *component.
 		velocity.Y *= engine.RandomRange(0.5, 0.8)
 
 		donburi.SetValue(wreck, component.Velocity, component.VelocityData{
-			Velocity: velocity,
+			Velocity:         velocity,
+			RotationVelocity: engine.RandomRange(-2, 2),
 		})
 
 		donburi.SetValue(wreck, component.Altitude, component.AltitudeData{

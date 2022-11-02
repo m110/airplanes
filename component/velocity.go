@@ -6,7 +6,8 @@ import (
 )
 
 type VelocityData struct {
-	Velocity math.Vec2
+	Velocity         math.Vec2
+	RotationVelocity float64
 }
 
 var Velocity = donburi.NewComponentType[VelocityData]()
