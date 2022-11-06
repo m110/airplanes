@@ -44,7 +44,6 @@ func (a *Airbase) createWorld() {
 		system.NewAltitude(),
 		debug,
 		render,
-		system.NewEvents(),
 	}
 
 	a.drawables = []Drawable{

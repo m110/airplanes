@@ -33,7 +33,7 @@ func (h *Health) Update(w donburi.World) {
 			}
 		} else {
 			if health.Health <= 0 {
-				component.MustFindEventBus(w).Publish(EnemyKilled{
+				EnemyKilledEvent.Publish(w, EnemyKilled{
 					Enemy: entry,
 				})
 			}

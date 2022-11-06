@@ -81,9 +81,9 @@ func (g *Game) loadLevel() {
 		system.NewShooter(),
 		system.NewEvolution(),
 		system.NewAltitude(),
+		system.NewEvents(),
 		render,
 		debug,
-		system.NewEvents(),
 	}
 
 	g.drawables = []Drawable{
@@ -184,6 +184,8 @@ func (g *Game) createWorld(levelIndex int) donburi.World {
 	}
 
 	world.Create(component.Debug)
+
+	system.SetupEvents(world)
 
 	return world
 }

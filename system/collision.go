@@ -62,7 +62,7 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 	},
 	component.CollisionLayerAirEnemies: {
 		component.CollisionLayerPlayers: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
-			component.MustFindEventBus(w).Publish(EnemyKilled{
+			EnemyKilledEvent.Publish(w, EnemyKilled{
 				Enemy: entry,
 			})
 
