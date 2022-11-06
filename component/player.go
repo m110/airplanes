@@ -120,7 +120,3 @@ func (d *PlayerData) EvolutionLevel() int {
 }
 
 var Player = donburi.NewComponentType[PlayerData]()
-
-func GetPlayer(entry *donburi.Entry) *PlayerData {
-	return donburi.Get[PlayerData](entry, Player)
-}

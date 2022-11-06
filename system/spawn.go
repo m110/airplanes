@@ -25,10 +25,10 @@ func (s *Spawn) Update(w donburi.World) {
 	cameraPos := transform.WorldPosition(archetype.MustFindCamera(w))
 
 	s.query.EachEntity(w, func(entry *donburi.Entry) {
-		t := transform.GetTransform(entry)
+		t := transform.Transform.Get(entry)
 
 		if cameraPos.Y <= t.LocalPosition.Y {
-			spawnable := component.GetSpawnable(entry)
+			spawnable := component.Spawnable.Get(entry)
 			spawnable.SpawnFunc(w)
 			hierarchy.RemoveRecursive(entry)
 		}

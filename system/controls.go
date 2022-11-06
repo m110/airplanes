@@ -32,13 +32,13 @@ func NewControls() *Controls {
 
 func (i *Controls) Update(w donburi.World) {
 	i.query.EachEntity(w, func(entry *donburi.Entry) {
-		input := component.GetInput(entry)
+		input := component.Input.Get(entry)
 
 		if input.Disabled {
 			return
 		}
 
-		velocity := component.GetVelocity(entry)
+		velocity := component.Velocity.Get(entry)
 
 		velocity.Velocity = math.Vec2{
 			X: 0,
@@ -60,11 +60,11 @@ func (i *Controls) Update(w donburi.World) {
 		}
 
 		// TODO Seems like a very complex way to get the weapon level and timer
-		airplane := component.GetPlayerAirplane(entry)
+		airplane := component.PlayerAirplane.Get(entry)
 		player := archetype.MustFindPlayerByNumber(w, airplane.PlayerNumber)
 		player.ShootTimer.Update()
 		if ebiten.IsKeyPressed(input.ShootKey) && player.ShootTimer.IsReady() {
-			position := transform.GetTransform(entry).LocalPosition
+			position := transform.Transform.Get(entry).LocalPosition
 
 			archetype.NewPlayerBullet(w, player, position)
 			player.ShootTimer.Reset()

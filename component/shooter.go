@@ -20,7 +20,3 @@ type ShooterData struct {
 }
 
 var Shooter = donburi.NewComponentType[ShooterData]()
-
-func GetShooter(entry *donburi.Entry) *ShooterData {
-	return donburi.Get[ShooterData](entry, Shooter)
-}

@@ -22,7 +22,3 @@ type ColliderData struct {
 }
 
 var Collider = donburi.NewComponentType[ColliderData]()
-
-func GetCollider(entry *donburi.Entry) *ColliderData {
-	return donburi.Get[ColliderData](entry, Collider)
-}

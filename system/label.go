@@ -27,7 +27,7 @@ func NewLabel() *Label {
 
 func (l *Label) Draw(w donburi.World, screen *ebiten.Image) {
 	l.query.EachEntity(w, func(entry *donburi.Entry) {
-		label := component.GetLabel(entry)
+		label := component.Label.Get(entry)
 		if label.Hidden {
 			return
 		}

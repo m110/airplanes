@@ -38,7 +38,7 @@ func (h *HUD) Draw(w donburi.World, screen *ebiten.Image) {
 	}
 
 	h.query.EachEntity(w, func(entry *donburi.Entry) {
-		player := component.GetPlayer(entry)
+		player := component.Player.Get(entry)
 
 		icon := assets.Health
 		iconWidth, iconHeight := icon.Size()

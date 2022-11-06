@@ -21,7 +21,3 @@ func (a *AltitudeData) Update() {
 }
 
 var Altitude = donburi.NewComponentType[AltitudeData]()
-
-func GetAltitude(entry *donburi.Entry) *AltitudeData {
-	return donburi.Get[AltitudeData](entry, Altitude)
-}

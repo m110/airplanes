@@ -6,7 +6,7 @@ require (
 	github.com/hajimehoshi/ebiten/v2 v2.4.7
 	github.com/lafriks/go-tiled v0.10.0
 	github.com/samber/lo v1.30.0
-	github.com/yohamta/donburi v1.2.23
+	github.com/yohamta/donburi v1.3.0
 	golang.org/x/image v0.0.0-20220902085622-e7cb96979f69
 )
 

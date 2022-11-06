@@ -36,16 +36,16 @@ func (b *Bounds) Update(w donburi.World) {
 	}
 
 	camera := archetype.MustFindCamera(w)
-	cameraPos := transform.GetTransform(camera).LocalPosition
+	cameraPos := transform.Transform.Get(camera).LocalPosition
 
 	b.query.EachEntity(w, func(entry *donburi.Entry) {
-		bounds := component.GetBounds(entry)
+		bounds := component.Bounds.Get(entry)
 		if bounds.Disabled {
 			return
 		}
 
-		t := transform.GetTransform(entry)
-		sprite := component.GetSprite(entry)
+		t := transform.Transform.Get(entry)
+		sprite := component.Sprite.Get(entry)
 
 		w, h := sprite.Image.Size()
 		width, height := float64(w), float64(h)

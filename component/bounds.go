@@ -8,7 +8,3 @@ type BoundsData struct {
 
 // Bounds indicates that the entity can't move of out the screen.
 var Bounds = donburi.NewComponentType[BoundsData]()
-
-func GetBounds(entry *donburi.Entry) *BoundsData {
-	return donburi.Get[BoundsData](entry, Bounds)
-}

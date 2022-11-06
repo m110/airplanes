@@ -53,17 +53,17 @@ func NewPlayerSelect(startCallback StartGameCallback, backToMenuCallback func())
 func (s *PlayerSelect) Update(w donburi.World) {
 	if s.started {
 		s.query.EachEntity(w, func(entry *donburi.Entry) {
-			playerSelect := component.GetPlayerSelect(entry)
+			playerSelect := component.PlayerSelect.Get(entry)
 			if !playerSelect.Selected || !playerSelect.Ready {
 				return
 			}
 
-			velocity := component.GetVelocity(entry)
+			velocity := component.Velocity.Get(entry)
 			velocity.Velocity.Y -= 0.01
 
 			s.altitudeTimer.Update()
 			if s.altitudeTimer.IsReady() {
-				component.GetAltitude(entry).Velocity = 0.005
+				component.Altitude.Get(entry).Velocity = 0.005
 			}
 
 			// TODO dynamic sprite size not hardcoded
@@ -78,7 +78,7 @@ func (s *PlayerSelect) Update(w donburi.World) {
 	var playerSelects []*donburi.Entry
 	selected := map[int]*donburi.Entry{}
 	s.query.EachEntity(w, func(entry *donburi.Entry) {
-		playerSelect := component.GetPlayerSelect(entry)
+		playerSelect := component.PlayerSelect.Get(entry)
 		if playerSelect.Selected {
 			selected[playerSelect.PlayerNumber] = entry
 		}
@@ -89,10 +89,10 @@ func (s *PlayerSelect) Update(w donburi.World) {
 	for number, settings := range archetype.Players {
 		if inpututil.IsKeyJustPressed(settings.Inputs.Shoot) {
 			if entry, ok := selected[number]; ok {
-				component.GetPlayerSelect(entry).LockIn()
+				component.PlayerSelect.Get(entry).LockIn()
 			} else {
 				for _, entry := range playerSelects {
-					playerSelect := component.GetPlayerSelect(entry)
+					playerSelect := component.PlayerSelect.Get(entry)
 					if !playerSelect.Selected {
 						playerSelect.Select(number)
 						break
@@ -103,13 +103,13 @@ func (s *PlayerSelect) Update(w donburi.World) {
 
 		if inpututil.IsKeyJustPressed(settings.Inputs.Left) {
 			if entry, ok := selected[number]; ok {
-				playerSelect := component.GetPlayerSelect(entry)
+				playerSelect := component.PlayerSelect.Get(entry)
 				if !playerSelect.Ready {
 					// TODO refactor
 					if playerSelect.Index > 0 {
 						for i := playerSelect.Index - 1; i >= 0; i-- {
 							entry := playerSelects[i]
-							ps := component.GetPlayerSelect(entry)
+							ps := component.PlayerSelect.Get(entry)
 							if !ps.Selected {
 								playerSelect.Unselect()
 
@@ -124,11 +124,11 @@ func (s *PlayerSelect) Update(w donburi.World) {
 
 		if inpututil.IsKeyJustPressed(settings.Inputs.Right) {
 			if entry, ok := selected[number]; ok {
-				playerSelect := component.GetPlayerSelect(entry)
+				playerSelect := component.PlayerSelect.Get(entry)
 				if !playerSelect.Ready {
 					if playerSelect.Index < len(playerSelects)-1 {
 						for _, entry := range playerSelects[playerSelect.Index+1:] {
-							ps := component.GetPlayerSelect(entry)
+							ps := component.PlayerSelect.Get(entry)
 							if !ps.Selected {
 								playerSelect.Unselect()
 
@@ -146,7 +146,7 @@ func (s *PlayerSelect) Update(w donburi.World) {
 	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
 		cancelled := false
 		for _, entry := range playerSelects {
-			playerSelect := component.GetPlayerSelect(entry)
+			playerSelect := component.PlayerSelect.Get(entry)
 			if playerSelect.Ready {
 				playerSelect.Release()
 				cancelled = true
@@ -163,29 +163,29 @@ func (s *PlayerSelect) Update(w donburi.World) {
 	}
 
 	for _, entry := range playerSelects {
-		playerSelect := component.GetPlayerSelect(entry)
+		playerSelect := component.PlayerSelect.Get(entry)
 		crosshair := hierarchy.MustGetChildren(entry)[0]
 		label := hierarchy.MustGetChildren(crosshair)[0]
 
 		if playerSelect.Selected {
 			if playerSelect.Ready {
-				component.GetSprite(crosshair).Hidden = true
+				component.Sprite.Get(crosshair).Hidden = true
 			} else {
-				component.GetSprite(crosshair).Hidden = false
+				component.Sprite.Get(crosshair).Hidden = false
 			}
 
-			component.GetLabel(label).Text = fmt.Sprintf("Player %v", playerSelect.PlayerNumber)
-			component.GetLabel(label).Hidden = false
+			component.Label.Get(label).Text = fmt.Sprintf("Player %v", playerSelect.PlayerNumber)
+			component.Label.Get(label).Hidden = false
 		} else {
-			component.GetSprite(crosshair).Hidden = true
-			component.GetLabel(label).Hidden = true
+			component.Sprite.Get(crosshair).Hidden = true
+			component.Label.Get(label).Hidden = true
 		}
 	}
 
 	var chosenPlayers []ChosenPlayer
 	playersReady := 0
 	for _, entry := range playerSelects {
-		playerSelect := component.GetPlayerSelect(entry)
+		playerSelect := component.PlayerSelect.Get(entry)
 		if playerSelect.Selected {
 			chosenPlayers = append(chosenPlayers, ChosenPlayer{
 				PlayerNumber: playerSelect.PlayerNumber,
@@ -201,9 +201,9 @@ func (s *PlayerSelect) Update(w donburi.World) {
 		s.chosenPlayers = chosenPlayers
 		s.started = true
 		for _, entry := range playerSelects {
-			ps := component.GetPlayerSelect(entry)
+			ps := component.PlayerSelect.Get(entry)
 			if ps.Selected && ps.Ready {
-				velocity := component.GetVelocity(entry)
+				velocity := component.Velocity.Get(entry)
 				velocity.Velocity.Y = -0.5
 			}
 		}

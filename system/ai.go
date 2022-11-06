@@ -30,14 +30,14 @@ func NewAI() *AI {
 
 func (a *AI) Update(w donburi.World) {
 	a.query.EachEntity(w, func(entry *donburi.Entry) {
-		ai := component.GetAI(entry)
+		ai := component.AI.Get(entry)
 		if ai.Type == component.AITypeFollowPath {
 			if ai.NextTarget >= len(ai.Path) {
 				return
 			}
 
-			position := transform.GetTransform(entry).LocalPosition
-			velocity := component.GetVelocity(entry)
+			position := transform.Transform.Get(entry).LocalPosition
+			velocity := component.Velocity.Get(entry)
 
 			target := ai.Path[ai.NextTarget]
 
@@ -77,14 +77,14 @@ func (a *AI) Update(w donburi.World) {
 				}
 			}
 
-			transform.GetTransform(entry).LocalRotation += diff
+			transform.Transform.Get(entry).LocalRotation += diff
 
 			// TODO Should use transform.Right() instead but it doesn't work
 			radians := dmath.ToRadians(angle)
 			velocity.Velocity.X = math.Cos(radians) * ai.Speed
 			velocity.Velocity.Y = math.Sin(radians) * ai.Speed
 		} else if ai.Type == component.AITypeConstantVelocity && !ai.StartedMoving {
-			velocity := component.GetVelocity(entry)
+			velocity := component.Velocity.Get(entry)
 			velocity.Velocity = transform.Right(entry).MulScalar(ai.Speed)
 			ai.StartedMoving = true
 		}

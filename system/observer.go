@@ -21,7 +21,7 @@ func NewObserver() *Observer {
 
 func (s *Observer) Update(w donburi.World) {
 	s.query.EachEntity(w, func(entry *donburi.Entry) {
-		observer := component.GetObserver(entry)
+		observer := component.Observer.Get(entry)
 		if observer.LookFor == nil {
 			return
 		}

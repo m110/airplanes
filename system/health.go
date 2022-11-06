@@ -24,7 +24,7 @@ func NewHealth() *Health {
 
 func (h *Health) Update(w donburi.World) {
 	h.query.EachEntity(w, func(entry *donburi.Entry) {
-		health := component.GetHealth(entry)
+		health := component.Health.Get(entry)
 
 		if health.JustDamaged {
 			health.DamageIndicatorTimer.Update()

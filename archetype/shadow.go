@@ -28,13 +28,13 @@ func NewShadow(w donburi.World, parent *donburi.Entry) *donburi.Entry {
 
 	transform.AppendChild(parent, shadow, false)
 
-	transform := transform.GetTransform(shadow)
+	transform := transform.Transform.Get(shadow)
 	transform.LocalPosition = math.Vec2{
 		X: -MaxShadowPosition,
 		Y: MaxShadowPosition,
 	}
 
-	parentSprite := component.GetSprite(parent)
+	parentSprite := component.Sprite.Get(parent)
 
 	spriteData := component.SpriteData{
 		Image:            ShadowImage(parentSprite.Image),

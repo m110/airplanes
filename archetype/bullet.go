@@ -78,7 +78,7 @@ func newPlayerBullet(w donburi.World, position math.Vec2, localRotation float64)
 
 	originalRotation := -90.0
 
-	t := transform.GetTransform(bullet)
+	t := transform.Transform.Get(bullet)
 	t.LocalPosition = position
 	t.LocalRotation = originalRotation + localRotation
 
@@ -115,7 +115,7 @@ func NewEnemyBullet(w donburi.World, position math.Vec2, rotation float64) {
 
 	image := assets.Rocket
 
-	t := transform.GetTransform(bullet)
+	t := transform.Transform.Get(bullet)
 	t.LocalPosition = position
 	t.LocalRotation = rotation
 

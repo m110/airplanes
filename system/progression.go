@@ -32,14 +32,14 @@ func NewProgression(nextLevelFunc func()) *Progression {
 
 func (p *Progression) Update(w donburi.World) {
 	levelEntry := component.MustFindLevel(w)
-	level := component.GetLevel(levelEntry)
+	level := component.Level.Get(levelEntry)
 
 	if level.Progressed {
-		cameraPos := transform.GetTransform(archetype.MustFindCamera(w)).LocalPosition
+		cameraPos := transform.Transform.Get(archetype.MustFindCamera(w)).LocalPosition
 		playersVisible := false
 		p.query.EachEntity(w, func(entry *donburi.Entry) {
-			playerPos := transform.GetTransform(entry).LocalPosition
-			playerSprite := component.GetSprite(entry)
+			playerPos := transform.Transform.Get(entry).LocalPosition
+			playerSprite := component.Sprite.Get(entry)
 			if playerPos.Y+float64(playerSprite.Image.Bounds().Dy()) > cameraPos.Y {
 				playersVisible = true
 			}
@@ -54,16 +54,16 @@ func (p *Progression) Update(w donburi.World) {
 		level.ProgressionTimer.Update()
 		if level.ProgressionTimer.IsReady() {
 			p.query.EachEntity(w, func(entry *donburi.Entry) {
-				input := component.GetInput(entry)
+				input := component.Input.Get(entry)
 				input.Disabled = true
 
-				velocity := component.GetVelocity(entry)
+				velocity := component.Velocity.Get(entry)
 				velocity.Velocity = math.Vec2{
 					X: 0,
 					Y: -3,
 				}
 
-				bounds := component.GetBounds(entry)
+				bounds := component.Bounds.Get(entry)
 				bounds.Disabled = true
 			})
 
@@ -72,7 +72,7 @@ func (p *Progression) Update(w donburi.World) {
 	} else {
 		camera := archetype.MustFindCamera(w)
 
-		cameraPos := transform.GetTransform(camera).LocalPosition
+		cameraPos := transform.Transform.Get(camera).LocalPosition
 		if cameraPos.Y == 0 {
 			level.ReachedEnd = true
 			level.ProgressionTimer.Reset()

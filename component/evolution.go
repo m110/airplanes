@@ -33,7 +33,3 @@ func (e *EvolutionData) StopEvolving() {
 }
 
 var Evolution = donburi.NewComponentType[EvolutionData]()
-
-func GetEvolution(entry *donburi.Entry) *EvolutionData {
-	return donburi.Get[EvolutionData](entry, Evolution)
-}

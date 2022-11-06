@@ -25,7 +25,3 @@ type AIData struct {
 }
 
 var AI = donburi.NewComponentType[AIData]()
-
-func GetAI(entry *donburi.Entry) *AIData {
-	return donburi.Get[AIData](entry, AI)
-}

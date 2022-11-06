@@ -8,7 +8,3 @@ type DespawnableData struct {
 }
 
 var Despawnable = donburi.NewComponentType[DespawnableData]()
-
-func GetDespawnable(entry *donburi.Entry) *DespawnableData {
-	return donburi.Get[DespawnableData](entry, Despawnable)
-}

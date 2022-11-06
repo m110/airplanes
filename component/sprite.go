@@ -53,7 +53,3 @@ func (s *SpriteData) Hide() {
 }
 
 var Sprite = donburi.NewComponentType[SpriteData]()
-
-func GetSprite(entry *donburi.Entry) *SpriteData {
-	return donburi.Get[SpriteData](entry, Sprite)
-}

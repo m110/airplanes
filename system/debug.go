@@ -45,7 +45,7 @@ func (d *Debug) Update(w donburi.World) {
 			return
 		}
 
-		d.debug = component.GetDebug(debug)
+		d.debug = component.Debug.Get(debug)
 	}
 
 	if inpututil.IsKeyJustPressed(ebiten.KeySlash) {
@@ -55,29 +55,29 @@ func (d *Debug) Update(w donburi.World) {
 	if d.debug.Enabled {
 		if inpututil.IsKeyJustPressed(ebiten.Key1) {
 			query.NewQuery(filter.Contains(component.Player)).EachEntity(w, func(entry *donburi.Entry) {
-				player := component.GetPlayer(entry)
+				player := component.Player.Get(entry)
 				player.UpgradeWeapon()
 			})
 		}
 		if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
 			query.NewQuery(filter.Contains(component.PlayerAirplane)).EachEntity(w, func(entry *donburi.Entry) {
-				t := transform.GetTransform(entry)
+				t := transform.Transform.Get(entry)
 				t.LocalRotation -= 10
 			})
 		}
 		if inpututil.IsKeyJustPressed(ebiten.KeyE) {
 			query.NewQuery(filter.Contains(component.PlayerAirplane)).EachEntity(w, func(entry *donburi.Entry) {
-				t := transform.GetTransform(entry)
+				t := transform.Transform.Get(entry)
 				t.LocalRotation += 10
 			})
 		}
 		if inpututil.IsKeyJustPressed(ebiten.KeyV) {
 			query.NewQuery(filter.Contains(component.PlayerAirplane)).EachEntity(w, func(entry *donburi.Entry) {
-				component.GetEvolution(entry).Evolve()
+				component.Evolution.Get(entry).Evolve()
 			})
 		}
 		if inpututil.IsKeyJustPressed(ebiten.KeyP) {
-			velocity := component.GetVelocity(archetype.MustFindCamera(w))
+			velocity := component.Velocity.Get(archetype.MustFindCamera(w))
 			if d.pausedCameraVelocity.IsZero() {
 				d.pausedCameraVelocity = velocity.Velocity
 				velocity.Velocity = math.Vec2{}
@@ -103,7 +103,7 @@ func (d *Debug) Draw(w donburi.World, screen *ebiten.Image) {
 	spawnedCount := 0
 	query.NewQuery(filter.Contains(component.Despawnable)).EachEntity(w, func(entry *donburi.Entry) {
 		despawnableCount++
-		if component.GetDespawnable(entry).Spawned {
+		if component.Despawnable.Get(entry).Spawned {
 			spawnedCount++
 		}
 	})
@@ -113,8 +113,8 @@ func (d *Debug) Draw(w donburi.World, screen *ebiten.Image) {
 
 	d.offscreen.Clear()
 	d.query.EachEntity(w, func(entry *donburi.Entry) {
-		t := transform.GetTransform(entry)
-		sprite := component.GetSprite(entry)
+		t := transform.Transform.Get(entry)
+		sprite := component.Sprite.Get(entry)
 
 		position := transform.WorldPosition(entry)
 
@@ -143,7 +143,7 @@ func (d *Debug) Draw(w donburi.World, screen *ebiten.Image) {
 		ebitenutil.DrawLine(d.offscreen, position.X, position.Y, up.X, up.Y, colornames.Lime)
 
 		if entry.HasComponent(component.Collider) {
-			collider := component.GetCollider(entry)
+			collider := component.Collider.Get(entry)
 			ebitenutil.DrawLine(d.offscreen, x, y, x+collider.Width, y, colornames.Lime)
 			ebitenutil.DrawLine(d.offscreen, x, y, x, y+collider.Height, colornames.Lime)
 			ebitenutil.DrawLine(d.offscreen, x+collider.Width, y, x+collider.Width, y+collider.Height, colornames.Lime)
@@ -151,7 +151,7 @@ func (d *Debug) Draw(w donburi.World, screen *ebiten.Image) {
 		}
 
 		if entry.HasComponent(component.AI) {
-			ai := component.GetAI(entry)
+			ai := component.AI.Get(entry)
 			for i, p := range ai.Path {
 				ebitenutil.DrawRect(d.offscreen, p.X-2, p.Y-2, 4, 4, colornames.Red)
 				if i < len(ai.Path)-1 {
@@ -166,7 +166,7 @@ func (d *Debug) Draw(w donburi.World, screen *ebiten.Image) {
 	})
 
 	camera := archetype.MustFindCamera(w)
-	cameraPos := transform.GetTransform(camera).LocalPosition
+	cameraPos := transform.Transform.Get(camera).LocalPosition
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(-cameraPos.X, -cameraPos.Y)
 	screen.DrawImage(d.offscreen, op)

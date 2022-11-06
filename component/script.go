@@ -7,7 +7,3 @@ type ScriptData struct {
 }
 
 var Script = donburi.NewComponentType[ScriptData]()
-
-func GetScript(entry *donburi.Entry) *ScriptData {
-	return donburi.Get[ScriptData](entry, Script)
-}

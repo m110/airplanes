@@ -30,12 +30,12 @@ func (d *Despawn) Update(w donburi.World) {
 		}
 	}
 
-	cameraPos := transform.GetTransform(archetype.MustFindCamera(w)).LocalPosition
+	cameraPos := transform.Transform.Get(archetype.MustFindCamera(w)).LocalPosition
 
 	d.query.EachEntity(w, func(entry *donburi.Entry) {
-		position := transform.GetTransform(entry).LocalPosition
-		sprite := component.GetSprite(entry)
-		despawnable := component.GetDespawnable(entry)
+		position := transform.Transform.Get(entry).LocalPosition
+		sprite := component.Sprite.Get(entry)
+		despawnable := component.Despawnable.Get(entry)
 
 		maxX := position.X + float64(sprite.Image.Bounds().Dx())
 		maxY := position.Y + float64(sprite.Image.Bounds().Dy())

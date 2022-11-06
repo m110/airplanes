@@ -30,7 +30,3 @@ func (p *PlayerSelectData) Release() {
 }
 
 var PlayerSelect = donburi.NewComponentType[PlayerSelectData]()
-
-func GetPlayerSelect(entry *donburi.Entry) *PlayerSelectData {
-	return donburi.Get[PlayerSelectData](entry, PlayerSelect)
-}

@@ -24,14 +24,10 @@ type Settings struct {
 
 var Game = donburi.NewComponentType[GameData]()
 
-func GetGame(entry *donburi.Entry) *GameData {
-	return donburi.Get[GameData](entry, Game)
-}
-
 func MustFindGame(w donburi.World) *GameData {
 	game, ok := query.NewQuery(filter.Contains(Game)).FirstEntity(w)
 	if !ok {
 		panic("game not found")
 	}
-	return GetGame(game)
+	return Game.Get(game)
 }

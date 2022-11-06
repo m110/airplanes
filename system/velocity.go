@@ -23,8 +23,8 @@ func NewVelocity() *Velocity {
 
 func (v *Velocity) Update(w donburi.World) {
 	v.query.EachEntity(w, func(entry *donburi.Entry) {
-		t := transform.GetTransform(entry)
-		velocity := component.GetVelocity(entry)
+		t := transform.Transform.Get(entry)
+		velocity := component.Velocity.Get(entry)
 
 		t.LocalPosition = t.LocalPosition.Add(velocity.Velocity)
 		t.LocalRotation += velocity.RotationVelocity

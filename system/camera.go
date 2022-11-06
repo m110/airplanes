@@ -15,13 +15,13 @@ func NewCamera() *Camera {
 
 func (c *Camera) Update(w donburi.World) {
 	camera := archetype.MustFindCamera(w)
-	cam := component.GetCamera(camera)
+	cam := component.Camera.Get(camera)
 
 	if !cam.Moving {
 		cam.MoveTimer.Update()
 		if cam.MoveTimer.IsReady() {
 			cam.Moving = true
-			component.GetVelocity(camera).Velocity.Y = -0.5
+			component.Velocity.Get(camera).Velocity.Y = -0.5
 		}
 	}
 }

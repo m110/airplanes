@@ -77,7 +77,7 @@ func NewAirplaneWreck(w donburi.World, parent *donburi.Entry, sprite *component.
 		pos.X += p.X + p.Width/2
 		pos.Y += p.Y + p.Height/2
 
-		transform.GetTransform(wreck).LocalPosition = pos
+		transform.Transform.Get(wreck).LocalPosition = pos
 
 		donburi.SetValue(wreck, component.Sprite, component.SpriteData{
 			Image: img,

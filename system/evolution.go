@@ -30,7 +30,7 @@ func NewEvolution() *Evolution {
 func (s *Evolution) Update(w donburi.World) {
 	// TODO Handle player evolving while already evolving (queue evolutions)
 	s.query.EachEntity(w, func(entry *donburi.Entry) {
-		evolution := component.GetEvolution(entry)
+		evolution := component.Evolution.Get(entry)
 		if !evolution.Evolving {
 			return
 		}
@@ -38,16 +38,16 @@ func (s *Evolution) Update(w donburi.World) {
 		currentEvolution, _ := transform.FindChildWithComponent(entry, component.CurrentEvolutionTag)
 		nextEvolution, _ := transform.FindChildWithComponent(entry, component.NextEvolutionTag)
 
-		currentEvolutionSprite := component.GetSprite(currentEvolution)
-		nextEvolutionSprite := component.GetSprite(nextEvolution)
+		currentEvolutionSprite := component.Sprite.Get(currentEvolution)
+		nextEvolutionSprite := component.Sprite.Get(nextEvolution)
 
-		currentEvolutionTransform := transform.GetTransform(currentEvolution)
-		nextEvolutionTransform := transform.GetTransform(nextEvolution)
+		currentEvolutionTransform := transform.Transform.Get(currentEvolution)
+		nextEvolutionTransform := transform.Transform.Get(nextEvolution)
 
 		shadow, _ := transform.FindChildWithComponent(entry, component.ShadowTag)
-		shadowSprite := component.GetSprite(shadow)
+		shadowSprite := component.Sprite.Get(shadow)
 
-		sprite := component.GetSprite(entry)
+		sprite := component.Sprite.Get(entry)
 
 		if !evolution.StartedEvolving {
 			// Hide sprite
@@ -59,7 +59,7 @@ func (s *Evolution) Update(w donburi.World) {
 			currentEvolutionSprite.Show()
 
 			nextEvolutionTransform.LocalScale = dmath.NewVec2(0, 0)
-			nextEvolutionSprite.Image = whiteImageFromImage(archetype.AirplaneImageByFaction(component.GetPlayerAirplane(entry).Faction, evolution.Level))
+			nextEvolutionSprite.Image = whiteImageFromImage(archetype.AirplaneImageByFaction(component.PlayerAirplane.Get(entry).Faction, evolution.Level))
 			nextEvolutionSprite.Show()
 
 			evolution.StartedEvolving = true
@@ -110,7 +110,7 @@ func (s *Evolution) Update(w donburi.World) {
 			nextEvolutionSprite.Hide()
 
 			// Show sprite and shadow
-			sprite.Image = archetype.AirplaneImageByFaction(component.GetPlayerAirplane(entry).Faction, evolution.Level)
+			sprite.Image = archetype.AirplaneImageByFaction(component.PlayerAirplane.Get(entry).Faction, evolution.Level)
 			sprite.Show()
 			shadowSprite.Image = archetype.ShadowImage(sprite.Image)
 		}

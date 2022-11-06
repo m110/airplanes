@@ -20,7 +20,7 @@ var EnemyKilledEvent = events.NewEventType[EnemyKilled]()
 
 func OnEnemyKilledWreck(w donburi.World, event EnemyKilled) {
 	if event.Enemy.HasComponent(component.Wreckable) {
-		archetype.NewAirplaneWreck(w, event.Enemy, component.GetSprite(event.Enemy))
+		archetype.NewAirplaneWreck(w, event.Enemy, component.Sprite.Get(event.Enemy))
 	}
 }
 
@@ -32,7 +32,7 @@ func OnEnemyKilledSpawnCollectible(w donburi.World, event EnemyKilled) {
 	// TODO A temporary high chance for test purposes
 	r := rand.Intn(10)
 	if r < 7 {
-		archetype.NewRandomCollectible(w, transform.GetTransform(event.Enemy).LocalPosition)
+		archetype.NewRandomCollectible(w, transform.Transform.Get(event.Enemy).LocalPosition)
 	}
 }
 

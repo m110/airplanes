@@ -15,7 +15,3 @@ type CollectibleData struct {
 }
 
 var Collectible = donburi.NewComponentType[CollectibleData]()
-
-func GetCollectible(entry *donburi.Entry) *CollectibleData {
-	return donburi.Get[CollectibleData](entry, Collectible)
-}

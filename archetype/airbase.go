@@ -22,7 +22,7 @@ func NewAirbaseAirplane(w donburi.World, position math.Vec2, faction component.P
 
 	originalRotation := -90.0
 
-	t := transform.GetTransform(airplane)
+	t := transform.Transform.Get(airplane)
 	t.LocalPosition = position
 	t.LocalRotation = originalRotation
 
@@ -41,7 +41,7 @@ func NewAirbaseAirplane(w donburi.World, position math.Vec2, faction component.P
 	NewCrosshair(w, airplane)
 
 	shadow := NewShadow(w, airplane)
-	transform.GetTransform(shadow).LocalPosition = math.Vec2{}
+	transform.Transform.Get(shadow).LocalPosition = math.Vec2{}
 }
 
 func NewCrosshair(w donburi.World, parent *donburi.Entry) {
@@ -52,7 +52,7 @@ func NewCrosshair(w donburi.World, parent *donburi.Entry) {
 		),
 	)
 
-	transform.GetTransform(crosshair).LocalScale = math.Vec2{X: 2.5, Y: 2.5}
+	transform.Transform.Get(crosshair).LocalScale = math.Vec2{X: 2.5, Y: 2.5}
 
 	transform.AppendChild(parent, crosshair, false)
 
@@ -76,5 +76,5 @@ func NewCrosshair(w donburi.World, parent *donburi.Entry) {
 	})
 
 	transform.AppendChild(crosshair, label, false)
-	transform.GetTransform(label).LocalPosition = math.Vec2{X: -25, Y: 30}
+	transform.Transform.Get(label).LocalPosition = math.Vec2{X: -25, Y: 30}
 }

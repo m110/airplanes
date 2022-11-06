@@ -26,17 +26,17 @@ func NewAltitude() *Altitude {
 
 func (a *Altitude) Update(w donburi.World) {
 	a.query.EachEntity(w, func(entry *donburi.Entry) {
-		altitude := component.GetAltitude(entry)
+		altitude := component.Altitude.Get(entry)
 		altitude.Update()
 
 		scale := 0.8 + 0.2*altitude.Altitude
-		t := transform.GetTransform(entry)
+		t := transform.Transform.Get(entry)
 		t.LocalScale.X = scale
 		t.LocalScale.Y = scale
 
 		shadow, ok := transform.FindChildWithComponent(entry, component.ShadowTag)
 		if ok {
-			shadowTransform := transform.GetTransform(shadow)
+			shadowTransform := transform.Transform.Get(shadow)
 			shadowTransform.LocalPosition.X = -archetype.MaxShadowPosition * altitude.Altitude
 			shadowTransform.LocalPosition.Y = archetype.MaxShadowPosition * altitude.Altitude
 		}
@@ -44,11 +44,11 @@ func (a *Altitude) Update(w donburi.World) {
 		// Grounded units don't move
 		if altitude.Falling && altitude.Altitude == 0 {
 			if entry.HasComponent(component.Velocity) {
-				velocity := component.GetVelocity(entry)
+				velocity := component.Velocity.Get(entry)
 				velocity.Velocity = math.Vec2{}
 				velocity.RotationVelocity = 0
 			}
-			sprite := component.GetSprite(entry)
+			sprite := component.Sprite.Get(entry)
 			sprite.Layer = component.SpriteLayerDebris
 		}
 	})

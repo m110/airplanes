@@ -28,7 +28,3 @@ func (d *PlayerAirplaneData) StopInvulnerability() {
 }
 
 var PlayerAirplane = donburi.NewComponentType[PlayerAirplaneData]()
-
-func GetPlayerAirplane(entry *donburi.Entry) *PlayerAirplaneData {
-	return donburi.Get[PlayerAirplaneData](entry, PlayerAirplane)
-}

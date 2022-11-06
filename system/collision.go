@@ -30,24 +30,24 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 	component.CollisionLayerPlayerBullets: {
 		component.CollisionLayerAirEnemies: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
 			hierarchy.RemoveRecursive(entry)
-			component.GetHealth(other).Damage()
+			component.Health.Get(other).Damage()
 		},
 		component.CollisionLayerGroundEnemies: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
 			hierarchy.RemoveRecursive(entry)
-			component.GetHealth(other).Damage()
+			component.Health.Get(other).Damage()
 		},
 	},
 	component.CollisionLayerPlayers: {
 		component.CollisionLayerCollectibles: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
-			airplane := component.GetPlayerAirplane(entry)
+			airplane := component.PlayerAirplane.Get(entry)
 			player := archetype.MustFindPlayerByNumber(w, airplane.PlayerNumber)
 
 			// TODO Is this the best place to do this?
-			switch component.GetCollectible(other).Type {
+			switch component.Collectible.Get(other).Type {
 			case component.CollectibleTypeWeaponUpgrade:
 				player.UpgradeWeapon()
 
-				evolution := component.GetEvolution(entry)
+				evolution := component.Evolution.Get(entry)
 				if player.EvolutionLevel() > evolution.Level {
 					evolution.Evolve()
 				}
@@ -78,14 +78,14 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 }
 
 func damagePlayer(w donburi.World, entry *donburi.Entry) {
-	if component.GetPlayerAirplane(entry).Invulnerable {
+	if component.PlayerAirplane.Get(entry).Invulnerable {
 		return
 	}
 
-	playerNumber := component.GetPlayerAirplane(entry).PlayerNumber
+	playerNumber := component.PlayerAirplane.Get(entry).PlayerNumber
 
 	if entry.HasComponent(component.Wreckable) {
-		archetype.NewAirplaneWreck(w, entry, component.GetSprite(entry))
+		archetype.NewAirplaneWreck(w, entry, component.Sprite.Get(entry))
 	}
 	hierarchy.RemoveRecursive(entry)
 
@@ -98,7 +98,7 @@ func (c *Collision) Update(w donburi.World) {
 	c.query.EachEntity(w, func(entry *donburi.Entry) {
 		// Skip entities not spawned yet
 		if entry.HasComponent(component.Despawnable) {
-			if !component.GetDespawnable(entry).Spawned {
+			if !component.Despawnable.Get(entry).Spawned {
 				return
 			}
 		}
@@ -110,7 +110,7 @@ func (c *Collision) Update(w donburi.World) {
 			continue
 		}
 
-		collider := component.GetCollider(entry)
+		collider := component.Collider.Get(entry)
 
 		for _, other := range entries {
 			if entry.Entity().Id() == other.Entity().Id() {
@@ -122,7 +122,7 @@ func (c *Collision) Update(w donburi.World) {
 				continue
 			}
 
-			otherCollider := component.GetCollider(other)
+			otherCollider := component.Collider.Get(other)
 
 			effects, ok := collisionEffects[collider.Layer]
 			if !ok {
@@ -137,8 +137,8 @@ func (c *Collision) Update(w donburi.World) {
 			if !entry.HasComponent(transform.Transform) {
 				panic(fmt.Sprintf("%#v missing position\n", entry.Entity().Id()))
 			}
-			pos := transform.GetTransform(entry).LocalPosition
-			otherPos := transform.GetTransform(other).LocalPosition
+			pos := transform.Transform.Get(entry).LocalPosition
+			otherPos := transform.Transform.Get(other).LocalPosition
 
 			// TODO The current approach doesn't take rotation into account
 			// TODO The current approach doesn't take scale into account

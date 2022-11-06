@@ -22,7 +22,7 @@ func NewShooter() *Shooter {
 
 func (s *Shooter) Update(w donburi.World) {
 	s.query.EachEntity(w, func(entry *donburi.Entry) {
-		shooter := component.GetShooter(entry)
+		shooter := component.Shooter.Get(entry)
 
 		shooter.ShootTimer.Update()
 
@@ -31,7 +31,7 @@ func (s *Shooter) Update(w donburi.World) {
 		// Could be merged into one system, however having them separately also makes sense.
 		// Perhaps both components be used by the AI system?
 		if entry.HasComponent(component.Observer) {
-			observer := component.GetObserver(entry)
+			observer := component.Observer.Get(entry)
 			if observer.Target == nil {
 				return
 			}

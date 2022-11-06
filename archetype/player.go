@@ -66,7 +66,7 @@ var Players = map[int]PlayerSettings{
 
 func playerSpawn(w donburi.World, playerNumber int) math.Vec2 {
 	game := component.MustFindGame(w)
-	cameraPos := transform.GetTransform(MustFindCamera(w)).LocalPosition
+	cameraPos := transform.Transform.Get(MustFindCamera(w)).LocalPosition
 
 	switch playerNumber {
 	case 1:
@@ -148,15 +148,15 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 		PlayerNumber:          player.PlayerNumber,
 		Faction:               faction,
 		InvulnerableTimer:     engine.NewTimer(time.Second * 3),
-		InvulnerableIndicator: component.GetSprite(shield),
+		InvulnerableIndicator: component.Sprite.Get(shield),
 	})
 
-	component.GetPlayerAirplane(airplane).StartInvulnerability()
+	component.PlayerAirplane.Get(airplane).StartInvulnerability()
 
 	originalRotation := -90.0
 
 	pos := playerSpawn(w, player.PlayerNumber)
-	t := transform.GetTransform(airplane)
+	t := transform.Transform.Get(airplane)
 	t.LocalPosition = pos
 	t.LocalRotation = originalRotation
 
@@ -231,7 +231,7 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 func MustFindPlayerByNumber(w donburi.World, playerNumber int) *component.PlayerData {
 	var foundPlayer *component.PlayerData
 	query.NewQuery(filter.Contains(component.Player)).EachEntity(w, func(e *donburi.Entry) {
-		player := component.GetPlayer(e)
+		player := component.Player.Get(e)
 		if player.PlayerNumber == playerNumber {
 			foundPlayer = player
 		}

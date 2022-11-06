@@ -18,7 +18,3 @@ type InputData struct {
 }
 
 var Input = donburi.NewComponentType[InputData]()
-
-func GetInput(entry *donburi.Entry) *InputData {
-	return donburi.Get[InputData](entry, Input)
-}

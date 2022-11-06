@@ -7,7 +7,3 @@ type DebugData struct {
 }
 
 var Debug = donburi.NewComponentType[DebugData]()
-
-func GetDebug(entry *donburi.Entry) *DebugData {
-	return donburi.Get[DebugData](entry, Debug)
-}

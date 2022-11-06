@@ -11,7 +11,3 @@ type ObserverData struct {
 }
 
 var Observer = donburi.NewComponentType[ObserverData]()
-
-func GetObserver(entry *donburi.Entry) *ObserverData {
-	return donburi.Get[ObserverData](entry, Observer)
-}

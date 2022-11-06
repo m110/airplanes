@@ -101,7 +101,7 @@ func (g *Game) createWorld(levelIndex int) donburi.World {
 	world := donburi.NewWorld()
 
 	level := world.Entry(world.Create(component.Level))
-	component.GetLevel(level).ProgressionTimer = engine.NewTimer(time.Second * 3)
+	component.Level.Get(level).ProgressionTimer = engine.NewTimer(time.Second * 3)
 
 	archetype.NewCamera(world, math.Vec2{
 		X: 0,
@@ -162,7 +162,7 @@ func (g *Game) createWorld(levelIndex int) donburi.World {
 		// Spawn new players
 		for _, p := range g.players {
 			player := archetype.NewPlayer(world, p.PlayerNumber, p.Faction)
-			archetype.NewPlayerAirplane(world, *component.GetPlayer(player), p.Faction, 0)
+			archetype.NewPlayerAirplane(world, *component.Player.Get(player), p.Faction, 0)
 		}
 	} else {
 		// Keep the same game data across levels
@@ -172,7 +172,7 @@ func (g *Game) createWorld(levelIndex int) donburi.World {
 
 		// Transfer existing players from the previous level
 		query.NewQuery(filter.Contains(component.Player)).EachEntity(g.world, func(entry *donburi.Entry) {
-			player := component.GetPlayer(entry)
+			player := component.Player.Get(entry)
 			// In case the level ends while the player's respawning
 			player.Respawning = false
 

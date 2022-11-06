@@ -42,7 +42,7 @@ func (r *Respawn) Update(w donburi.World) {
 	playersAlive := 0
 
 	r.query.EachEntity(w, func(entry *donburi.Entry) {
-		player := component.GetPlayer(entry)
+		player := component.Player.Get(entry)
 
 		if player.Lives > 0 {
 			playersAlive++
@@ -63,7 +63,7 @@ func (r *Respawn) Update(w donburi.World) {
 		if !game.GameOver {
 			game.GameOver = true
 			cam := archetype.MustFindCamera(w)
-			component.GetVelocity(cam).Velocity.Y = 0
+			component.Velocity.Get(cam).Velocity.Y = 0
 		}
 	}
 }

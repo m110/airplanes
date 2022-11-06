@@ -23,8 +23,8 @@ func NewEnemySpawn(w donburi.World, position math.Vec2, spawnFunc component.Spaw
 		),
 	)
 
-	transform.GetTransform(spawn).LocalPosition = position
-	component.GetSpawnable(spawn).SpawnFunc = spawnFunc
+	transform.Transform.Get(spawn).LocalPosition = position
+	component.Spawnable.Get(spawn).SpawnFunc = spawnFunc
 }
 
 func NewEnemyAirplane(
@@ -49,7 +49,7 @@ func NewEnemyAirplane(
 
 	originalRotation := -90.0
 
-	t := transform.GetTransform(airplane)
+	t := transform.Transform.Get(airplane)
 	t.LocalPosition = position
 	t.LocalRotation = originalRotation + rotation
 
@@ -112,7 +112,7 @@ func NewEnemyTank(
 	)
 
 	transform.Reset(tank)
-	t := transform.GetTransform(tank)
+	t := transform.Transform.Get(tank)
 	t.LocalPosition = position
 	t.LocalRotation = rotation
 
@@ -164,7 +164,7 @@ func NewEnemyTank(
 
 	originalRotation := 90.0
 	transform.Reset(gun)
-	gunT := transform.GetTransform(gun)
+	gunT := transform.Transform.Get(gun)
 	gunT.LocalPosition = position
 	gunT.LocalRotation = originalRotation + rotation
 
@@ -195,7 +195,7 @@ func newDamageIndicator(w donburi.World, parent *donburi.Entry) *component.Sprit
 		),
 	)
 
-	parentSprite := component.GetSprite(parent)
+	parentSprite := component.Sprite.Get(parent)
 
 	image := ebiten.NewImage(parentSprite.Image.Size())
 	op := &ebiten.DrawImageOptions{}
@@ -212,5 +212,5 @@ func newDamageIndicator(w donburi.World, parent *donburi.Entry) *component.Sprit
 
 	transform.AppendChild(parent, indicator, false)
 
-	return component.GetSprite(indicator)
+	return component.Sprite.Get(indicator)
 }

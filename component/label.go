@@ -8,7 +8,3 @@ type LabelData struct {
 }
 
 var Label = donburi.NewComponentType[LabelData]()
-
-func GetLabel(entry *donburi.Entry) *LabelData {
-	return donburi.Get[LabelData](entry, Label)
-}

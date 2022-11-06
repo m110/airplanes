@@ -24,7 +24,7 @@ func NewCameraBounds() *CameraBounds {
 
 func (b *CameraBounds) Update(w donburi.World) {
 	b.query.EachEntity(w, func(entry *donburi.Entry) {
-		t := transform.GetTransform(entry)
+		t := transform.Transform.Get(entry)
 		if t.LocalPosition.X < 0 {
 			t.LocalPosition.X = 0
 		}

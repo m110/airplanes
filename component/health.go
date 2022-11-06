@@ -30,7 +30,3 @@ func (d *HealthData) HideDamageIndicator() {
 }
 
 var Health = donburi.NewComponentType[HealthData]()
-
-func GetHealth(entry *donburi.Entry) *HealthData {
-	return donburi.Get[HealthData](entry, Health)
-}

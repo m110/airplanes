@@ -9,7 +9,3 @@ type SpawnableData struct {
 }
 
 var Spawnable = donburi.NewComponentType[SpawnableData]()
-
-func GetSpawnable(entry *donburi.Entry) *SpawnableData {
-	return donburi.Get[SpawnableData](entry, Spawnable)
-}

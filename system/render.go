@@ -38,13 +38,13 @@ func (r *Render) Update(w donburi.World) {
 			return
 		}
 
-		r.debug = component.GetDebug(debug)
+		r.debug = component.Debug.Get(debug)
 	}
 }
 
 func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 	camera := archetype.MustFindCamera(w)
-	cameraPos := transform.GetTransform(camera).LocalPosition
+	cameraPos := transform.Transform.Get(camera).LocalPosition
 
 	r.offscreen.Clear()
 
@@ -54,14 +54,14 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 	})
 
 	byLayer := lo.GroupBy(entries, func(entry *donburi.Entry) int {
-		return int(component.GetSprite(entry).Layer)
+		return int(component.Sprite.Get(entry).Layer)
 	})
 	layers := lo.Keys(byLayer)
 	sort.Ints(layers)
 
 	for _, layer := range layers {
 		for _, entry := range byLayer[layer] {
-			sprite := component.GetSprite(entry)
+			sprite := component.Sprite.Get(entry)
 
 			if sprite.Hidden {
 				continue
