@@ -54,7 +54,7 @@ func NewEnemyAirplane(
 	t.LocalRotation = originalRotation + rotation
 
 	image := assets.AirplaneGraySmall
-	donburi.SetValue(airplane, component.Sprite, component.SpriteData{
+	component.Sprite.SetValue(airplane, component.SpriteData{
 		Image:            image,
 		Layer:            component.SpriteLayerAirUnits,
 		Pivot:            component.SpritePivotCenter,
@@ -63,27 +63,27 @@ func NewEnemyAirplane(
 
 	width, height := image.Size()
 
-	donburi.SetValue(airplane, component.Collider, component.ColliderData{
+	component.Collider.SetValue(airplane, component.ColliderData{
 		Width:  float64(width),
 		Height: float64(height),
 		Layer:  component.CollisionLayerAirEnemies,
 	})
 
 	if len(path.Points) > 0 {
-		donburi.SetValue(airplane, component.AI, component.AIData{
+		component.AI.SetValue(airplane, component.AIData{
 			Type:      component.AITypeFollowPath,
 			Speed:     speed,
 			Path:      path.Points,
 			PathLoops: path.Loops,
 		})
 	} else {
-		donburi.SetValue(airplane, component.AI, component.AIData{
+		component.AI.SetValue(airplane, component.AIData{
 			Type:  component.AITypeConstantVelocity,
 			Speed: speed,
 		})
 	}
 
-	donburi.SetValue(airplane, component.Health, component.HealthData{
+	component.Health.SetValue(airplane, component.HealthData{
 		Health:               3,
 		DamageIndicatorTimer: engine.NewTimer(time.Millisecond * 100),
 		DamageIndicator:      newDamageIndicator(w, airplane),
@@ -117,7 +117,7 @@ func NewEnemyTank(
 	t.LocalRotation = rotation
 
 	image := assets.TankBase
-	donburi.SetValue(tank, component.Sprite, component.SpriteData{
+	component.Sprite.SetValue(tank, component.SpriteData{
 		Image:            image,
 		Layer:            component.SpriteLayerGroundUnits,
 		Pivot:            component.SpritePivotCenter,
@@ -126,27 +126,27 @@ func NewEnemyTank(
 
 	width, height := image.Size()
 
-	donburi.SetValue(tank, component.Collider, component.ColliderData{
+	component.Collider.SetValue(tank, component.ColliderData{
 		Width:  float64(width),
 		Height: float64(height),
 		Layer:  component.CollisionLayerGroundEnemies,
 	})
 
 	if len(path.Points) > 0 {
-		donburi.SetValue(tank, component.AI, component.AIData{
+		component.AI.SetValue(tank, component.AIData{
 			Type:      component.AITypeFollowPath,
 			Speed:     speed,
 			Path:      path.Points,
 			PathLoops: path.Loops,
 		})
 	} else {
-		donburi.SetValue(tank, component.AI, component.AIData{
+		component.AI.SetValue(tank, component.AIData{
 			Type:  component.AITypeConstantVelocity,
 			Speed: speed,
 		})
 	}
 
-	donburi.SetValue(tank, component.Health, component.HealthData{
+	component.Health.SetValue(tank, component.HealthData{
 		Health:               5,
 		DamageIndicatorTimer: engine.NewTimer(time.Millisecond * 100),
 		DamageIndicator:      newDamageIndicator(w, tank),
@@ -168,18 +168,18 @@ func NewEnemyTank(
 	gunT.LocalPosition = position
 	gunT.LocalRotation = originalRotation + rotation
 
-	donburi.SetValue(gun, component.Sprite, component.SpriteData{
+	component.Sprite.SetValue(gun, component.SpriteData{
 		Image:            assets.TankGun,
 		Layer:            component.SpriteLayerGroundGuns,
 		Pivot:            component.SpritePivotCenter,
 		OriginalRotation: originalRotation,
 	})
 
-	donburi.SetValue(gun, component.Observer, component.ObserverData{
+	component.Observer.SetValue(gun, component.ObserverData{
 		LookFor: query.NewQuery(filter.Contains(component.PlayerAirplane)),
 	})
 
-	donburi.SetValue(gun, component.Shooter, component.ShooterData{
+	component.Shooter.SetValue(gun, component.ShooterData{
 		Type:       component.ShooterTypeRocket,
 		ShootTimer: engine.NewTimer(time.Millisecond * 2500),
 	})
@@ -202,7 +202,7 @@ func newDamageIndicator(w donburi.World, parent *donburi.Entry) *component.Sprit
 	op.ColorM.Translate(1, 1, 1, 0)
 	image.DrawImage(parentSprite.Image, op)
 
-	donburi.SetValue(indicator, component.Sprite, component.SpriteData{
+	component.Sprite.SetValue(indicator, component.SpriteData{
 		Image:            image,
 		Layer:            component.SpriteLayerIndicators,
 		Pivot:            parentSprite.Pivot,

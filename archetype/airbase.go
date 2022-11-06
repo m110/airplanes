@@ -26,14 +26,14 @@ func NewAirbaseAirplane(w donburi.World, position math.Vec2, faction component.P
 	t.LocalPosition = position
 	t.LocalRotation = originalRotation
 
-	donburi.SetValue(airplane, component.Sprite, component.SpriteData{
+	component.Sprite.SetValue(airplane, component.SpriteData{
 		Image:            AirplaneImageByFaction(faction, 0),
 		Layer:            component.SpriteLayerAirUnits,
 		Pivot:            component.SpritePivotCenter,
 		OriginalRotation: originalRotation,
 	})
 
-	donburi.SetValue(airplane, component.PlayerSelect, component.PlayerSelectData{
+	component.PlayerSelect.SetValue(airplane, component.PlayerSelectData{
 		Index:   index,
 		Faction: faction,
 	})
@@ -56,7 +56,7 @@ func NewCrosshair(w donburi.World, parent *donburi.Entry) {
 
 	transform.AppendChild(parent, crosshair, false)
 
-	donburi.SetValue(crosshair, component.Sprite, component.SpriteData{
+	component.Sprite.SetValue(crosshair, component.SpriteData{
 		Image:  assets.Crosshair,
 		Layer:  component.SpriteLayerGroundUnits,
 		Pivot:  component.SpritePivotCenter,
@@ -70,7 +70,7 @@ func NewCrosshair(w donburi.World, parent *donburi.Entry) {
 		),
 	)
 
-	donburi.SetValue(label, component.Label, component.LabelData{
+	component.Label.SetValue(label, component.LabelData{
 		Text:   "",
 		Hidden: true,
 	})

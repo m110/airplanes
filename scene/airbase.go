@@ -59,7 +59,7 @@ func (a *Airbase) createWorld() {
 		a.world.Create(transform.Transform, component.Sprite),
 	)
 
-	donburi.SetValue(levelEntry, component.Sprite, component.SpriteData{
+	component.Sprite.SetValue(levelEntry, component.SpriteData{
 		Image: levelAsset.Background,
 		Layer: component.SpriteLayerBackground,
 		Pivot: component.SpritePivotTopLeft,

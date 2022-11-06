@@ -43,7 +43,7 @@ func NewShadow(w donburi.World, parent *donburi.Entry) *donburi.Entry {
 		OriginalRotation: parentSprite.OriginalRotation,
 	}
 
-	donburi.SetValue(shadow, component.Sprite, spriteData)
+	component.Sprite.SetValue(shadow, spriteData)
 
 	return shadow
 }

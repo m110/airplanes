@@ -37,20 +37,20 @@ func NewRandomCollectible(w donburi.World, position math.Vec2) {
 
 	transform.Transform.Get(collectible).LocalPosition = position
 
-	donburi.SetValue(collectible, component.Sprite, component.SpriteData{
+	component.Sprite.SetValue(collectible, component.SpriteData{
 		Image: image,
 		Layer: component.SpriteLayerCollectibles,
 		Pivot: component.SpritePivotCenter,
 	})
 
 	width, height := image.Size()
-	donburi.SetValue(collectible, component.Collider, component.ColliderData{
+	component.Collider.SetValue(collectible, component.ColliderData{
 		Width:  float64(width),
 		Height: float64(height),
 		Layer:  component.CollisionLayerCollectibles,
 	})
 
-	donburi.SetValue(collectible, component.Collectible, component.CollectibleData{
+	component.Collectible.SetValue(collectible, component.CollectibleData{
 		Type: collectibleType,
 	})
 }

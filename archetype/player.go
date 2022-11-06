@@ -106,7 +106,7 @@ func NewPlayer(w donburi.World, playerNumber int, faction component.PlayerFactio
 
 func NewPlayerFromPlayerData(w donburi.World, playerData component.PlayerData) *donburi.Entry {
 	player := w.Entry(w.Create(component.Player))
-	donburi.SetValue(player, component.Player, playerData)
+	component.Player.SetValue(player, playerData)
 	return player
 }
 
@@ -137,14 +137,14 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 		),
 	)
 
-	donburi.SetValue(shield, component.Sprite, component.SpriteData{
+	component.Sprite.SetValue(shield, component.SpriteData{
 		Image:            assets.AirplaneShield,
 		Layer:            component.SpriteLayerIndicators,
 		Pivot:            component.SpritePivotCenter,
 		OriginalRotation: -90.0,
 	})
 
-	donburi.SetValue(airplane, component.PlayerAirplane, component.PlayerAirplaneData{
+	component.PlayerAirplane.SetValue(airplane, component.PlayerAirplaneData{
 		PlayerNumber:          player.PlayerNumber,
 		Faction:               faction,
 		InvulnerableTimer:     engine.NewTimer(time.Second * 3),
@@ -164,7 +164,7 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 
 	image := AirplaneImageByFaction(faction, evolutionLevel)
 
-	donburi.SetValue(airplane, component.Sprite, component.SpriteData{
+	component.Sprite.SetValue(airplane, component.SpriteData{
 		Image:            image,
 		Layer:            component.SpriteLayerAirUnits,
 		Pivot:            component.SpritePivotCenter,
@@ -172,14 +172,14 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 	})
 
 	width, height := image.Size()
-	donburi.SetValue(airplane, component.Collider, component.ColliderData{
+	component.Collider.SetValue(airplane, component.ColliderData{
 		Width:  float64(width),
 		Height: float64(height),
 		Layer:  component.CollisionLayerPlayers,
 	})
 
 	inputs := settings.Inputs
-	donburi.SetValue(airplane, component.Input, component.InputData{
+	component.Input.SetValue(airplane, component.InputData{
 		MoveUpKey:    inputs.Up,
 		MoveRightKey: inputs.Right,
 		MoveDownKey:  inputs.Down,
@@ -188,7 +188,7 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 		ShootKey:     inputs.Shoot,
 	})
 
-	donburi.SetValue(airplane, component.Evolution, component.EvolutionData{
+	component.Evolution.SetValue(airplane, component.EvolutionData{
 		Level:       evolutionLevel,
 		GrowTimer:   engine.NewTimer(time.Second * 1),
 		ShrinkTimer: engine.NewTimer(time.Second * 1),
@@ -218,7 +218,7 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 
 		transform.AppendChild(airplane, e, false)
 
-		donburi.SetValue(e, component.Sprite, component.SpriteData{
+		component.Sprite.SetValue(e, component.SpriteData{
 			Image:            ebiten.NewImageFromImage(image),
 			Layer:            component.SpriteLayerAirUnits,
 			Pivot:            component.SpritePivotCenter,

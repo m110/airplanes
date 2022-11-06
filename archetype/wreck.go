@@ -79,7 +79,7 @@ func NewAirplaneWreck(w donburi.World, parent *donburi.Entry, sprite *component.
 
 		transform.Transform.Get(wreck).LocalPosition = pos
 
-		donburi.SetValue(wreck, component.Sprite, component.SpriteData{
+		component.Sprite.SetValue(wreck, component.SpriteData{
 			Image: img,
 			Layer: component.SpriteLayerFallingWrecks,
 			Pivot: sprite.Pivot,
@@ -89,12 +89,12 @@ func NewAirplaneWreck(w donburi.World, parent *donburi.Entry, sprite *component.
 		velocity.X *= engine.RandomRange(0.5, 0.8)
 		velocity.Y *= engine.RandomRange(0.5, 0.8)
 
-		donburi.SetValue(wreck, component.Velocity, component.VelocityData{
+		component.Velocity.SetValue(wreck, component.VelocityData{
 			Velocity:         velocity,
 			RotationVelocity: engine.RandomRange(-2, 2),
 		})
 
-		donburi.SetValue(wreck, component.Altitude, component.AltitudeData{
+		component.Altitude.SetValue(wreck, component.AltitudeData{
 			Altitude: 1.0,
 			Velocity: -0.01,
 			Falling:  true,

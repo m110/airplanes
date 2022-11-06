@@ -111,7 +111,7 @@ func (g *Game) createWorld(levelIndex int) donburi.World {
 	levelEntry := world.Entry(
 		world.Create(transform.Transform, component.Sprite),
 	)
-	donburi.SetValue(levelEntry, component.Sprite, component.SpriteData{
+	component.Sprite.SetValue(levelEntry, component.SpriteData{
 		Image: levelAsset.Background,
 		Layer: component.SpriteLayerBackground,
 		Pivot: component.SpritePivotTopLeft,
@@ -151,7 +151,7 @@ func (g *Game) createWorld(levelIndex int) donburi.World {
 
 	if g.world == nil {
 		game := world.Entry(world.Create(component.Game))
-		donburi.SetValue(game, component.Game, component.GameData{
+		component.Game.SetValue(game, component.GameData{
 			Score: 0,
 			Settings: component.Settings{
 				ScreenWidth:  g.screenWidth,
@@ -168,7 +168,7 @@ func (g *Game) createWorld(levelIndex int) donburi.World {
 		// Keep the same game data across levels
 		gameData := component.MustFindGame(g.world)
 		newGameData := world.Entry(world.Create(component.Game))
-		donburi.Set(newGameData, component.Game, gameData)
+		component.Game.Set(newGameData, gameData)
 
 		// Transfer existing players from the previous level
 		query.NewQuery(filter.Contains(component.Player)).EachEntity(g.world, func(entry *donburi.Entry) {

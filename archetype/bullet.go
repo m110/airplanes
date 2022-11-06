@@ -82,11 +82,11 @@ func newPlayerBullet(w donburi.World, position math.Vec2, localRotation float64)
 	t.LocalPosition = position
 	t.LocalRotation = originalRotation + localRotation
 
-	donburi.SetValue(bullet, component.Velocity, component.VelocityData{
+	component.Velocity.SetValue(bullet, component.VelocityData{
 		Velocity: transform.Right(bullet).MulScalar(playerBulletSpeed),
 	})
 
-	donburi.SetValue(bullet, component.Sprite, component.SpriteData{
+	component.Sprite.SetValue(bullet, component.SpriteData{
 		Image:            image,
 		Layer:            component.SpriteLayerAirUnits,
 		Pivot:            component.SpritePivotCenter,
@@ -95,7 +95,7 @@ func newPlayerBullet(w donburi.World, position math.Vec2, localRotation float64)
 
 	width, height := image.Size()
 
-	donburi.SetValue(bullet, component.Collider, component.ColliderData{
+	component.Collider.SetValue(bullet, component.ColliderData{
 		Width:  float64(width),
 		Height: float64(height),
 		Layer:  component.CollisionLayerPlayerBullets,
@@ -119,11 +119,11 @@ func NewEnemyBullet(w donburi.World, position math.Vec2, rotation float64) {
 	t.LocalPosition = position
 	t.LocalRotation = rotation
 
-	donburi.SetValue(bullet, component.Velocity, component.VelocityData{
+	component.Velocity.SetValue(bullet, component.VelocityData{
 		Velocity: transform.Right(bullet).MulScalar(enemyBulletSpeed),
 	})
 
-	donburi.SetValue(bullet, component.Sprite, component.SpriteData{
+	component.Sprite.SetValue(bullet, component.SpriteData{
 		Image:            image,
 		Layer:            component.SpriteLayerAirUnits,
 		Pivot:            component.SpritePivotCenter,
@@ -132,7 +132,7 @@ func NewEnemyBullet(w donburi.World, position math.Vec2, rotation float64) {
 
 	width, height := image.Size()
 
-	donburi.SetValue(bullet, component.Collider, component.ColliderData{
+	component.Collider.SetValue(bullet, component.ColliderData{
 		Width:  float64(width),
 		Height: float64(height),
 		Layer:  component.CollisionLayerEnemyBullets,
