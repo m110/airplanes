@@ -83,11 +83,9 @@ func NewEnemyAirplane(
 		})
 	}
 
-	component.Health.SetValue(airplane, component.HealthData{
-		Health:               3,
-		DamageIndicatorTimer: engine.NewTimer(time.Millisecond * 100),
-		DamageIndicator:      newDamageIndicator(w, airplane),
-	})
+	health := component.Health.Get(airplane)
+	health.Health = 3
+	health.DamageIndicator = newDamageIndicator(w, airplane)
 
 	NewShadow(w, airplane)
 }
@@ -111,7 +109,6 @@ func NewEnemyTank(
 		),
 	)
 
-	transform.Reset(tank)
 	t := transform.Transform.Get(tank)
 	t.LocalPosition = position
 	t.LocalRotation = rotation
@@ -146,11 +143,9 @@ func NewEnemyTank(
 		})
 	}
 
-	component.Health.SetValue(tank, component.HealthData{
-		Health:               5,
-		DamageIndicatorTimer: engine.NewTimer(time.Millisecond * 100),
-		DamageIndicator:      newDamageIndicator(w, tank),
-	})
+	health := component.Health.Get(tank)
+	health.Health = 5
+	health.DamageIndicator = newDamageIndicator(w, tank)
 
 	gun := w.Entry(
 		w.Create(
@@ -163,7 +158,6 @@ func NewEnemyTank(
 	)
 
 	originalRotation := 90.0
-	transform.Reset(gun)
 	gunT := transform.Transform.Get(gun)
 	gunT.LocalPosition = position
 	gunT.LocalRotation = originalRotation + rotation
@@ -180,11 +174,136 @@ func NewEnemyTank(
 	})
 
 	component.Shooter.SetValue(gun, component.ShooterData{
-		Type:       component.ShooterTypeRocket,
+		Type:       component.ShooterTypeBullet,
 		ShootTimer: engine.NewTimer(time.Millisecond * 2500),
 	})
 
 	transform.AppendChild(tank, gun, true)
+}
+
+func NewEnemyTurretBeam(
+	w donburi.World,
+	position math.Vec2,
+	rotation float64,
+) {
+	turret := newEnemyTurret(w, position, rotation)
+
+	gun := w.Entry(
+		w.Create(
+			transform.Transform,
+			component.Sprite,
+			component.Despawnable,
+			component.Observer,
+			component.Shooter,
+		),
+	)
+
+	originalRotation := 90.0
+	gunT := transform.Transform.Get(gun)
+	gunT.LocalPosition = position
+	gunT.LocalRotation = originalRotation + rotation
+
+	component.Sprite.SetValue(gun, component.SpriteData{
+		Image:            assets.TurretGunSingle,
+		Layer:            component.SpriteLayerGroundGuns,
+		Pivot:            component.SpritePivotCenter,
+		OriginalRotation: originalRotation,
+	})
+
+	component.Observer.SetValue(gun, component.ObserverData{
+		LookFor: query.NewQuery(filter.Contains(component.PlayerAirplane)),
+	})
+
+	component.Shooter.SetValue(gun, component.ShooterData{
+		Type:       component.ShooterTypeBeam,
+		ShootTimer: engine.NewTimer(time.Millisecond * 5000),
+	})
+
+	transform.AppendChild(turret, gun, true)
+}
+
+func NewEnemyTurretMissiles(
+	w donburi.World,
+	position math.Vec2,
+	rotation float64,
+) {
+	turret := newEnemyTurret(w, position, rotation)
+
+	gun := w.Entry(
+		w.Create(
+			transform.Transform,
+			component.Sprite,
+			component.Despawnable,
+			component.Observer,
+			component.Shooter,
+		),
+	)
+
+	originalRotation := 90.0
+	gunT := transform.Transform.Get(gun)
+	gunT.LocalPosition = position
+	gunT.LocalRotation = originalRotation + rotation
+
+	component.Sprite.SetValue(gun, component.SpriteData{
+		Image:            assets.TurretGunDouble,
+		Layer:            component.SpriteLayerGroundGuns,
+		Pivot:            component.SpritePivotCenter,
+		OriginalRotation: originalRotation,
+	})
+
+	component.Observer.SetValue(gun, component.ObserverData{
+		LookFor: query.NewQuery(filter.Contains(component.PlayerAirplane)),
+	})
+
+	component.Shooter.SetValue(gun, component.ShooterData{
+		Type:       component.ShooterTypeMissile,
+		ShootTimer: engine.NewTimer(time.Millisecond * 5000),
+	})
+
+	transform.AppendChild(turret, gun, true)
+}
+
+func newEnemyTurret(
+	w donburi.World,
+	position math.Vec2,
+	rotation float64,
+) *donburi.Entry {
+	turret := w.Entry(
+		w.Create(
+			transform.Transform,
+			component.Sprite,
+			component.AI,
+			component.Despawnable,
+			component.Collider,
+			component.Health,
+		),
+	)
+
+	t := transform.Transform.Get(turret)
+	t.LocalPosition = position
+	t.LocalRotation = rotation
+
+	image := assets.TurretBase
+	component.Sprite.SetValue(turret, component.SpriteData{
+		Image:            image,
+		Layer:            component.SpriteLayerGroundUnits,
+		Pivot:            component.SpritePivotCenter,
+		OriginalRotation: 0,
+	})
+
+	width, height := image.Size()
+
+	component.Collider.SetValue(turret, component.ColliderData{
+		Width:  float64(width),
+		Height: float64(height),
+		Layer:  component.CollisionLayerGroundEnemies,
+	})
+
+	health := component.Health.Get(turret)
+	health.Health = 5
+	health.DamageIndicator = newDamageIndicator(w, turret)
+
+	return turret
 }
 
 func newDamageIndicator(w donburi.World, parent *donburi.Entry) *component.SpriteData {

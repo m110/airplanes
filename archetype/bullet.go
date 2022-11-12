@@ -1,17 +1,23 @@
 package archetype
 
 import (
+	"time"
+
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/features/math"
 	"github.com/yohamta/donburi/features/transform"
+	"github.com/yohamta/donburi/filter"
+	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/component"
+	"github.com/m110/airplanes/engine"
 )
 
 const (
 	playerBulletSpeed = 10
 	enemyBulletSpeed  = 4
+	enemyMissileSpeed = 2
 )
 
 func NewPlayerBullet(w donburi.World, player *component.PlayerData, position math.Vec2) {
@@ -113,7 +119,7 @@ func NewEnemyBullet(w donburi.World, position math.Vec2, rotation float64) {
 		),
 	)
 
-	image := assets.Rocket
+	image := assets.Bullet
 
 	t := transform.Transform.Get(bullet)
 	t.LocalPosition = position
@@ -136,5 +142,49 @@ func NewEnemyBullet(w donburi.World, position math.Vec2, rotation float64) {
 		Width:  float64(width),
 		Height: float64(height),
 		Layer:  component.CollisionLayerEnemyBullets,
+	})
+}
+
+func NewEnemyMissile(w donburi.World, position math.Vec2, rotation float64) {
+	missile := w.Entry(
+		w.Create(
+			component.Velocity,
+			transform.Transform,
+			component.Sprite,
+			component.Despawnable,
+			component.Collider,
+			component.Follower,
+		),
+	)
+
+	image := assets.Missile
+
+	t := transform.Transform.Get(missile)
+	t.LocalPosition = position
+	t.LocalRotation = rotation
+
+	component.Velocity.SetValue(missile, component.VelocityData{
+		Velocity: transform.Right(missile).MulScalar(enemyMissileSpeed),
+	})
+
+	component.Sprite.SetValue(missile, component.SpriteData{
+		Image:            image,
+		Layer:            component.SpriteLayerAirUnits,
+		Pivot:            component.SpritePivotCenter,
+		OriginalRotation: -90,
+	})
+
+	width, height := image.Size()
+
+	component.Collider.SetValue(missile, component.ColliderData{
+		Width:  float64(width),
+		Height: float64(height),
+		Layer:  component.CollisionLayerEnemyBullets,
+	})
+
+	component.Follower.SetValue(missile, component.FollowerData{
+		Target:         component.ClosestTarget(w, missile, query.NewQuery(filter.Contains(component.PlayerAirplane))),
+		FollowingSpeed: enemyMissileSpeed,
+		FollowingTimer: engine.NewTimer(3 * time.Second),
 	})
 }

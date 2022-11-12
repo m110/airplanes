@@ -40,7 +40,13 @@ func (s *Shooter) Update(w donburi.World) {
 		if shooter.ShootTimer.IsReady() {
 			shooter.ShootTimer.Reset()
 
-			archetype.NewEnemyBullet(w, transform.WorldPosition(entry), transform.WorldRotation(entry))
+			switch shooter.Type {
+			case component.ShooterTypeBullet:
+				archetype.NewEnemyBullet(w, transform.WorldPosition(entry), transform.WorldRotation(entry))
+			case component.ShooterTypeMissile:
+				archetype.NewEnemyMissile(w, transform.WorldPosition(entry), transform.WorldRotation(entry))
+			case component.ShooterTypeBeam:
+			}
 		}
 	})
 }

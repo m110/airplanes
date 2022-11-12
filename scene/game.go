@@ -82,6 +82,7 @@ func (g *Game) loadLevel() {
 		system.NewEvolution(),
 		system.NewAltitude(),
 		system.NewEvents(),
+		system.NewFollower(),
 		render,
 		debug,
 	}
@@ -142,6 +143,22 @@ func (g *Game) createWorld(levelIndex int) donburi.World {
 					enemy.Rotation,
 					enemy.Speed,
 					enemy.Path,
+				)
+			})
+		case assets.EnemyClassTurretBeam:
+			archetype.NewEnemySpawn(world, pos, func(w donburi.World) {
+				archetype.NewEnemyTurretBeam(
+					w,
+					enemy.Position,
+					enemy.Rotation,
+				)
+			})
+		case assets.EnemyClassTurretMissiles:
+			archetype.NewEnemySpawn(world, pos, func(w donburi.World) {
+				archetype.NewEnemyTurretMissiles(
+					w,
+					enemy.Position,
+					enemy.Rotation,
 				)
 			})
 		default:

@@ -26,27 +26,13 @@ func (s *Observer) Update(w donburi.World) {
 			return
 		}
 
-		pos := transform.WorldPosition(entry)
-
-		var closestDistance float64
-		var closestTarget *donburi.Entry
-		observer.LookFor.EachEntity(w, func(target *donburi.Entry) {
-			targetPos := transform.WorldPosition(target)
-			distance := pos.Distance(targetPos)
-
-			if closestTarget == nil || distance < closestDistance {
-				closestTarget = target
-				closestDistance = distance
-			}
-		})
-
-		observer.Target = closestTarget
-		if closestTarget == nil {
+		observer.Target = component.ClosestTarget(w, entry, observer.LookFor)
+		if observer.Target == nil {
 			return
 		}
 
 		// TODO: Should rather rotate towards the target instead of looking at it straight away.
-		targetPos := transform.WorldPosition(closestTarget)
+		targetPos := transform.WorldPosition(observer.Target)
 		transform.LookAt(entry, targetPos)
 	})
 }

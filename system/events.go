@@ -19,7 +19,7 @@ type EnemyKilled struct {
 var EnemyKilledEvent = events.NewEventType[EnemyKilled]()
 
 func OnEnemyKilledWreck(w donburi.World, event EnemyKilled) {
-	if event.Enemy.HasComponent(component.Wreckable) {
+	if event.Enemy.Valid() && event.Enemy.HasComponent(component.Wreckable) {
 		archetype.NewAirplaneWreck(w, event.Enemy, component.Sprite.Get(event.Enemy))
 	}
 }

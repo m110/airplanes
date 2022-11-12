@@ -40,8 +40,13 @@ var (
 	TankBase *ebiten.Image
 	TankGun  *ebiten.Image
 
+	TurretBase      *ebiten.Image
+	TurretGunSingle *ebiten.Image
+	TurretGunDouble *ebiten.Image
+
 	LaserSingle *ebiten.Image
-	Rocket      *ebiten.Image
+	Bullet      *ebiten.Image
+	Missile     *ebiten.Image
 
 	Health        *ebiten.Image
 	WeaponUpgrade *ebiten.Image
@@ -59,8 +64,10 @@ var (
 )
 
 const (
-	EnemyClassAirplane = "enemy-airplane"
-	EnemyClassTank     = "enemy-tank"
+	EnemyClassAirplane       = "enemy-airplane"
+	EnemyClassTank           = "enemy-tank"
+	EnemyClassTurretBeam     = "enemy-turret-beam"
+	EnemyClassTurretMissiles = "enemy-turret-missiles"
 
 	TilesetClassTiles     = "tiles"
 	TilesetClassAirplanes = "airplanes"
@@ -129,8 +136,13 @@ func MustLoadAssets() {
 	TankBase = loader.MustFindTile(TilesetClassTiles, "tank-base")
 	TankGun = loader.MustFindTile(TilesetClassTiles, "tank-gun")
 
+	TurretBase = loader.MustFindTile(TilesetClassTiles, "turret-base")
+	TurretGunSingle = loader.MustFindTile(TilesetClassTiles, "turret-gun-single")
+	TurretGunDouble = loader.MustFindTile(TilesetClassTiles, "turret-gun-double")
+
 	LaserSingle = loader.MustFindTile(TilesetClassTiles, "laser-single")
-	Rocket = loader.MustFindTile(TilesetClassTiles, "rocket")
+	Bullet = loader.MustFindTile(TilesetClassTiles, "bullet")
+	Missile = loader.MustFindTile(TilesetClassTiles, "missile")
 
 	Health = loader.MustFindTile(TilesetClassTiles, "health")
 	WeaponUpgrade = loader.MustFindTile(TilesetClassTiles, "weapon-upgrade")
@@ -237,7 +249,10 @@ func (l *levelLoader) MustLoadLevel(levelPath string) Level {
 
 	for _, og := range levelMap.ObjectGroups {
 		for _, o := range og.Objects {
-			if o.Class == EnemyClassAirplane || o.Class == EnemyClassTank {
+			if o.Class == EnemyClassAirplane ||
+				o.Class == EnemyClassTank ||
+				o.Class == EnemyClassTurretBeam ||
+				o.Class == EnemyClassTurretMissiles {
 				enemy := Enemy{
 					Class: o.Class,
 					Position: math.Vec2{

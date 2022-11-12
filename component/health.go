@@ -1,6 +1,8 @@
 package component
 
 import (
+	"time"
+
 	"github.com/yohamta/donburi"
 
 	"github.com/m110/airplanes/engine"
@@ -29,4 +31,6 @@ func (d *HealthData) HideDamageIndicator() {
 	d.DamageIndicator.Hidden = true
 }
 
-var Health = donburi.NewComponentType[HealthData]()
+var Health = donburi.NewComponentType[HealthData](HealthData{
+	DamageIndicatorTimer: engine.NewTimer(time.Millisecond * 100),
+})

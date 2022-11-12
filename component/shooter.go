@@ -9,8 +9,8 @@ import (
 type ShooterType int
 
 const (
-	ShooterTypeRocket ShooterType = iota
-	ShooterTypeMissiles
+	ShooterTypeBullet ShooterType = iota
+	ShooterTypeMissile
 	ShooterTypeBeam
 )
 
