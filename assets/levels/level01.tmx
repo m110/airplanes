@@ -256,15 +256,12 @@
    <polyline points="-4,-36 -244,-44 -296,-36 -360,-20 -400,4 -416,68 -396,136 -320,188 -224,204"/>
   </object>
   <object id="72" class="enemy-airplane" gid="142" x="128" y="308" width="32" height="32" rotation="180"/>
-  <object id="86" class="enemy-airplane" gid="142" x="128" y="308" width="32" height="32" rotation="180"/>
   <object id="77" class="enemy-airplane" gid="142" x="268" y="192" width="32" height="32" rotation="180"/>
   <object id="80" class="enemy-airplane" gid="142" x="440" y="104" width="32" height="32" rotation="180"/>
   <object id="73" class="enemy-airplane" gid="142" x="92" y="308" width="32" height="32" rotation="180"/>
-  <object id="85" class="enemy-airplane" gid="142" x="92" y="308" width="32" height="32" rotation="180"/>
   <object id="76" class="enemy-airplane" gid="142" x="232" y="192" width="32" height="32" rotation="180"/>
   <object id="79" class="enemy-airplane" gid="142" x="404" y="104" width="32" height="32" rotation="180"/>
   <object id="74" class="enemy-airplane" gid="142" x="52" y="308" width="32" height="32" rotation="180"/>
-  <object id="84" class="enemy-airplane" gid="142" x="52" y="308" width="32" height="32" rotation="180"/>
   <object id="75" class="enemy-airplane" gid="142" x="192" y="192" width="32" height="32" rotation="180"/>
   <object id="78" class="enemy-airplane" gid="142" x="364" y="104" width="32" height="32" rotation="180"/>
   <object id="87" class="enemy-airplane" gid="142" x="292" y="608" width="32" height="32" rotation="180"/>

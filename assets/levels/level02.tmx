@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="150" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="79">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="150" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="81">
  <tileset firstgid="1" source="tiles.tsx"/>
  <tileset firstgid="121" source="airplanes.tsx"/>
  <layer id="1" name="Background" width="30" height="150">
@@ -162,6 +162,16 @@
   <object id="20" class="enemy-turret-missiles" gid="17" x="392" y="888" width="16" height="16"/>
   <object id="21" class="enemy-turret-missiles" gid="17" x="232" y="696" width="16" height="16"/>
   <object id="32" class="enemy-turret-missiles" gid="17" x="56" y="536" width="16" height="16"/>
+  <object id="79" class="enemy-tank" gid="29" x="56" y="104" width="16" height="16">
+   <properties>
+    <property name="speed" type="float" value="0.75"/>
+   </properties>
+  </object>
+  <object id="80" class="enemy-tank" gid="29" x="152" y="296" width="16" height="16">
+   <properties>
+    <property name="speed" type="float" value="0.75"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="2" name="Air Units">
   <object id="4" class="enemy-airplane" gid="142" x="156" y="1788" width="32" height="32" rotation="180"/>
@@ -177,20 +187,12 @@
   <object id="14" class="enemy-airplane" gid="142" x="324" y="1696" width="32" height="32" rotation="180"/>
   <object id="66" class="enemy-airplane" gid="142" x="324" y="1736" width="32" height="32" rotation="180"/>
   <object id="22" class="enemy-airplane" gid="142" x="72" y="812" width="32" height="32" rotation="180"/>
-  <object id="78" class="enemy-airplane" gid="142" x="344" y="1020" width="32" height="32" rotation="180"/>
-  <object id="36" class="enemy-airplane" gid="142" x="72" y="812" width="32" height="32" rotation="180"/>
   <object id="77" class="enemy-airplane" gid="142" x="344" y="1020" width="32" height="32" rotation="180"/>
   <object id="23" class="enemy-airplane" gid="142" x="100" y="848" width="32" height="32" rotation="180"/>
-  <object id="76" class="enemy-airplane" gid="142" x="372" y="1056" width="32" height="32" rotation="180"/>
-  <object id="35" class="enemy-airplane" gid="142" x="100" y="848" width="32" height="32" rotation="180"/>
   <object id="75" class="enemy-airplane" gid="142" x="372" y="1056" width="32" height="32" rotation="180"/>
   <object id="24" class="enemy-airplane" gid="142" x="132" y="880" width="32" height="32" rotation="180"/>
-  <object id="74" class="enemy-airplane" gid="142" x="404" y="1088" width="32" height="32" rotation="180"/>
-  <object id="34" class="enemy-airplane" gid="142" x="132" y="880" width="32" height="32" rotation="180"/>
   <object id="73" class="enemy-airplane" gid="142" x="404" y="1088" width="32" height="32" rotation="180"/>
   <object id="25" class="enemy-airplane" gid="142" x="160" y="908" width="32" height="32" rotation="180"/>
-  <object id="72" class="enemy-airplane" gid="142" x="432" y="1116" width="32" height="32" rotation="180"/>
-  <object id="33" class="enemy-airplane" gid="142" x="160" y="908" width="32" height="32" rotation="180"/>
   <object id="71" class="enemy-airplane" gid="142" x="432" y="1116" width="32" height="32" rotation="180"/>
   <object id="26" class="enemy-airplane" gid="142" x="-88" y="1328" width="32" height="32" rotation="90"/>
   <object id="27" class="enemy-airplane" gid="142" x="-20" y="1328" width="32" height="32" rotation="90"/>
@@ -200,12 +202,9 @@
   <object id="31" class="enemy-airplane" gid="142" x="496" y="1428" width="32" height="32" rotation="-90"/>
   <object id="38" class="enemy-airplane" gid="142" x="44" y="216" width="32" height="32" rotation="180"/>
   <object id="61" class="enemy-airplane" gid="142" x="424" y="204" width="32" height="32" rotation="180"/>
-  <object id="39" class="enemy-airplane" gid="142" x="44" y="216" width="32" height="32" rotation="180"/>
-  <object id="46" class="enemy-airplane" gid="142" x="44" y="216" width="32" height="32" rotation="180"/>
   <object id="55" class="enemy-airplane" gid="142" x="24" y="184" width="32" height="32" rotation="180"/>
   <object id="62" class="enemy-airplane" gid="142" x="448" y="176" width="32" height="32" rotation="180"/>
   <object id="40" class="enemy-airplane" gid="142" x="60" y="248" width="32" height="32" rotation="180"/>
-  <object id="41" class="enemy-airplane" gid="142" x="60" y="248" width="32" height="32" rotation="180"/>
   <object id="57" class="enemy-airplane" gid="142" x="408" y="236" width="32" height="32" rotation="180"/>
   <object id="43" class="enemy-airplane" gid="142" x="76" y="280" width="32" height="32" rotation="180"/>
   <object id="56" class="enemy-airplane" gid="142" x="388" y="268" width="32" height="32" rotation="180"/>

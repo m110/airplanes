@@ -33,9 +33,8 @@ func OnEnemyKilledSpawnCollectible(w donburi.World, event EnemyKilled) {
 		return
 	}
 
-	// TODO A temporary high chance for test purposes
 	r := rand.Intn(10)
-	if r < 7 {
+	if r < 2 {
 		archetype.NewRandomCollectible(w, transform.Transform.Get(event.Enemy).LocalPosition)
 	}
 }

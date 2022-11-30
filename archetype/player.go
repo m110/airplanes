@@ -59,7 +59,7 @@ var Players = map[int]PlayerSettings{
 			Right: ebiten.KeyRight,
 			Down:  ebiten.KeyDown,
 			Left:  ebiten.KeyLeft,
-			Shoot: ebiten.KeyK,
+			Shoot: ebiten.KeyEnter,
 		},
 	},
 }
