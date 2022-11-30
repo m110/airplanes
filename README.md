@@ -65,6 +65,8 @@ Other packages:
 
 You can edit the levels in the `assets/levels` directory using [Tiled](https://www.mapeditor.org/).
 
+Levels are loaded using the `level*.tmx` pattern, so you can add new levels by adding new files with bigger numbers.
+
 ![](docs/editor.png)
 
 Supported objects are:
@@ -85,6 +87,10 @@ Parameters:
 | `speed`   | Speed of the enemy, if different than default.                               |
 | `path`    | Path of the enemy. If not provided, the enemy moves in the facing direction. |
 | `spawn`   | Group spawn, if a group of enemies needs to spawn at once.                   |   
+
+The `path` should point to either a polygon or a polyline object in the same layer.
+If a polyline is used, the enemy will follow the path and keep moving in the facing direction after the last point.
+Polygon paths work like loops.
 
 ### Spawning
 
