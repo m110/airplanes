@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "level1.tmx",
+    "activeFile": "",
     "expandedProjectPaths": [
         "."
     ],
@@ -15,11 +15,11 @@
             "expandedObjectLayers": [
                 2
             ],
-            "scale": 0.74,
-            "selectedLayer": 1,
+            "scale": 1.3536,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 337.1621621621622,
-                "y": 518.2432432432432
+                "x": 251.18203309692672,
+                "y": 281.84101654846336
             }
         },
         "airplanes.tsx": {
@@ -28,24 +28,37 @@
         },
         "level01.tmx": {
             "expandedObjectLayers": [
+                3,
                 2
             ],
-            "scale": 0.7135,
-            "selectedLayer": 1,
+            "scale": 0.7413,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 227.0497547302032,
-                "y": 767.3440784863349
+                "x": 372.31889923108054,
+                "y": 406.7179279643869
             }
         },
         "level02.tmx": {
             "expandedObjectLayers": [
+                3,
                 2
             ],
-            "scale": 0.9914,
+            "scale": 0.3755,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 431.42476697736356,
+                "y": 1399.4673768308921
+            }
+        },
+        "level03.tmx": {
+            "expandedObjectLayers": [
+                3
+            ],
+            "scale": 0.4562,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 227.96045995561826,
-                "y": 797.3572725438773
+                "x": 282.7707145988601,
+                "y": 327.7071459886016
             }
         },
         "level1.tmx": {
@@ -84,12 +97,12 @@
     "map.height": 80,
     "map.lastUsedFormat": "tmx",
     "openFiles": [
-        "level1.tmx",
-        "level2.tmx"
     ],
     "project": "airplanes.tiled-project",
     "property.type": "float",
     "recentFiles": [
+        "level03.tmx",
+        "level01.tmx",
         "level2.tmx",
         "level1.tmx",
         "tiles.tsx",

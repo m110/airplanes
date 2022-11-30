@@ -29,6 +29,10 @@ func OnEnemyKilledAddScore(w donburi.World, event EnemyKilled) {
 }
 
 func OnEnemyKilledSpawnCollectible(w donburi.World, event EnemyKilled) {
+	if !event.Enemy.Valid() {
+		return
+	}
+
 	// TODO A temporary high chance for test purposes
 	r := rand.Intn(10)
 	if r < 7 {

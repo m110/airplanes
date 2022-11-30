@@ -69,6 +69,8 @@ const (
 	EnemyClassTurretBeam     = "enemy-turret-beam"
 	EnemyClassTurretMissiles = "enemy-turret-missiles"
 
+	ObjectClassGroupSpawn = "group-spawn"
+
 	TilesetClassTiles     = "tiles"
 	TilesetClassAirplanes = "airplanes"
 )
@@ -84,8 +86,14 @@ type AirBaseLevel struct {
 }
 
 type Level struct {
-	Background *ebiten.Image
-	Enemies    []Enemy
+	Background       *ebiten.Image
+	Enemies          []Enemy
+	EnemyGroupSpawns []EnemyGroupSpawn
+}
+
+type EnemyGroupSpawn struct {
+	Position math.Vec2
+	Enemies  []Enemy
 }
 
 type Enemy struct {
@@ -247,6 +255,21 @@ func (l *levelLoader) MustLoadLevel(levelPath string) Level {
 		}
 	}
 
+	groupSpawns := map[uint32]EnemyGroupSpawn{}
+
+	for _, og := range levelMap.ObjectGroups {
+		for _, o := range og.Objects {
+			if o.Class == "group-spawn" {
+				groupSpawns[o.ID] = EnemyGroupSpawn{
+					Position: math.Vec2{
+						X: o.X,
+						Y: o.Y,
+					},
+				}
+			}
+		}
+	}
+
 	for _, og := range levelMap.ObjectGroups {
 		for _, o := range og.Objects {
 			if o.Class == EnemyClassAirplane ||
@@ -263,6 +286,7 @@ func (l *levelLoader) MustLoadLevel(levelPath string) Level {
 					Speed:    1,
 				}
 
+				var groupSpawnID uint32
 				for _, p := range o.Properties {
 					if p.Name == "path" {
 						pathID, err := strconv.Atoi(p.Value)
@@ -285,11 +309,32 @@ func (l *levelLoader) MustLoadLevel(levelPath string) Level {
 
 						enemy.Speed = speed
 					}
+					if p.Name == "spawn" {
+						groupSpawnIDInt, err := strconv.Atoi(p.Value)
+						if err != nil {
+							panic("invalid path id: " + err.Error())
+						}
+						groupSpawnID = uint32(groupSpawnIDInt)
+					}
 				}
 
-				level.Enemies = append(level.Enemies, enemy)
+				if groupSpawnID == 0 {
+					level.Enemies = append(level.Enemies, enemy)
+				} else {
+					groupSpawn, ok := groupSpawns[groupSpawnID]
+					if !ok {
+						panic(fmt.Sprintf("group spawn not found: %v", groupSpawnID))
+					}
+
+					groupSpawn.Enemies = append(groupSpawn.Enemies, enemy)
+					groupSpawns[groupSpawnID] = groupSpawn
+				}
 			}
 		}
+	}
+
+	for _, groupSpawn := range groupSpawns {
+		level.EnemyGroupSpawns = append(level.EnemyGroupSpawns, groupSpawn)
 	}
 
 	renderer, err := render.NewRendererWithFileSystem(levelMap, assetsFS)

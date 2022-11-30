@@ -124,46 +124,20 @@ func (g *Game) createWorld(levelIndex int) donburi.World {
 		// TODO Sprite offset could be based on the sprite
 		pos.Y += 32
 
-		switch enemy.Class {
-		case assets.EnemyClassAirplane:
-			archetype.NewEnemySpawn(world, pos, func(w donburi.World) {
-				archetype.NewEnemyAirplane(
-					w,
-					enemy.Position,
-					enemy.Rotation,
-					enemy.Speed,
-					enemy.Path,
-				)
-			})
-		case assets.EnemyClassTank:
-			archetype.NewEnemySpawn(world, pos, func(w donburi.World) {
-				archetype.NewEnemyTank(
-					w,
-					enemy.Position,
-					enemy.Rotation,
-					enemy.Speed,
-					enemy.Path,
-				)
-			})
-		case assets.EnemyClassTurretBeam:
-			archetype.NewEnemySpawn(world, pos, func(w donburi.World) {
-				archetype.NewEnemyTurretBeam(
-					w,
-					enemy.Position,
-					enemy.Rotation,
-				)
-			})
-		case assets.EnemyClassTurretMissiles:
-			archetype.NewEnemySpawn(world, pos, func(w donburi.World) {
-				archetype.NewEnemyTurretMissiles(
-					w,
-					enemy.Position,
-					enemy.Rotation,
-				)
-			})
-		default:
-			panic("unknown enemy class: " + enemy.Class)
-		}
+		archetype.NewEnemySpawn(world, pos, func(w donburi.World) {
+			enemyToSpawnFunc(enemy)(w)
+		})
+	}
+
+	for i := range levelAsset.EnemyGroupSpawns {
+		groupSpawn := levelAsset.EnemyGroupSpawns[i]
+		pos := groupSpawn.Position
+		archetype.NewEnemySpawn(world, pos, func(w donburi.World) {
+			for _, enemy := range groupSpawn.Enemies {
+				spawnFunc := enemyToSpawnFunc(enemy)
+				spawnFunc(w)
+			}
+		})
 	}
 
 	if g.world == nil {
@@ -205,6 +179,49 @@ func (g *Game) createWorld(levelIndex int) donburi.World {
 	system.SetupEvents(world)
 
 	return world
+}
+
+func enemyToSpawnFunc(enemy assets.Enemy) func(w donburi.World) {
+	switch enemy.Class {
+	case assets.EnemyClassAirplane:
+		return func(w donburi.World) {
+			archetype.NewEnemyAirplane(
+				w,
+				enemy.Position,
+				enemy.Rotation,
+				enemy.Speed,
+				enemy.Path,
+			)
+		}
+	case assets.EnemyClassTank:
+		return func(w donburi.World) {
+			archetype.NewEnemyTank(
+				w,
+				enemy.Position,
+				enemy.Rotation,
+				enemy.Speed,
+				enemy.Path,
+			)
+		}
+	case assets.EnemyClassTurretBeam:
+		return func(w donburi.World) {
+			archetype.NewEnemyTurretBeam(
+				w,
+				enemy.Position,
+				enemy.Rotation,
+			)
+		}
+	case assets.EnemyClassTurretMissiles:
+		return func(w donburi.World) {
+			archetype.NewEnemyTurretMissiles(
+				w,
+				enemy.Position,
+				enemy.Rotation,
+			)
+		}
+	default:
+		panic("unknown enemy class: " + enemy.Class)
+	}
 }
 
 func (g *Game) restart() {
