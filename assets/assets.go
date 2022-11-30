@@ -259,7 +259,7 @@ func (l *levelLoader) MustLoadLevel(levelPath string) Level {
 
 	for _, og := range levelMap.ObjectGroups {
 		for _, o := range og.Objects {
-			if o.Class == "group-spawn" {
+			if o.Class == ObjectClassGroupSpawn {
 				groupSpawns[o.ID] = EnemyGroupSpawn{
 					Position: math.Vec2{
 						X: o.X,
