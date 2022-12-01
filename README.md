@@ -2,8 +2,8 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/m110/airplanes/blob/master/LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/m110/airplanes)](https://goreportcard.com/report/github.com/m110/airplanes)
-[![ActionsCI](https://github.com/m110/airplanes/workflows/deploy-web/badge.svg)](https://github.com/m110/airplanes/actions/workflows/deploy-web.yml)
-[![Play online](https://img.shields.io/static/v1?label=play&message=online&color=brightgreen&logo=github)](https://github.com/m110/airplanes)
+[![ActionsCI](https://github.com/m110/airplanes/actions/workflows/deploy-web.yml/badge.svg)](https://github.com/m110/airplanes/actions/workflows/deploy-web.yml)
+[![Play online](https://img.shields.io/static/v1?label=play&message=online&color=brightgreen&logo=github)](https://m110.github.io/airplanes/)
 
 A 2D shoot 'em up game made with:
 
