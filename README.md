@@ -43,10 +43,10 @@ Collect powerups to evolve your airplane!
 
 Play online: https://m110.github.io/airplanes/
 
-Or:
+Or local:
 
 ```
-go run .
+go run github.com/m110/airplanes@latest
 ```
 
 ## Debug Mode
