@@ -33,6 +33,12 @@ Playable, with a long list of ideas and TODOs in the code. There are just two le
 * Player 1: WASD to move, Space to shoot
 * Player 2: Arrow keys to move, Enter to shoot
 
+Shoot enemies and avoid bullets.
+
+Collect powerups to evolve your airplane!
+
+![](docs/evolve.gif)
+
 ## Playing
 
 Play online: https://m110.github.io/airplanes/
