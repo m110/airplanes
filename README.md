@@ -37,7 +37,7 @@ Shoot enemies and avoid bullets.
 
 Collect powerups to evolve your airplane!
 
-![](docs/evolve.gif)
+![](docs/evolution.gif)
 
 ## Playing
 
