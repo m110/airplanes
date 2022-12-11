@@ -41,7 +41,7 @@ func (r *Respawn) Update(w donburi.World) {
 
 	playersAlive := 0
 
-	r.query.EachEntity(w, func(entry *donburi.Entry) {
+	r.query.Each(w, func(entry *donburi.Entry) {
 		player := component.Player.Get(entry)
 
 		if player.Lives > 0 {

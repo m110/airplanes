@@ -24,7 +24,7 @@ func NewSpawn() *Spawn {
 func (s *Spawn) Update(w donburi.World) {
 	cameraPos := transform.WorldPosition(archetype.MustFindCamera(w))
 
-	s.query.EachEntity(w, func(entry *donburi.Entry) {
+	s.query.Each(w, func(entry *donburi.Entry) {
 		t := transform.Transform.Get(entry)
 
 		if cameraPos.Y <= t.LocalPosition.Y {

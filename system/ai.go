@@ -29,7 +29,7 @@ func NewAI() *AI {
 }
 
 func (a *AI) Update(w donburi.World) {
-	a.query.EachEntity(w, func(entry *donburi.Entry) {
+	a.query.Each(w, func(entry *donburi.Entry) {
 		ai := component.AI.Get(entry)
 		if ai.Type == component.AITypeFollowPath {
 			if ai.NextTarget >= len(ai.Path) {

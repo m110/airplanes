@@ -31,7 +31,7 @@ func NewControls() *Controls {
 }
 
 func (i *Controls) Update(w donburi.World) {
-	i.query.EachEntity(w, func(entry *donburi.Entry) {
+	i.query.Each(w, func(entry *donburi.Entry) {
 		input := component.Input.Get(entry)
 
 		if input.Disabled {

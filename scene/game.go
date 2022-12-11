@@ -162,7 +162,7 @@ func (g *Game) createWorld(levelIndex int) donburi.World {
 		component.Game.Set(newGameData, gameData)
 
 		// Transfer existing players from the previous level
-		query.NewQuery(filter.Contains(component.Player)).EachEntity(g.world, func(entry *donburi.Entry) {
+		query.NewQuery(filter.Contains(component.Player)).Each(g.world, func(entry *donburi.Entry) {
 			player := component.Player.Get(entry)
 			// In case the level ends while the player's respawning
 			player.Respawning = false

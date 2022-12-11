@@ -30,7 +30,7 @@ func NewCamera(w donburi.World, startPosition math.Vec2) *donburi.Entry {
 }
 
 func MustFindCamera(w donburi.World) *donburi.Entry {
-	camera, ok := query.NewQuery(filter.Contains(component.Camera)).FirstEntity(w)
+	camera, ok := query.NewQuery(filter.Contains(component.Camera)).First(w)
 	if !ok {
 		panic("no camera found")
 	}

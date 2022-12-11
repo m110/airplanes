@@ -19,7 +19,7 @@ func NewScript() *Script {
 }
 
 func (s *Script) Update(w donburi.World) {
-	s.query.EachEntity(w, func(entry *donburi.Entry) {
+	s.query.Each(w, func(entry *donburi.Entry) {
 		script := component.Script.Get(entry)
 		script.Update(w)
 	})

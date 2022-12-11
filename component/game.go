@@ -25,7 +25,7 @@ type Settings struct {
 var Game = donburi.NewComponentType[GameData]()
 
 func MustFindGame(w donburi.World) *GameData {
-	game, ok := query.NewQuery(filter.Contains(Game)).FirstEntity(w)
+	game, ok := query.NewQuery(filter.Contains(Game)).First(w)
 	if !ok {
 		panic("game not found")
 	}

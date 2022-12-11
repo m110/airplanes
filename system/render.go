@@ -33,7 +33,7 @@ func NewRenderer() *Render {
 
 func (r *Render) Update(w donburi.World) {
 	if r.debug == nil {
-		debug, ok := query.NewQuery(filter.Contains(component.Debug)).FirstEntity(w)
+		debug, ok := query.NewQuery(filter.Contains(component.Debug)).First(w)
 		if !ok {
 			return
 		}
@@ -49,7 +49,7 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 	r.offscreen.Clear()
 
 	var entries []*donburi.Entry
-	r.query.EachEntity(w, func(entry *donburi.Entry) {
+	r.query.Each(w, func(entry *donburi.Entry) {
 		entries = append(entries, entry)
 	})
 

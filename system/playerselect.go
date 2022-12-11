@@ -52,7 +52,7 @@ func NewPlayerSelect(startCallback StartGameCallback, backToMenuCallback func())
 
 func (s *PlayerSelect) Update(w donburi.World) {
 	if s.started {
-		s.query.EachEntity(w, func(entry *donburi.Entry) {
+		s.query.Each(w, func(entry *donburi.Entry) {
 			playerSelect := component.PlayerSelect.Get(entry)
 			if !playerSelect.Selected || !playerSelect.Ready {
 				return
@@ -77,7 +77,7 @@ func (s *PlayerSelect) Update(w donburi.World) {
 
 	var playerSelects []*donburi.Entry
 	selected := map[int]*donburi.Entry{}
-	s.query.EachEntity(w, func(entry *donburi.Entry) {
+	s.query.Each(w, func(entry *donburi.Entry) {
 		playerSelect := component.PlayerSelect.Get(entry)
 		if playerSelect.Selected {
 			selected[playerSelect.PlayerNumber] = entry
