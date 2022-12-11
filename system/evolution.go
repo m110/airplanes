@@ -29,7 +29,7 @@ func NewEvolution() *Evolution {
 
 func (s *Evolution) Update(w donburi.World) {
 	// TODO Handle player evolving while already evolving (queue evolutions)
-	s.query.EachEntity(w, func(entry *donburi.Entry) {
+	s.query.Each(w, func(entry *donburi.Entry) {
 		evolution := component.Evolution.Get(entry)
 		if !evolution.Evolving {
 			return

@@ -17,7 +17,7 @@ type LevelData struct {
 var Level = donburi.NewComponentType[LevelData]()
 
 func MustFindLevel(w donburi.World) *donburi.Entry {
-	level, ok := query.NewQuery(filter.Contains(Level)).FirstEntity(w)
+	level, ok := query.NewQuery(filter.Contains(Level)).First(w)
 	if !ok {
 		panic("no level found")
 	}

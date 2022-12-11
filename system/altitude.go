@@ -25,7 +25,7 @@ func NewAltitude() *Altitude {
 }
 
 func (a *Altitude) Update(w donburi.World) {
-	a.query.EachEntity(w, func(entry *donburi.Entry) {
+	a.query.Each(w, func(entry *donburi.Entry) {
 		altitude := component.Altitude.Get(entry)
 		altitude.Update()
 

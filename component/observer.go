@@ -18,7 +18,7 @@ func ClosestTarget(w donburi.World, entry *donburi.Entry, lookFor *query.Query) 
 
 	var closestDistance float64
 	var closestTarget *donburi.Entry
-	lookFor.EachEntity(w, func(target *donburi.Entry) {
+	lookFor.Each(w, func(target *donburi.Entry) {
 		targetPos := transform.WorldPosition(target)
 		distance := pos.Distance(targetPos)
 

@@ -37,7 +37,7 @@ func (h *HUD) Draw(w donburi.World, screen *ebiten.Image) {
 		h.shadowOverlay.Fill(colornames.Black)
 	}
 
-	h.query.EachEntity(w, func(entry *donburi.Entry) {
+	h.query.Each(w, func(entry *donburi.Entry) {
 		player := component.Player.Get(entry)
 
 		icon := assets.Health

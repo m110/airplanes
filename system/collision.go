@@ -95,7 +95,7 @@ func damagePlayer(w donburi.World, entry *donburi.Entry) {
 
 func (c *Collision) Update(w donburi.World) {
 	var entries []*donburi.Entry
-	c.query.EachEntity(w, func(entry *donburi.Entry) {
+	c.query.Each(w, func(entry *donburi.Entry) {
 		// Skip entities not spawned yet
 		if entry.HasComponent(component.Despawnable) {
 			if !component.Despawnable.Get(entry).Spawned {

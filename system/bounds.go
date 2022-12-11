@@ -38,7 +38,7 @@ func (b *Bounds) Update(w donburi.World) {
 	camera := archetype.MustFindCamera(w)
 	cameraPos := transform.Transform.Get(camera).LocalPosition
 
-	b.query.EachEntity(w, func(entry *donburi.Entry) {
+	b.query.Each(w, func(entry *donburi.Entry) {
 		bounds := component.Bounds.Get(entry)
 		if bounds.Disabled {
 			return

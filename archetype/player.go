@@ -230,7 +230,7 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 
 func MustFindPlayerByNumber(w donburi.World, playerNumber int) *component.PlayerData {
 	var foundPlayer *component.PlayerData
-	query.NewQuery(filter.Contains(component.Player)).EachEntity(w, func(e *donburi.Entry) {
+	query.NewQuery(filter.Contains(component.Player)).Each(w, func(e *donburi.Entry) {
 		player := component.Player.Get(e)
 		if player.PlayerNumber == playerNumber {
 			foundPlayer = player

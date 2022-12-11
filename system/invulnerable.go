@@ -19,7 +19,7 @@ func NewInvulnerable() *Invulnerable {
 }
 
 func (s *Invulnerable) Update(w donburi.World) {
-	s.query.EachEntity(w, func(entry *donburi.Entry) {
+	s.query.Each(w, func(entry *donburi.Entry) {
 		player := component.PlayerAirplane.Get(entry)
 		if player.Invulnerable {
 			player.InvulnerableTimer.Update()

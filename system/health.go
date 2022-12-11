@@ -23,7 +23,7 @@ func NewHealth() *Health {
 }
 
 func (h *Health) Update(w donburi.World) {
-	h.query.EachEntity(w, func(entry *donburi.Entry) {
+	h.query.Each(w, func(entry *donburi.Entry) {
 		health := component.Health.Get(entry)
 
 		if health.JustDamaged {

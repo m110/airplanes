@@ -37,7 +37,7 @@ func (p *Progression) Update(w donburi.World) {
 	if level.Progressed {
 		cameraPos := transform.Transform.Get(archetype.MustFindCamera(w)).LocalPosition
 		playersVisible := false
-		p.query.EachEntity(w, func(entry *donburi.Entry) {
+		p.query.Each(w, func(entry *donburi.Entry) {
 			playerPos := transform.Transform.Get(entry).LocalPosition
 			playerSprite := component.Sprite.Get(entry)
 			if playerPos.Y+float64(playerSprite.Image.Bounds().Dy()) > cameraPos.Y {
@@ -53,7 +53,7 @@ func (p *Progression) Update(w donburi.World) {
 	if level.ReachedEnd {
 		level.ProgressionTimer.Update()
 		if level.ProgressionTimer.IsReady() {
-			p.query.EachEntity(w, func(entry *donburi.Entry) {
+			p.query.Each(w, func(entry *donburi.Entry) {
 				input := component.Input.Get(entry)
 				input.Disabled = true
 

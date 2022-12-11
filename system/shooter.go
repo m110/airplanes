@@ -21,7 +21,7 @@ func NewShooter() *Shooter {
 }
 
 func (s *Shooter) Update(w donburi.World) {
-	s.query.EachEntity(w, func(entry *donburi.Entry) {
+	s.query.Each(w, func(entry *donburi.Entry) {
 		shooter := component.Shooter.Get(entry)
 
 		shooter.ShootTimer.Update()
