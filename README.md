@@ -30,8 +30,8 @@ Playable, with a long list of ideas and TODOs in the code. There are just two le
 
 ## How to play
 
-* Player 1: WASD to move, Space to shoot
-* Player 2: Arrow keys to move, Enter to shoot
+* Player 1: <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> to move, <kbd>Space</kbd> to shoot
+* Player 2: <kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd> to move, <kbd>Enter</kbd> to shoot
 
 Shoot enemies and avoid bullets.
 
