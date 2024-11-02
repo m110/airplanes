@@ -84,6 +84,8 @@ func (g *Game) loadLevel() {
 		system.NewFollower(),
 		render,
 		debug,
+		system.NewTimeToLive(),
+		system.NewDestroy(),
 	}
 
 	g.drawables = []Drawable{

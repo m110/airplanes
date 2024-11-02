@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/yohamta/donburi"
-	"github.com/yohamta/donburi/features/hierarchy"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 
@@ -28,11 +27,11 @@ type collisionEffect func(w donburi.World, entry *donburi.Entry, other *donburi.
 var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]collisionEffect{
 	component.CollisionLayerPlayerBullets: {
 		component.CollisionLayerAirEnemies: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
-			hierarchy.RemoveRecursive(entry)
+			component.Destroy(entry)
 			component.Health.Get(other).Damage()
 		},
 		component.CollisionLayerGroundEnemies: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
-			hierarchy.RemoveRecursive(entry)
+			component.Destroy(entry)
 			component.Health.Get(other).Damage()
 		},
 	},
@@ -56,7 +55,7 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 				player.AddLive()
 			}
 
-			hierarchy.RemoveRecursive(other)
+			component.Destroy(other)
 		},
 	},
 	component.CollisionLayerAirEnemies: {
@@ -70,7 +69,7 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 	},
 	component.CollisionLayerEnemyBullets: {
 		component.CollisionLayerPlayers: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
-			hierarchy.RemoveRecursive(entry)
+			component.Destroy(entry)
 			damagePlayer(w, other)
 		},
 	},
@@ -86,7 +85,7 @@ func damagePlayer(w donburi.World, entry *donburi.Entry) {
 	if entry.HasComponent(component.Wreckable) {
 		archetype.NewAirplaneWreck(w, entry, component.Sprite.Get(entry))
 	}
-	hierarchy.RemoveRecursive(entry)
+	component.Destroy(entry)
 
 	player := archetype.MustFindPlayerByNumber(w, playerNumber)
 	player.Damage()
@@ -121,7 +120,6 @@ func (c *Collision) Update(w donburi.World) {
 				continue
 			}
 
-			// TODO Sometimes crashes here - after level ends?
 			otherCollider := component.Collider.Get(other)
 
 			effects, ok := collisionEffects[collider.Layer]

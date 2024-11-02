@@ -2,7 +2,6 @@ package system
 
 import (
 	"github.com/yohamta/donburi"
-	"github.com/yohamta/donburi/features/hierarchy"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 
@@ -29,7 +28,7 @@ func (s *Spawn) Update(w donburi.World) {
 		if cameraPos.Y <= t.LocalPosition.Y {
 			spawnable := component.Spawnable.Get(entry)
 			spawnable.SpawnFunc(w)
-			hierarchy.RemoveRecursive(entry)
+			component.Destroy(entry)
 		}
 	})
 }

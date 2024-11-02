@@ -5,7 +5,6 @@ import (
 
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/features/events"
-	"github.com/yohamta/donburi/features/hierarchy"
 	"github.com/yohamta/donburi/features/transform"
 
 	"github.com/m110/airplanes/archetype"
@@ -40,7 +39,7 @@ func OnEnemyKilledSpawnCollectible(w donburi.World, event EnemyKilled) {
 }
 
 func OnEnemyKilledDestroyEnemy(w donburi.World, event EnemyKilled) {
-	hierarchy.RemoveRecursive(event.Enemy)
+	component.Destroy(event.Enemy)
 }
 
 func SetupEvents(w donburi.World) {

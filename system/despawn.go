@@ -2,7 +2,6 @@ package system
 
 import (
 	"github.com/yohamta/donburi"
-	"github.com/yohamta/donburi/features/hierarchy"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
 
@@ -53,7 +52,7 @@ func (d *Despawn) Update(w donburi.World) {
 
 		if maxY < cameraPos.Y || position.Y > cameraMaxY ||
 			maxX < cameraPos.X || position.X > cameraMaxX {
-			hierarchy.RemoveRecursive(entry)
+			component.Destroy(entry)
 		}
 	})
 }
