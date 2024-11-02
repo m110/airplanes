@@ -9,11 +9,12 @@ import (
 	"github.com/m110/airplanes/component"
 )
 
-func NewJoystick(w donburi.World, pos math.Vec2) {
+func NewJoystick(w donburi.World, pos math.Vec2) *donburi.Entry {
 	joystick := w.Entry(w.Create(
 		transform.Transform,
 		component.Joystick,
 		component.Sprite,
+		component.UI,
 	))
 	component.Sprite.SetValue(joystick, component.SpriteData{
 		Image: assets.JoystickBase,
@@ -28,6 +29,7 @@ func NewJoystick(w donburi.World, pos math.Vec2) {
 		transform.Transform,
 		component.Joystick,
 		component.Sprite,
+		component.UI,
 	))
 
 	component.Sprite.SetValue(knob, component.SpriteData{
@@ -36,4 +38,6 @@ func NewJoystick(w donburi.World, pos math.Vec2) {
 		Pivot: component.SpritePivotCenter,
 	})
 	transform.AppendChild(joystick, knob, false)
+
+	return joystick
 }

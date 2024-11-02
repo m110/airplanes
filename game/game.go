@@ -70,8 +70,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 func (g *Game) Layout(width, height int) (int, int) {
 	if g.screenWidth == 0 || g.screenHeight == 0 {
-		g.screenWidth = width
-		g.screenHeight = height
+		return width, height
 	}
-	return width, height
+	return g.screenWidth, g.screenHeight
 }

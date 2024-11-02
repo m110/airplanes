@@ -16,6 +16,7 @@ import (
 
 type Render struct {
 	query     *donburi.Query
+	uiQuery   *donburi.Query
 	offscreen *ebiten.Image
 	debug     *component.DebugData
 }
@@ -23,7 +24,13 @@ type Render struct {
 func NewRenderer() *Render {
 	return &Render{
 		query: donburi.NewQuery(
-			filter.Contains(transform.Transform, component.Sprite),
+			filter.And(
+				filter.Contains(transform.Transform, component.Sprite),
+				filter.Not(filter.Contains(component.UI)),
+			),
+		),
+		uiQuery: donburi.NewQuery(
+			filter.Contains(transform.Transform, component.Sprite, component.UI),
 		),
 		// TODO figure out the proper size
 		offscreen: ebiten.NewImage(3000, 3000),
@@ -104,4 +111,41 @@ func (r *Render) Draw(w donburi.World, screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(-cameraPos.X, -cameraPos.Y)
 	screen.DrawImage(r.offscreen, op)
+
+	// TODO deduplicate
+	r.uiQuery.Each(w, func(entry *donburi.Entry) {
+		sprite := component.Sprite.Get(entry)
+
+		if sprite.Hidden {
+			return
+		}
+
+		w, h := sprite.Image.Size()
+		halfW, halfH := float64(w)/2, float64(h)/2
+
+		op := &ebiten.DrawImageOptions{}
+		op.GeoM.Translate(-halfW, -halfH)
+		op.GeoM.Rotate(float64(int(transform.WorldRotation(entry)-sprite.OriginalRotation)%360) * 2 * math.Pi / 360)
+		op.GeoM.Translate(halfW, halfH)
+
+		position := transform.WorldPosition(entry)
+
+		x := position.X
+		y := position.Y
+
+		switch sprite.Pivot {
+		case component.SpritePivotCenter:
+			x -= halfW
+			y -= halfH
+		}
+
+		scale := transform.WorldScale(entry)
+		op.GeoM.Translate(-halfW, -halfH)
+		op.GeoM.Scale(scale.X, scale.Y)
+		op.GeoM.Translate(halfW, halfH)
+
+		op.GeoM.Translate(x, y)
+
+		screen.DrawImage(sprite.Image, op)
+	})
 }

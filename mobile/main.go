@@ -7,7 +7,11 @@ import (
 )
 
 func init() {
-	mobile.SetGame(game.NewGame(game.Config{}))
+	mobile.SetGame(game.NewGame(game.Config{
+		Quick:        true,
+		ScreenWidth:  480,
+		ScreenHeight: 1040,
+	}))
 }
 
 func Dummy() {}

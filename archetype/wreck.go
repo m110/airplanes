@@ -14,8 +14,8 @@ import (
 func NewAirplaneWreck(w donburi.World, parent *donburi.Entry, sprite *component.SpriteData) {
 	widthInt, heightInt := sprite.Image.Size()
 	width, height := float64(widthInt), float64(heightInt)
-	cutpointX := float64(int(width * engine.RandomRange(0.3, 0.7)))
-	cutpointY := float64(int(height * engine.RandomRange(0.3, 0.7)))
+	cutpointX := float64(int(width * engine.RandomFloatRange(0.3, 0.7)))
+	cutpointY := float64(int(height * engine.RandomFloatRange(0.3, 0.7)))
 
 	pieces := []engine.Rect{
 		{
@@ -86,12 +86,12 @@ func NewAirplaneWreck(w donburi.World, parent *donburi.Entry, sprite *component.
 		})
 
 		velocity := transform.Right(parent)
-		velocity.X *= engine.RandomRange(0.5, 0.8)
-		velocity.Y *= engine.RandomRange(0.5, 0.8)
+		velocity.X *= engine.RandomFloatRange(0.5, 0.8)
+		velocity.Y *= engine.RandomFloatRange(0.5, 0.8)
 
 		component.Velocity.SetValue(wreck, component.VelocityData{
 			Velocity:         velocity,
-			RotationVelocity: engine.RandomRange(-2, 2),
+			RotationVelocity: engine.RandomFloatRange(-2, 2),
 		})
 
 		component.Altitude.SetValue(wreck, component.AltitudeData{
