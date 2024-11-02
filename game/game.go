@@ -2,6 +2,7 @@ package game
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
+
 	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/scene"
 	"github.com/m110/airplanes/system"
@@ -18,10 +19,32 @@ type Game struct {
 	screenHeight int
 }
 
-func NewGame() *Game {
+type Config struct {
+	Quick        bool
+	ScreenWidth  int
+	ScreenHeight int
+}
+
+func NewGame(config Config) *Game {
 	assets.MustLoadAssets()
 
-	return &Game{}
+	g := &Game{
+		screenWidth:  config.ScreenWidth,
+		screenHeight: config.ScreenHeight,
+	}
+
+	if config.Quick {
+		g.switchToGame([]system.ChosenPlayer{
+			{
+				PlayerNumber: 1,
+				Faction:      0,
+			},
+		})
+	} else {
+		g.switchToTitle()
+	}
+
+	return g
 }
 
 func (g *Game) switchToTitle() {
@@ -37,9 +60,6 @@ func (g *Game) switchToGame(players []system.ChosenPlayer) {
 }
 
 func (g *Game) Update() error {
-	if g.scene == nil {
-		g.switchToTitle()
-	}
 	g.scene.Update()
 	return nil
 }
@@ -49,7 +69,9 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 
 func (g *Game) Layout(width, height int) (int, int) {
-	g.screenWidth = width
-	g.screenHeight = height
+	if g.screenWidth == 0 || g.screenHeight == 0 {
+		g.screenWidth = width
+		g.screenHeight = height
+	}
 	return width, height
 }

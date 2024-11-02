@@ -2,7 +2,6 @@ package scene
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/features/math"
 	"github.com/yohamta/donburi/features/transform"
@@ -75,46 +74,10 @@ func (a *Airbase) createWorld() {
 		archetype.NewAirbaseAirplane(a.world, spawn.Position, component.MustPlayerFactionFromString(spawn.Faction), i)
 	}
 
-	joystick := a.world.Entry(a.world.Create(
-		transform.Transform,
-		component.Joystick,
-		component.Sprite,
-	))
-	component.Sprite.SetValue(joystick, component.SpriteData{
-		Image: assets.JoystickBase,
-		Layer: component.SpriteLayerUI,
-		Pivot: component.SpritePivotCenter,
-	})
-	t := transform.Transform.Get(joystick)
-	t.LocalPosition = math.Vec2{float64(a.width - 75), float64(a.height - 150)}
-	t.LocalScale = math.Vec2{0.5, 0.5}
-
-	knob := a.world.Entry(a.world.Create(
-		transform.Transform,
-		component.Joystick,
-		component.Sprite,
-	))
-
-	component.Sprite.SetValue(knob, component.SpriteData{
-		Image: assets.JoystickKnob,
-		Layer: component.SpriteLayerUI,
-		Pivot: component.SpritePivotCenter,
-	})
-	transform.AppendChild(joystick, knob, false)
-
 	a.world.Create(component.Debug)
 }
 
 func (a *Airbase) Update() {
-	if inpututil.IsKeyJustPressed(ebiten.Key1) {
-		a.startCallback([]system.ChosenPlayer{
-			{
-				PlayerNumber: 1,
-				Faction:      component.PlayerFactionBlue,
-			},
-		})
-	}
-
 	for _, s := range a.systems {
 		s.Update(a.world)
 	}
