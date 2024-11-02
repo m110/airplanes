@@ -2,3 +2,11 @@
 *.out
 vendor/
 go.work
+
+mobile/Airplanes/Airplanes.xcodeproj/project.xcworkspace/xcuserdata
+mobile/Airplanes.xcframework
+
+build/
+
+*.aar
+
