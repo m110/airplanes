@@ -9,6 +9,7 @@ import (
 
 	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
+	"github.com/m110/airplanes/engine/input"
 )
 
 type Controls struct {
@@ -31,9 +32,9 @@ func NewControls() *Controls {
 
 func (i *Controls) Update(w donburi.World) {
 	i.query.Each(w, func(entry *donburi.Entry) {
-		input := component.Input.Get(entry)
+		in := component.Input.Get(entry)
 
-		if input.Disabled {
+		if in.Disabled {
 			return
 		}
 
@@ -45,32 +46,39 @@ func (i *Controls) Update(w donburi.World) {
 			Y: -0.5,
 		}
 
-		touchIDs := ebiten.AppendTouchIDs(nil)
-		var isTouch bool
-		var touchX, touchY int
-		if len(touchIDs) > 0 {
-			isTouch = true
-			touchX, touchY = ebiten.TouchPosition(touchIDs[0])
-		}
+		if input.IsTouchPrimaryInput() {
+			touchIDs := ebiten.AppendTouchIDs(nil)
+			var isTouch bool
+			var touchX, touchY int
+			if len(touchIDs) > 0 {
+				isTouch = true
+				touchX, touchY = ebiten.TouchPosition(touchIDs[0])
+			}
 
-		if ebiten.IsKeyPressed(input.MoveUpKey) || (isTouch && touchY < 400) {
-			velocity.Velocity.Y = -input.MoveSpeed
-		} else if ebiten.IsKeyPressed(input.MoveDownKey) || (isTouch && touchY > 400) {
-			velocity.Velocity.Y = input.MoveSpeed
-		}
+			_ = isTouch
+			_ = touchX
+			_ = touchY
 
-		if ebiten.IsKeyPressed(input.MoveRightKey) || (isTouch && touchX > 200) {
-			velocity.Velocity.X = input.MoveSpeed
-		}
-		if ebiten.IsKeyPressed(input.MoveLeftKey) || (isTouch && touchX < 200) {
-			velocity.Velocity.X = -input.MoveSpeed
+		} else {
+			if ebiten.IsKeyPressed(in.MoveUpKey) {
+				velocity.Velocity.Y = -in.MoveSpeed
+			} else if ebiten.IsKeyPressed(in.MoveDownKey) {
+				velocity.Velocity.Y = in.MoveSpeed
+			}
+
+			if ebiten.IsKeyPressed(in.MoveRightKey) {
+				velocity.Velocity.X = in.MoveSpeed
+			}
+			if ebiten.IsKeyPressed(in.MoveLeftKey) {
+				velocity.Velocity.X = -in.MoveSpeed
+			}
 		}
 
 		// TODO Seems like a very complex way to get the weapon level and timer
 		airplane := component.PlayerAirplane.Get(entry)
 		player := archetype.MustFindPlayerByNumber(w, airplane.PlayerNumber)
 		player.ShootTimer.Update()
-		if (ebiten.IsKeyPressed(input.ShootKey) || len(touchIDs) > 1) && player.ShootTimer.IsReady() {
+		if (ebiten.IsKeyPressed(in.ShootKey) || input.IsTouchPrimaryInput()) && player.ShootTimer.IsReady() {
 			position := transform.Transform.Get(entry).LocalPosition
 
 			archetype.NewPlayerBullet(w, player, position)

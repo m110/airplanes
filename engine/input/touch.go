@@ -1,7 +1,7 @@
-//go:build ((darwin && !arm && !arm64) || freebsd || linux || windows || js) && !android && !ios
+//go:build !android && !ios
 
 package input
 
-func isTouchPrimaryInput() bool {
+func IsTouchPrimaryInput() bool {
 	return false
 }
