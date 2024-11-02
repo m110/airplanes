@@ -2,8 +2,6 @@ package main
 
 import (
 	"log"
-	"math/rand"
-	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 
@@ -39,7 +37,7 @@ func (g *Game) switchToTitle() {
 }
 
 func (g *Game) switchToAirbase() {
-	g.scene = scene.NewAirbase(g.switchToGame, g.switchToTitle)
+	g.scene = scene.NewAirbase(screenWidth, screenHeight, g.switchToGame, g.switchToTitle)
 }
 
 func (g *Game) switchToGame(players []system.ChosenPlayer) {
@@ -61,7 +59,6 @@ func (g *Game) Layout(width, height int) (int, int) {
 
 func main() {
 	ebiten.SetWindowSize(screenWidth, screenHeight)
-	rand.Seed(time.Now().UTC().UnixNano())
 
 	err := ebiten.RunGame(NewGame())
 	if err != nil {

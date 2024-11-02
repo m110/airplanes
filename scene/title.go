@@ -1,6 +1,7 @@
 package scene
 
 import (
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -25,6 +26,12 @@ func NewTitle(screenWidth int, screenHeight int, newGameCallback func()) *Title 
 
 func (t *Title) Update() {
 	if ebiten.IsKeyPressed(ebiten.KeyEnter) || ebiten.IsKeyPressed(ebiten.KeySpace) {
+		t.newGameCallback()
+		return
+	}
+
+	touchIDs := inpututil.AppendJustPressedTouchIDs(nil)
+	if len(touchIDs) > 0 {
 		t.newGameCallback()
 		return
 	}

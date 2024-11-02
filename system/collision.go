@@ -122,6 +122,7 @@ func (c *Collision) Update(w donburi.World) {
 				continue
 			}
 
+			// TODO Sometimes crashes here - after level ends?
 			otherCollider := component.Collider.Get(other)
 
 			effects, ok := collisionEffects[collider.Layer]

@@ -86,8 +86,14 @@ func (s *PlayerSelect) Update(w donburi.World) {
 		playerSelects = append(playerSelects, entry)
 	})
 
+	var isTouch bool
+	touchIDs := inpututil.AppendJustPressedTouchIDs(nil)
+	if len(touchIDs) > 0 {
+		isTouch = true
+	}
+
 	for number, settings := range archetype.Players {
-		if inpututil.IsKeyJustPressed(settings.Inputs.Shoot) {
+		if inpututil.IsKeyJustPressed(settings.Inputs.Shoot) || isTouch {
 			if entry, ok := selected[number]; ok {
 				component.PlayerSelect.Get(entry).LockIn()
 			} else {

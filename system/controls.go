@@ -46,16 +46,24 @@ func (i *Controls) Update(w donburi.World) {
 			Y: -0.5,
 		}
 
-		if ebiten.IsKeyPressed(input.MoveUpKey) {
+		touchIDs := ebiten.AppendTouchIDs(nil)
+		var isTouch bool
+		var touchX, touchY int
+		if len(touchIDs) > 0 {
+			isTouch = true
+			touchX, touchY = ebiten.TouchPosition(touchIDs[0])
+		}
+
+		if ebiten.IsKeyPressed(input.MoveUpKey) || (isTouch && touchY < 400) {
 			velocity.Velocity.Y = -input.MoveSpeed
-		} else if ebiten.IsKeyPressed(input.MoveDownKey) {
+		} else if ebiten.IsKeyPressed(input.MoveDownKey) || (isTouch && touchY > 400) {
 			velocity.Velocity.Y = input.MoveSpeed
 		}
 
-		if ebiten.IsKeyPressed(input.MoveRightKey) {
+		if ebiten.IsKeyPressed(input.MoveRightKey) || (isTouch && touchX > 200) {
 			velocity.Velocity.X = input.MoveSpeed
 		}
-		if ebiten.IsKeyPressed(input.MoveLeftKey) {
+		if ebiten.IsKeyPressed(input.MoveLeftKey) || (isTouch && touchX < 200) {
 			velocity.Velocity.X = -input.MoveSpeed
 		}
 
@@ -63,7 +71,7 @@ func (i *Controls) Update(w donburi.World) {
 		airplane := component.PlayerAirplane.Get(entry)
 		player := archetype.MustFindPlayerByNumber(w, airplane.PlayerNumber)
 		player.ShootTimer.Update()
-		if ebiten.IsKeyPressed(input.ShootKey) && player.ShootTimer.IsReady() {
+		if (ebiten.IsKeyPressed(input.ShootKey) || len(touchIDs) > 1) && player.ShootTimer.IsReady() {
 			position := transform.Transform.Get(entry).LocalPosition
 
 			archetype.NewPlayerBullet(w, player, position)

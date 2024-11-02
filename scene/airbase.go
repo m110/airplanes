@@ -18,14 +18,19 @@ type Airbase struct {
 	systems   []System
 	drawables []Drawable
 
+	width  int
+	height int
+
 	startCallback      system.StartGameCallback
 	backToMenuCallback func()
 }
 
-func NewAirbase(startCallback system.StartGameCallback, backToMenuCallback func()) *Airbase {
+func NewAirbase(width, height int, startCallback system.StartGameCallback, backToMenuCallback func()) *Airbase {
 	a := &Airbase{
 		startCallback:      startCallback,
 		backToMenuCallback: backToMenuCallback,
+		width:              width,
+		height:             height,
 	}
 
 	a.createWorld()
@@ -39,7 +44,6 @@ func (a *Airbase) createWorld() {
 
 	a.systems = []System{
 		system.NewVelocity(),
-		system.NewScript(),
 		system.NewPlayerSelect(a.startCallback, a.backToMenuCallback),
 		system.NewAltitude(),
 		debug,
@@ -70,6 +74,33 @@ func (a *Airbase) createWorld() {
 	for i, spawn := range levelAsset.Spawns {
 		archetype.NewAirbaseAirplane(a.world, spawn.Position, component.MustPlayerFactionFromString(spawn.Faction), i)
 	}
+
+	joystick := a.world.Entry(a.world.Create(
+		transform.Transform,
+		component.Joystick,
+		component.Sprite,
+	))
+	component.Sprite.SetValue(joystick, component.SpriteData{
+		Image: assets.JoystickBase,
+		Layer: component.SpriteLayerUI,
+		Pivot: component.SpritePivotCenter,
+	})
+	t := transform.Transform.Get(joystick)
+	t.LocalPosition = math.Vec2{float64(a.width - 75), float64(a.height - 150)}
+	t.LocalScale = math.Vec2{0.5, 0.5}
+
+	knob := a.world.Entry(a.world.Create(
+		transform.Transform,
+		component.Joystick,
+		component.Sprite,
+	))
+
+	component.Sprite.SetValue(knob, component.SpriteData{
+		Image: assets.JoystickKnob,
+		Layer: component.SpriteLayerUI,
+		Pivot: component.SpritePivotCenter,
+	})
+	transform.AppendChild(joystick, knob, false)
 
 	a.world.Create(component.Debug)
 }
