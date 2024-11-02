@@ -7,7 +7,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/filter"
-	"github.com/yohamta/donburi/query"
 	"golang.org/x/image/colornames"
 
 	"github.com/m110/airplanes/assets"
@@ -15,14 +14,14 @@ import (
 )
 
 type HUD struct {
-	query         *query.Query
+	query         *donburi.Query
 	game          *component.GameData
 	shadowOverlay *ebiten.Image
 }
 
 func NewHUD() *HUD {
 	return &HUD{
-		query: query.NewQuery(filter.Contains(component.Player)),
+		query: donburi.NewQuery(filter.Contains(component.Player)),
 	}
 }
 

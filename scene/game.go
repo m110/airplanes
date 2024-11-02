@@ -9,7 +9,6 @@ import (
 	"github.com/yohamta/donburi/features/math"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
-	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/assets"
@@ -162,7 +161,7 @@ func (g *Game) createWorld(levelIndex int) donburi.World {
 		component.Game.Set(newGameData, gameData)
 
 		// Transfer existing players from the previous level
-		query.NewQuery(filter.Contains(component.Player)).Each(g.world, func(entry *donburi.Entry) {
+		donburi.NewQuery(filter.Contains(component.Player)).Each(g.world, func(entry *donburi.Entry) {
 			player := component.Player.Get(entry)
 			// In case the level ends while the player's respawning
 			player.Respawning = false

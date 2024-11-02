@@ -6,7 +6,6 @@ import (
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
-	"github.com/yohamta/donburi/query"
 	"golang.org/x/image/colornames"
 
 	"github.com/m110/airplanes/assets"
@@ -14,12 +13,12 @@ import (
 )
 
 type Label struct {
-	query *query.Query
+	query *donburi.Query
 }
 
 func NewLabel() *Label {
 	return &Label{
-		query: query.NewQuery(
+		query: donburi.NewQuery(
 			filter.Contains(transform.Transform, component.Label),
 		),
 	}

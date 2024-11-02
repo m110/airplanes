@@ -6,7 +6,6 @@ import (
 	dmath "github.com/yohamta/donburi/features/math"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
-	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/assets"
@@ -14,14 +13,14 @@ import (
 )
 
 type Evolution struct {
-	query *query.Query
+	query *donburi.Query
 
 	shadowBuffer *ebiten.Image
 }
 
 func NewEvolution() *Evolution {
 	return &Evolution{
-		query: query.NewQuery(filter.Contains(component.Evolution)),
+		query: donburi.NewQuery(filter.Contains(component.Evolution)),
 		// TODO Not that universal in terms of size
 		shadowBuffer: ebiten.NewImage(assets.AirplanesBlue[0].Size()),
 	}

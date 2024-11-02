@@ -5,19 +5,18 @@ import (
 	"github.com/yohamta/donburi/features/hierarchy"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
-	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
 )
 
 type Spawn struct {
-	query *query.Query
+	query *donburi.Query
 }
 
 func NewSpawn() *Spawn {
 	return &Spawn{
-		query: query.NewQuery(filter.Contains(component.Spawnable)),
+		query: donburi.NewQuery(filter.Contains(component.Spawnable)),
 	}
 }
 

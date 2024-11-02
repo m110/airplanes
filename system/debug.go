@@ -10,7 +10,6 @@ import (
 	"github.com/yohamta/donburi/features/math"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
-	"github.com/yohamta/donburi/query"
 	"golang.org/x/image/colornames"
 
 	"github.com/m110/airplanes/archetype"
@@ -18,7 +17,7 @@ import (
 )
 
 type Debug struct {
-	query     *query.Query
+	query     *donburi.Query
 	debug     *component.DebugData
 	offscreen *ebiten.Image
 
@@ -29,7 +28,7 @@ type Debug struct {
 
 func NewDebug(restartLevelCallback func()) *Debug {
 	return &Debug{
-		query: query.NewQuery(
+		query: donburi.NewQuery(
 			filter.Contains(transform.Transform, component.Sprite),
 		),
 		// TODO figure out the proper size
@@ -40,7 +39,7 @@ func NewDebug(restartLevelCallback func()) *Debug {
 
 func (d *Debug) Update(w donburi.World) {
 	if d.debug == nil {
-		debug, ok := query.NewQuery(filter.Contains(component.Debug)).First(w)
+		debug, ok := donburi.NewQuery(filter.Contains(component.Debug)).First(w)
 		if !ok {
 			return
 		}
@@ -54,25 +53,25 @@ func (d *Debug) Update(w donburi.World) {
 
 	if d.debug.Enabled {
 		if inpututil.IsKeyJustPressed(ebiten.Key1) {
-			query.NewQuery(filter.Contains(component.Player)).Each(w, func(entry *donburi.Entry) {
+			donburi.NewQuery(filter.Contains(component.Player)).Each(w, func(entry *donburi.Entry) {
 				player := component.Player.Get(entry)
 				player.UpgradeWeapon()
 			})
 		}
 		if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
-			query.NewQuery(filter.Contains(component.PlayerAirplane)).Each(w, func(entry *donburi.Entry) {
+			donburi.NewQuery(filter.Contains(component.PlayerAirplane)).Each(w, func(entry *donburi.Entry) {
 				t := transform.Transform.Get(entry)
 				t.LocalRotation -= 10
 			})
 		}
 		if inpututil.IsKeyJustPressed(ebiten.KeyE) {
-			query.NewQuery(filter.Contains(component.PlayerAirplane)).Each(w, func(entry *donburi.Entry) {
+			donburi.NewQuery(filter.Contains(component.PlayerAirplane)).Each(w, func(entry *donburi.Entry) {
 				t := transform.Transform.Get(entry)
 				t.LocalRotation += 10
 			})
 		}
 		if inpututil.IsKeyJustPressed(ebiten.KeyV) {
-			query.NewQuery(filter.Contains(component.PlayerAirplane)).Each(w, func(entry *donburi.Entry) {
+			donburi.NewQuery(filter.Contains(component.PlayerAirplane)).Each(w, func(entry *donburi.Entry) {
 				component.Evolution.Get(entry).Evolve()
 			})
 		}
@@ -101,7 +100,7 @@ func (d *Debug) Draw(w donburi.World, screen *ebiten.Image) {
 
 	despawnableCount := 0
 	spawnedCount := 0
-	query.NewQuery(filter.Contains(component.Despawnable)).Each(w, func(entry *donburi.Entry) {
+	donburi.NewQuery(filter.Contains(component.Despawnable)).Each(w, func(entry *donburi.Entry) {
 		despawnableCount++
 		if component.Despawnable.Get(entry).Spawned {
 			spawnedCount++
