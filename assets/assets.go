@@ -22,6 +22,11 @@ var (
 	//go:embed tiles/airplane_shield.png
 	airplaneShieldData []byte
 
+	//go:embed tiles/joystick-base.png
+	joystickBaseData []byte
+	//go:embed tiles/joystick-knob.png
+	joystickKnobData []byte
+
 	//go:embed fonts/kenney-future.ttf
 	normalFontData []byte
 	//go:embed fonts/kenney-future-narrow.ttf
@@ -54,6 +59,9 @@ var (
 
 	AirplaneShield *ebiten.Image
 	Crosshair      *ebiten.Image
+
+	JoystickBase *ebiten.Image
+	JoystickKnob *ebiten.Image
 
 	AirBase AirBaseLevel
 	Levels  []Level
@@ -158,6 +166,9 @@ func MustLoadAssets() {
 
 	AirplaneShield = mustNewEbitenImage(airplaneShieldData)
 	Crosshair = loader.MustFindTile(TilesetClassTiles, "crosshair")
+
+	JoystickBase = mustNewEbitenImage(joystickBaseData)
+	JoystickKnob = mustNewEbitenImage(joystickKnobData)
 }
 
 func mustLoadFont(data []byte, size int) font.Face {

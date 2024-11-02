@@ -17,6 +17,7 @@ const (
 	SpriteLayerFallingWrecks
 	SpriteLayerAirUnits
 	SpriteLayerIndicators
+	SpriteLayerUI
 )
 
 type SpritePivot int

@@ -4,7 +4,6 @@ import (
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
-	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
@@ -12,13 +11,13 @@ import (
 )
 
 type Bounds struct {
-	query *query.Query
+	query *donburi.Query
 	game  *component.GameData
 }
 
 func NewBounds() *Bounds {
 	return &Bounds{
-		query: query.NewQuery(filter.Contains(
+		query: donburi.NewQuery(filter.Contains(
 			component.PlayerAirplane,
 			transform.Transform,
 			component.Sprite,

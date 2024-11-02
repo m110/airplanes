@@ -9,21 +9,20 @@ import (
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
-	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
 )
 
 type Render struct {
-	query     *query.Query
+	query     *donburi.Query
 	offscreen *ebiten.Image
 	debug     *component.DebugData
 }
 
 func NewRenderer() *Render {
 	return &Render{
-		query: query.NewQuery(
+		query: donburi.NewQuery(
 			filter.Contains(transform.Transform, component.Sprite),
 		),
 		// TODO figure out the proper size
@@ -33,7 +32,7 @@ func NewRenderer() *Render {
 
 func (r *Render) Update(w donburi.World) {
 	if r.debug == nil {
-		debug, ok := query.NewQuery(filter.Contains(component.Debug)).First(w)
+		debug, ok := donburi.NewQuery(filter.Contains(component.Debug)).First(w)
 		if !ok {
 			return
 		}

@@ -4,10 +4,8 @@ import (
 	"fmt"
 
 	"github.com/yohamta/donburi"
-	"github.com/yohamta/donburi/features/hierarchy"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
-	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
@@ -15,12 +13,12 @@ import (
 )
 
 type Collision struct {
-	query *query.Query
+	query *donburi.Query
 }
 
 func NewCollision() *Collision {
 	return &Collision{
-		query: query.NewQuery(filter.Contains(component.Collider)),
+		query: donburi.NewQuery(filter.Contains(component.Collider)),
 	}
 }
 
@@ -29,11 +27,11 @@ type collisionEffect func(w donburi.World, entry *donburi.Entry, other *donburi.
 var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]collisionEffect{
 	component.CollisionLayerPlayerBullets: {
 		component.CollisionLayerAirEnemies: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
-			hierarchy.RemoveRecursive(entry)
+			component.Destroy(entry)
 			component.Health.Get(other).Damage()
 		},
 		component.CollisionLayerGroundEnemies: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
-			hierarchy.RemoveRecursive(entry)
+			component.Destroy(entry)
 			component.Health.Get(other).Damage()
 		},
 	},
@@ -57,7 +55,7 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 				player.AddLive()
 			}
 
-			hierarchy.RemoveRecursive(other)
+			component.Destroy(other)
 		},
 	},
 	component.CollisionLayerAirEnemies: {
@@ -71,7 +69,7 @@ var collisionEffects = map[component.ColliderLayer]map[component.ColliderLayer]c
 	},
 	component.CollisionLayerEnemyBullets: {
 		component.CollisionLayerPlayers: func(w donburi.World, entry *donburi.Entry, other *donburi.Entry) {
-			hierarchy.RemoveRecursive(entry)
+			component.Destroy(entry)
 			damagePlayer(w, other)
 		},
 	},
@@ -87,7 +85,7 @@ func damagePlayer(w donburi.World, entry *donburi.Entry) {
 	if entry.HasComponent(component.Wreckable) {
 		archetype.NewAirplaneWreck(w, entry, component.Sprite.Get(entry))
 	}
-	hierarchy.RemoveRecursive(entry)
+	component.Destroy(entry)
 
 	player := archetype.MustFindPlayerByNumber(w, playerNumber)
 	player.Damage()
@@ -114,11 +112,6 @@ func (c *Collision) Update(w donburi.World) {
 
 		for _, other := range entries {
 			if entry.Entity().Id() == other.Entity().Id() {
-				continue
-			}
-
-			// One of the entities could already be removed from the world due to collision effect
-			if !entry.Valid() || !other.Valid() {
 				continue
 			}
 

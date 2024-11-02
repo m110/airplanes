@@ -3,18 +3,17 @@ package system
 import (
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/filter"
-	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/component"
 )
 
 type Script struct {
-	query *query.Query
+	query *donburi.Query
 }
 
 func NewScript() *Script {
 	return &Script{
-		query: query.NewQuery(filter.Contains(component.Script)),
+		query: donburi.NewQuery(filter.Contains(component.Script)),
 	}
 }
 

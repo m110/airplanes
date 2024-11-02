@@ -2,23 +2,21 @@ package system
 
 import (
 	"github.com/yohamta/donburi"
-	"github.com/yohamta/donburi/features/hierarchy"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
-	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
 )
 
 type Despawn struct {
-	query *query.Query
+	query *donburi.Query
 	game  *component.GameData
 }
 
 func NewDespawn() *Despawn {
 	return &Despawn{
-		query: query.NewQuery(filter.Contains(component.Despawnable)),
+		query: donburi.NewQuery(filter.Contains(component.Despawnable)),
 	}
 }
 
@@ -54,7 +52,7 @@ func (d *Despawn) Update(w donburi.World) {
 
 		if maxY < cameraPos.Y || position.Y > cameraMaxY ||
 			maxX < cameraPos.X || position.X > cameraMaxX {
-			hierarchy.RemoveRecursive(entry)
+			component.Destroy(entry)
 		}
 	})
 }

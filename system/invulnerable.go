@@ -3,18 +3,17 @@ package system
 import (
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/filter"
-	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/component"
 )
 
 type Invulnerable struct {
-	query *query.Query
+	query *donburi.Query
 }
 
 func NewInvulnerable() *Invulnerable {
 	return &Invulnerable{
-		query: query.NewQuery(filter.Contains(component.PlayerAirplane)),
+		query: donburi.NewQuery(filter.Contains(component.PlayerAirplane)),
 	}
 }
 

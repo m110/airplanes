@@ -10,7 +10,6 @@ import (
 	"github.com/yohamta/donburi/features/hierarchy"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
-	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
@@ -25,7 +24,7 @@ type ChosenPlayer struct {
 type StartGameCallback func(players []ChosenPlayer)
 
 type PlayerSelect struct {
-	query              *query.Query
+	query              *donburi.Query
 	startCallback      StartGameCallback
 	backToMenuCallback func()
 
@@ -36,7 +35,7 @@ type PlayerSelect struct {
 
 func NewPlayerSelect(startCallback StartGameCallback, backToMenuCallback func()) *PlayerSelect {
 	return &PlayerSelect{
-		query: query.NewQuery(
+		query: donburi.NewQuery(
 			filter.Contains(
 				transform.Transform,
 				component.PlayerSelect,
@@ -86,8 +85,14 @@ func (s *PlayerSelect) Update(w donburi.World) {
 		playerSelects = append(playerSelects, entry)
 	})
 
+	var isTouch bool
+	touchIDs := inpututil.AppendJustPressedTouchIDs(nil)
+	if len(touchIDs) > 0 {
+		isTouch = true
+	}
+
 	for number, settings := range archetype.Players {
-		if inpututil.IsKeyJustPressed(settings.Inputs.Shoot) {
+		if inpututil.IsKeyJustPressed(settings.Inputs.Shoot) || isTouch {
 			if entry, ok := selected[number]; ok {
 				component.PlayerSelect.Get(entry).LockIn()
 			} else {

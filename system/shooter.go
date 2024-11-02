@@ -4,19 +4,18 @@ import (
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
-	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
 )
 
 type Shooter struct {
-	query *query.Query
+	query *donburi.Query
 }
 
 func NewShooter() *Shooter {
 	return &Shooter{
-		query: query.NewQuery(filter.Contains(transform.Transform, component.Shooter)),
+		query: donburi.NewQuery(filter.Contains(transform.Transform, component.Shooter)),
 	}
 }
 

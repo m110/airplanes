@@ -7,7 +7,6 @@ import (
 	"github.com/yohamta/donburi/features/math"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
-	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/component"
@@ -77,6 +76,7 @@ func newPlayerBullet(w donburi.World, position math.Vec2, localRotation float64)
 			component.Sprite,
 			component.Despawnable,
 			component.Collider,
+			component.DistanceLimit,
 		),
 	)
 
@@ -105,6 +105,10 @@ func newPlayerBullet(w donburi.World, position math.Vec2, localRotation float64)
 		Width:  float64(width),
 		Height: float64(height),
 		Layer:  component.CollisionLayerPlayerBullets,
+	})
+
+	component.DistanceLimit.SetValue(bullet, component.DistanceLimitData{
+		MaxDistance: 200,
 	})
 }
 
@@ -183,7 +187,7 @@ func NewEnemyMissile(w donburi.World, position math.Vec2, rotation float64) {
 	})
 
 	component.Follower.SetValue(missile, component.FollowerData{
-		Target:         component.ClosestTarget(w, missile, query.NewQuery(filter.Contains(component.PlayerAirplane))),
+		Target:         component.ClosestTarget(w, missile, donburi.NewQuery(filter.Contains(component.PlayerAirplane))),
 		FollowingSpeed: enemyMissileSpeed,
 		FollowingTimer: engine.NewTimer(3 * time.Second),
 	})

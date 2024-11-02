@@ -1,0 +1,15 @@
+version: '3'
+
+tasks:
+  mobile:
+    dir: ./mobile
+    cmds:
+      - ebitenmobile bind -target ios -o Airplanes.xcframework .
+
+  mobile-deploy:
+    deps:
+      - mobile
+    dir: ./mobile
+    cmds:
+      - xcodebuild -scheme Airplanes -configuration Debug -sdk iphoneos -derivedDataPath build 
+      - ios-deploy --bundle build/Build/Products/Debug-iphoneos/Airplanes.app --nostart --no-wifi 

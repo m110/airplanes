@@ -5,21 +5,20 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/filter"
-	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/archetype"
 	"github.com/m110/airplanes/component"
 )
 
 type Respawn struct {
-	query           *query.Query
+	query           *donburi.Query
 	game            *component.GameData
 	restartCallback func()
 }
 
 func NewRespawn(restartCallback func()) *Respawn {
 	return &Respawn{
-		query:           query.NewQuery(filter.Contains(component.Player)),
+		query:           donburi.NewQuery(filter.Contains(component.Player)),
 		restartCallback: restartCallback,
 	}
 }

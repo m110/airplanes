@@ -9,7 +9,6 @@ import (
 	"github.com/yohamta/donburi/features/math"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
-	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/component"
@@ -230,7 +229,7 @@ func NewPlayerAirplane(w donburi.World, player component.PlayerData, faction com
 
 func MustFindPlayerByNumber(w donburi.World, playerNumber int) *component.PlayerData {
 	var foundPlayer *component.PlayerData
-	query.NewQuery(filter.Contains(component.Player)).Each(w, func(e *donburi.Entry) {
+	donburi.NewQuery(filter.Contains(component.Player)).Each(w, func(e *donburi.Entry) {
 		player := component.Player.Get(e)
 		if player.PlayerNumber == playerNumber {
 			foundPlayer = player

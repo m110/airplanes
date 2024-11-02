@@ -8,7 +8,6 @@ import (
 	"github.com/yohamta/donburi/features/math"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
-	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/assets"
 	"github.com/m110/airplanes/component"
@@ -170,7 +169,7 @@ func NewEnemyTank(
 	})
 
 	component.Observer.SetValue(gun, component.ObserverData{
-		LookFor: query.NewQuery(filter.Contains(component.PlayerAirplane)),
+		LookFor: donburi.NewQuery(filter.Contains(component.PlayerAirplane)),
 	})
 
 	component.Shooter.SetValue(gun, component.ShooterData{
@@ -211,7 +210,7 @@ func NewEnemyTurretBeam(
 	})
 
 	component.Observer.SetValue(gun, component.ObserverData{
-		LookFor: query.NewQuery(filter.Contains(component.PlayerAirplane)),
+		LookFor: donburi.NewQuery(filter.Contains(component.PlayerAirplane)),
 	})
 
 	component.Shooter.SetValue(gun, component.ShooterData{
@@ -252,7 +251,7 @@ func NewEnemyTurretMissiles(
 	})
 
 	component.Observer.SetValue(gun, component.ObserverData{
-		LookFor: query.NewQuery(filter.Contains(component.PlayerAirplane)),
+		LookFor: donburi.NewQuery(filter.Contains(component.PlayerAirplane)),
 	})
 
 	component.Shooter.SetValue(gun, component.ShooterData{

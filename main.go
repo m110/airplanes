@@ -1,69 +1,27 @@
 package main
 
 import (
+	"flag"
 	"log"
-	"math/rand"
-	"time"
+
+	"github.com/m110/airplanes/game"
 
 	"github.com/hajimehoshi/ebiten/v2"
-
-	"github.com/m110/airplanes/assets"
-	"github.com/m110/airplanes/scene"
-	"github.com/m110/airplanes/system"
 )
-
-var (
-	screenWidth  = 480
-	screenHeight = 640
-)
-
-type Scene interface {
-	Update()
-	Draw(screen *ebiten.Image)
-}
-
-type Game struct {
-	scene Scene
-}
-
-func NewGame() *Game {
-	assets.MustLoadAssets()
-
-	g := &Game{}
-	g.switchToTitle()
-	return g
-}
-
-func (g *Game) switchToTitle() {
-	g.scene = scene.NewTitle(screenWidth, screenHeight, g.switchToAirbase)
-}
-
-func (g *Game) switchToAirbase() {
-	g.scene = scene.NewAirbase(g.switchToGame, g.switchToTitle)
-}
-
-func (g *Game) switchToGame(players []system.ChosenPlayer) {
-	g.scene = scene.NewGame(players, screenWidth, screenHeight)
-}
-
-func (g *Game) Update() error {
-	g.scene.Update()
-	return nil
-}
-
-func (g *Game) Draw(screen *ebiten.Image) {
-	g.scene.Draw(screen)
-}
-
-func (g *Game) Layout(width, height int) (int, int) {
-	return width, height
-}
 
 func main() {
-	ebiten.SetWindowSize(screenWidth, screenHeight)
-	rand.Seed(time.Now().UTC().UnixNano())
+	quickFlag := flag.Bool("quick", false, "quick mode")
+	flag.Parse()
 
-	err := ebiten.RunGame(NewGame())
+	config := game.Config{
+		Quick:        *quickFlag,
+		ScreenWidth:  480,
+		ScreenHeight: 640,
+	}
+
+	ebiten.SetWindowSize(config.ScreenWidth, config.ScreenHeight)
+
+	err := ebiten.RunGame(game.NewGame(config))
 	if err != nil {
 		log.Fatal(err)
 	}

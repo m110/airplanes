@@ -3,7 +3,6 @@ package component
 import (
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/filter"
-	"github.com/yohamta/donburi/query"
 )
 
 type GameData struct {
@@ -25,7 +24,7 @@ type Settings struct {
 var Game = donburi.NewComponentType[GameData]()
 
 func MustFindGame(w donburi.World) *GameData {
-	game, ok := query.NewQuery(filter.Contains(Game)).First(w)
+	game, ok := donburi.NewQuery(filter.Contains(Game)).First(w)
 	if !ok {
 		panic("game not found")
 	}

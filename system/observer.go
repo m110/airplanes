@@ -4,18 +4,17 @@ import (
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/features/transform"
 	"github.com/yohamta/donburi/filter"
-	"github.com/yohamta/donburi/query"
 
 	"github.com/m110/airplanes/component"
 )
 
 type Observer struct {
-	query *query.Query
+	query *donburi.Query
 }
 
 func NewObserver() *Observer {
 	return &Observer{
-		query: query.NewQuery(filter.Contains(transform.Transform, component.Observer)),
+		query: donburi.NewQuery(filter.Contains(transform.Transform, component.Observer)),
 	}
 }
 

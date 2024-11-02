@@ -2,7 +2,6 @@ package scene
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/features/math"
 	"github.com/yohamta/donburi/features/transform"
@@ -18,14 +17,19 @@ type Airbase struct {
 	systems   []System
 	drawables []Drawable
 
+	width  int
+	height int
+
 	startCallback      system.StartGameCallback
 	backToMenuCallback func()
 }
 
-func NewAirbase(startCallback system.StartGameCallback, backToMenuCallback func()) *Airbase {
+func NewAirbase(width, height int, startCallback system.StartGameCallback, backToMenuCallback func()) *Airbase {
 	a := &Airbase{
 		startCallback:      startCallback,
 		backToMenuCallback: backToMenuCallback,
+		width:              width,
+		height:             height,
 	}
 
 	a.createWorld()
@@ -39,7 +43,6 @@ func (a *Airbase) createWorld() {
 
 	a.systems = []System{
 		system.NewVelocity(),
-		system.NewScript(),
 		system.NewPlayerSelect(a.startCallback, a.backToMenuCallback),
 		system.NewAltitude(),
 		debug,
@@ -75,15 +78,6 @@ func (a *Airbase) createWorld() {
 }
 
 func (a *Airbase) Update() {
-	if inpututil.IsKeyJustPressed(ebiten.Key1) {
-		a.startCallback([]system.ChosenPlayer{
-			{
-				PlayerNumber: 1,
-				Faction:      component.PlayerFactionBlue,
-			},
-		})
-	}
-
 	for _, s := range a.systems {
 		s.Update(a.world)
 	}
