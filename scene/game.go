@@ -82,6 +82,7 @@ func (g *Game) loadLevel() {
 		system.NewAltitude(),
 		system.NewEvents(),
 		system.NewFollower(),
+		system.NewDistanceLimit(),
 		render,
 		debug,
 		system.NewTimeToLive(),

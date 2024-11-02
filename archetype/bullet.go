@@ -76,6 +76,7 @@ func newPlayerBullet(w donburi.World, position math.Vec2, localRotation float64)
 			component.Sprite,
 			component.Despawnable,
 			component.Collider,
+			component.DistanceLimit,
 		),
 	)
 
@@ -104,6 +105,10 @@ func newPlayerBullet(w donburi.World, position math.Vec2, localRotation float64)
 		Width:  float64(width),
 		Height: float64(height),
 		Layer:  component.CollisionLayerPlayerBullets,
+	})
+
+	component.DistanceLimit.SetValue(bullet, component.DistanceLimitData{
+		MaxDistance: 200,
 	})
 }
 

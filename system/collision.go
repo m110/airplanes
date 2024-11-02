@@ -115,11 +115,6 @@ func (c *Collision) Update(w donburi.World) {
 				continue
 			}
 
-			// One of the entities could already be removed from the world due to collision effect
-			if !entry.Valid() || !other.Valid() {
-				continue
-			}
-
 			otherCollider := component.Collider.Get(other)
 
 			effects, ok := collisionEffects[collider.Layer]
