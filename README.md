@@ -109,3 +109,16 @@ Enemies are spawned once the top camera boundary reaches their position.
 A group spawn spawns all connected enemies at once.
 
 All objects despawn once they go out of screen.
+
+### Mobile Development Notes
+
+1. `task mobile` to create the `Airplanes.xcframework`.
+2. Open the Xcode project and deploy.
+3. If the app takes long to launch, <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>,</kbd> and disable the "Debug executable" option.
+
+#### Creating a new mobile project
+
+1. Create a new Xcode project (Game, SpriteKit).
+2. Add the `Airplanes.xcframework` to the project as a framework.
+3. Add the `GameController.framework` to the project as a framework.
+4. Update `GameViewController` to use `MobileEbitenViewController`.

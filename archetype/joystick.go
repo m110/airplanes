@@ -23,7 +23,7 @@ func NewJoystick(w donburi.World, pos math.Vec2) *donburi.Entry {
 	})
 	t := transform.Transform.Get(joystick)
 	t.LocalPosition = pos
-	t.LocalScale = math.Vec2{X: 0.5, Y: 0.5}
+	t.LocalScale = math.Vec2{X: 0.2, Y: 0.2}
 
 	knob := w.Entry(w.Create(
 		transform.Transform,

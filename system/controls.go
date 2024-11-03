@@ -69,7 +69,7 @@ func (i *Controls) Update(w donburi.World) {
 				X: float64(touchX) - joystickPos.X,
 				Y: float64(touchY) - joystickPos.Y,
 			}
-			maxRadius := 100.0
+			maxRadius := 20.0
 			length := knobMove.Magnitude()
 
 			// Get direction vector before clamping (this will be normalized)
@@ -85,10 +85,7 @@ func (i *Controls) Update(w donburi.World) {
 			}
 
 			movementFactor := stdmath.Min(length/maxRadius, 1.0)
-			factor := 0.5
 
-			// Scale knob visual position
-			knobMove = knobMove.MulScalar(factor)
 			knob := hierarchy.MustGetChildren(joystick)[0]
 			knobTransform := transform.Transform.Get(knob)
 			knobTransform.LocalPosition = knobMove
